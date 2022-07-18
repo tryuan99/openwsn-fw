@@ -1,0 +1,12 @@
+.\objects\ccms.o: ..\..\..\drivers\common\crypto\ccms.c
+.\objects\ccms.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\ccms.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ccms.o: ..\..\..\inc\config.h
+.\objects\ccms.o: ..\..\..\inc\check_config.h
+.\objects\ccms.o: ..\..\..\inc\opendefs.h
+.\objects\ccms.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\ccms.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\ccms.o: ..\..\..\inc\af.h
+.\objects\ccms.o: ..\..\..\drivers\common\crypto\ccms.h
+.\objects\ccms.o: ..\..\..\drivers\common\crypto\aes128.h
+.\objects\ccms.o: ..\..\..\bsp\boards\cryptoengine.h

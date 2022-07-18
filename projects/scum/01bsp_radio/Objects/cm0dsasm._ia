@@ -1,0 +1,5 @@
+--cpu Cortex-M0 --li -g --16 --apcs=interwork 
+-IC:\Users\fmaksimo\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM0\Include
+-IC:\Keil_v5\ARM\CMSIS\Include
+--pd "__UVISION_VERSION SETA 533" --pd "ARMCM0 SETA 1"
+--list .\listings\cm0dsasm.lst --xref -o .\objects\cm0dsasm.o --depend .\objects\cm0dsasm.d "..\..\..\bsp\boards\scum\cm0dsasm.s"

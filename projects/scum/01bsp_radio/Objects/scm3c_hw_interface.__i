@@ -1,0 +1,5 @@
+-c --cpu Cortex-M0 --li -g -O0 --apcs=interwork --split_sections -I ..\..\..\bsp\boards\scum -I ..\..\..\bsp\boards
+-IC:\Users\fmaksimo\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM0\Include
+-IC:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="533" -DARMCM0
+-o .\objects\scm3c_hw_interface.o --omf_browse .\objects\scm3c_hw_interface.crf --depend .\objects\scm3c_hw_interface.d "..\..\..\bsp\boards\scum\scm3c_hw_interface.c"

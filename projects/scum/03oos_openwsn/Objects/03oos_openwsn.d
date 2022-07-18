@@ -1,0 +1,13 @@
+.\objects\03oos_openwsn.o: ..\..\common\03oos_openwsn\03oos_openwsn.c
+.\objects\03oos_openwsn.o: ..\..\..\inc\config.h
+.\objects\03oos_openwsn.o: ..\..\..\inc\check_config.h
+.\objects\03oos_openwsn.o: ..\..\..\bsp\boards\board.h
+.\objects\03oos_openwsn.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\03oos_openwsn.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\03oos_openwsn.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\03oos_openwsn.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\03oos_openwsn.o: ..\..\..\kernel\scheduler.h
+.\objects\03oos_openwsn.o: ..\..\..\inc\opendefs.h
+.\objects\03oos_openwsn.o: ..\..\..\inc\af.h
+.\objects\03oos_openwsn.o: ..\..\..\kernel\openos/scheduler_types.h
+.\objects\03oos_openwsn.o: ..\..\..\openstack\openstack.h

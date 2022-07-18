@@ -1,0 +1,15 @@
+.\objects\opentimers.o: ..\..\..\drivers\common\opentimers.c
+.\objects\opentimers.o: ..\..\..\inc\opendefs.h
+.\objects\opentimers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\opentimers.o: ..\..\..\inc\config.h
+.\objects\opentimers.o: ..\..\..\inc\check_config.h
+.\objects\opentimers.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\opentimers.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\opentimers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\opentimers.o: ..\..\..\inc\af.h
+.\objects\opentimers.o: ..\..\..\drivers\common\opentimers.h
+.\objects\opentimers.o: ..\..\..\bsp\boards\sctimer.h
+.\objects\opentimers.o: ..\..\..\bsp\boards\board.h
+.\objects\opentimers.o: ..\..\..\bsp\boards\debugpins.h
+.\objects\opentimers.o: ..\..\..\kernel\scheduler.h
+.\objects\opentimers.o: ..\..\..\kernel\openos/scheduler_types.h

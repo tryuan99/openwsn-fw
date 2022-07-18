@@ -1,0 +1,18 @@
+--cpu Cortex-M0
+".\objects\01bsp_radio.o"
+".\objects\cm0dsasm.o"
+".\objects\leds.o"
+".\objects\board.o"
+".\objects\uart.o"
+".\objects\debugpins.o"
+".\objects\radio.o"
+".\objects\eui64.o"
+".\objects\sctimer.o"
+".\objects\retarget.o"
+".\objects\adc.o"
+".\objects\optical.o"
+".\objects\scm3c_hw_interface.o"
+--strict --scatter ".\Objects\01bsp_radio.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\01bsp_radio.map" -o .\Objects\01bsp_radio.axf

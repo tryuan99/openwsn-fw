@@ -1,0 +1,9 @@
+.\objects\01bsp_radio.o: 01bsp_radio.c
+.\objects\01bsp_radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\01bsp_radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\board.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\scum\radio.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\leds.h
+.\objects\01bsp_radio.o: ..\..\..\bsp\boards\uart.h

@@ -1,0 +1,14 @@
+.\objects\scheduler.o: ..\..\..\kernel\openos\scheduler.c
+.\objects\scheduler.o: ..\..\..\inc\opendefs.h
+.\objects\scheduler.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\scheduler.o: ..\..\..\inc\config.h
+.\objects\scheduler.o: ..\..\..\inc\check_config.h
+.\objects\scheduler.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\scheduler.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\scheduler.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\scheduler.o: ..\..\..\inc\af.h
+.\objects\scheduler.o: ..\..\..\kernel\scheduler.h
+.\objects\scheduler.o: ..\..\..\kernel\openos/scheduler_types.h
+.\objects\scheduler.o: ..\..\..\bsp\boards\board.h
+.\objects\scheduler.o: ..\..\..\bsp\boards\debugpins.h
+.\objects\scheduler.o: ..\..\..\bsp\boards\leds.h

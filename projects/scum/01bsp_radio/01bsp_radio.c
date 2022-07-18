@@ -17,6 +17,8 @@ end of frame event), it will turn on its error LED.
 \author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
+
+/*
 #include "board.h"
 #include "radio.h"
 #include "leds.h"
@@ -75,9 +77,13 @@ void     cb_timer(void);
 
 //=========================== main ============================================
 
+*/
+
 /**
 \brief The program starts executing here.
 */
+
+/*
 int mote_main(void) {
    uint8_t i;
     uint32_t j;
@@ -266,4 +272,175 @@ void cb_timer(void) {
    // update debug stats
    app_dbg.num_timer++;
    
+}
+*/
+
+#include "stdint.h"
+#include "string.h"
+#include "board.h"
+#include "radio.h"
+#include "leds.h"
+#include "uart.h"
+//#include "sctimer.h"
+
+//=========================== defines =========================================
+
+#define LENGTH_PACKET        9+LENGTH_CRC // maximum length is 127 bytes
+#define CHANNEL              11             // 24ghz: 11 = 2.405GHz, subghz: 11 = 865.325 in  FSK operating mode #1
+#define LENGTH_SERIAL_FRAME  9              // length of the serial frame
+
+//=========================== variables =======================================
+
+typedef struct {
+    uint8_t    num_radioTimerCompare;
+    uint8_t    num_startFrame;
+    uint8_t    num_endFrame;
+} app_dbg_t;
+
+app_dbg_t app_dbg;
+
+typedef struct {
+    // rx packet
+    volatile    uint8_t    rxpk_done;
+                uint8_t    rxpk_buf[LENGTH_PACKET];
+                uint8_t    rxpk_len;
+                uint8_t    rxpk_num;
+                int8_t     rxpk_rssi;
+                uint8_t    rxpk_lqi;
+                bool       rxpk_crc;
+                uint8_t    rxpk_freq_offset;
+    // uart
+                uint8_t    uart_txFrame[LENGTH_SERIAL_FRAME];
+                uint8_t    uart_lastTxByte;
+    volatile    uint8_t    uart_done;
+} app_vars_t;
+
+app_vars_t app_vars;
+
+//=========================== prototypes ======================================
+
+// radiotimer
+void cb_radioTimerOverflows(void);
+// radio
+void cb_startFrame(PORT_TIMER_WIDTH timestamp);
+void cb_endFrame(PORT_TIMER_WIDTH timestamp);
+// uart
+void cb_uartTxDone(void);
+uint8_t cb_uartRxCb(void);
+
+//=========================== main ============================================
+
+/**
+\brief The program starts executing here.
+*/
+int mote_main(void) {
+
+    uint8_t i;
+
+    // clear local variables
+    memset(&app_vars,0,sizeof(app_vars_t));
+
+    // initialize board
+    board_init();
+
+    // add callback functions radio
+    radio_setStartFrameCb(cb_startFrame);
+    radio_setEndFrameCb(cb_endFrame);
+
+    // prepare radio
+    radio_rfOn();
+    // freq type only effects on scum port
+    radio_setFrequency(CHANNEL, FREQ_RX);
+
+    // switch in RX
+    radio_rxEnable();
+    radio_rxNow();
+
+    while (1) {
+
+        // sleep while waiting for at least one of the rxpk_done to be set
+
+        app_vars.rxpk_done = 0;
+        while (app_vars.rxpk_done==0) {
+            board_sleep();
+        }
+
+        // if I get here, I just received a packet
+
+        //===== send notification over serial port
+
+        // led
+        leds_error_on();
+
+        // format frame to send over serial port
+        printf("packet: %d %d %d\r\n",app_vars.rxpk_buf[0], app_vars.rxpk_buf[1], app_vars.rxpk_buf[2]);
+
+        // led
+        leds_error_off();
+    }
+}
+
+//=========================== callbacks =======================================
+
+//===== radio
+
+void cb_startFrame(PORT_TIMER_WIDTH timestamp) {
+
+    leds_sync_on();
+    // update debug stats
+    app_dbg.num_startFrame++;
+}
+
+void cb_endFrame(PORT_TIMER_WIDTH timestamp) {
+    uint8_t  i;
+    bool     expectedFrame;
+
+    // update debug stats
+    app_dbg.num_endFrame++;
+
+    memset(&app_vars.rxpk_buf[0],0,LENGTH_PACKET);
+
+    //app_vars.rxpk_freq_offset = radio_getFrequencyOffset();
+
+    // get packet from radio
+    radio_getReceivedFrame(
+        app_vars.rxpk_buf,
+        &app_vars.rxpk_len,
+        sizeof(app_vars.rxpk_buf),
+        &app_vars.rxpk_rssi,
+        &app_vars.rxpk_lqi,
+        &app_vars.rxpk_crc
+    );
+
+    // check the frame is sent by radio_tx project
+    expectedFrame = TRUE;
+
+    if (app_vars.rxpk_len>LENGTH_PACKET){
+        expectedFrame = FALSE;
+    } else {
+        for(i=1;i<10;i++){
+            if(app_vars.rxpk_buf[i]!=i){
+                expectedFrame = FALSE;
+                break;
+            }
+        }
+    }
+
+    // read the packet number
+    app_vars.rxpk_num = app_vars.rxpk_buf[0];
+
+    // toggle led if the frame is expected
+    if (expectedFrame){
+        // indicate I just received a packet from bsp_radio_tx mote
+        app_vars.rxpk_done = 1;
+
+        leds_debug_toggle();
+    }
+
+    // keep listening (needed for at86rf215 radio)
+    radio_rxEnable();
+    radio_rxNow();
+
+    // led
+    leds_sync_off();
 }

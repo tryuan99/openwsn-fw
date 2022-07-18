@@ -1,0 +1,12 @@
+.\objects\radio.o: ..\..\..\bsp\boards\scum\radio.c
+.\objects\radio.o: ..\..\..\bsp\boards\board.h
+.\objects\radio.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\radio.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\radio.o: ..\..\..\bsp\boards\scum\radio.h
+.\objects\radio.o: ..\..\..\bsp\boards\sctimer.h
+.\objects\radio.o: ..\..\..\bsp\boards\debugpins.h
+.\objects\radio.o: ..\..\..\bsp\boards\leds.h
+.\objects\radio.o: ..\..\..\bsp\boards\scum\memory_map.h
+.\objects\radio.o: ..\..\..\bsp\boards\scum\scm3c_hw_interface.h

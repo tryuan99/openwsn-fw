@@ -73,8 +73,8 @@ len=17  num=84  rssi=-81  lqi=108 crc=1
 //=========================== defines =========================================
 
 #define LENGTH_PACKET        125+LENGTH_CRC // maximum length is 127 bytes
-#define CHANNEL              11             // 24ghz: 11 = 2.405GHz, subghz: 11 = 865.325 in  FSK operating mode #1
-#define LENGTH_SERIAL_FRAME  9              // length of the serial frame
+#define CHANNEL              17             // 24ghz: 11 = 2.405GHz, subghz: 11 = 865.325 in  FSK operating mode #1
+#define LENGTH_SERIAL_FRAME  16              // length of the serial frame
 
 //=========================== variables =======================================
 
@@ -164,15 +164,20 @@ int mote_main(void) {
 
         // format frame to send over serial port
         i = 0;
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_len;  // packet length
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_num;  // packet number
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_rssi; // RSSI
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_lqi;  // LQI
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_crc;  // CRC
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_freq_offset; // freq_offset
-        app_vars.uart_txFrame[i++] = 0xff;               // closing flag
-        app_vars.uart_txFrame[i++] = 0xff;               // closing flag
-        app_vars.uart_txFrame[i++] = 0xff;               // closing flag
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0];  // packet length
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[1];  // packet number
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[2];  // RSSI
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[3];  // LQI
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[4];  // CRC
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[5];  // freq_offset
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[6];               // closing flag
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[7];               // closing flag
+        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[8];
+		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[9];
+		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[10];
+		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[11];
+		app_vars.uart_txFrame[i++] = '\r';
+		app_vars.uart_txFrame[i++] = '\n';
 
         app_vars.uart_done          = 0;
         app_vars.uart_lastTxByte    = 0;
@@ -225,7 +230,7 @@ void cb_endFrame(PORT_TIMER_WIDTH timestamp) {
     // check the frame is sent by radio_tx project
     expectedFrame = TRUE;
 
-    if (app_vars.rxpk_len>LENGTH_PACKET){
+    /*if (app_vars.rxpk_len>LENGTH_PACKET){
         expectedFrame = FALSE;
     } else {
         for(i=1;i<10;i++){
@@ -237,7 +242,7 @@ void cb_endFrame(PORT_TIMER_WIDTH timestamp) {
     }
 
     // read the packet number
-    app_vars.rxpk_num = app_vars.rxpk_buf[0];
+    app_vars.rxpk_num = app_vars.rxpk_buf[0];*/
 
     // toggle led if the frame is expected
     if (expectedFrame){

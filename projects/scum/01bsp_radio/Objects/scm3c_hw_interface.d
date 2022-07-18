@@ -1,0 +1,13 @@
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\scm3c_hw_interface.c
+.\objects\scm3c_hw_interface.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\scm3c_hw_interface.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\memory_map.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\scm3c_hw_interface.h
+.\objects\scm3c_hw_interface.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\radio.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\board.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\optical.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\sctimer.h
+.\objects\scm3c_hw_interface.o: ..\..\..\bsp\boards\scum\scum_defs.h

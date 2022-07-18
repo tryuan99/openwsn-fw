@@ -1,0 +1,9 @@
+.\objects\openapps.o: ..\..\..\openapps\openapps.c
+.\objects\openapps.o: ..\..\..\inc\config.h
+.\objects\openapps.o: ..\..\..\inc\check_config.h
+.\objects\openapps.o: ..\..\..\inc\opendefs.h
+.\objects\openapps.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\openapps.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\openapps.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\openapps.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\openapps.o: ..\..\..\inc\af.h

@@ -1,0 +1,11 @@
+.\objects\optical.o: ..\..\..\bsp\boards\scum\optical.c
+.\objects\optical.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\optical.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\optical.o: ..\..\..\bsp\boards\scum\memory_map.h
+.\objects\optical.o: ..\..\..\bsp\boards\scum\scm3c_hw_interface.h
+.\objects\optical.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\optical.o: ..\..\..\bsp\boards\scum\radio.h
+.\objects\optical.o: ..\..\..\bsp\boards\board.h
+.\objects\optical.o: ..\..\..\bsp\boards\scum\board_info.h
+.\objects\optical.o: ..\..\..\bsp\boards\toolchain_defs.h
+.\objects\optical.o: ..\..\..\bsp\boards\scum\scum_defs.h
