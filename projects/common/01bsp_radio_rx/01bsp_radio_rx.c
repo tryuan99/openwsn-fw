@@ -68,7 +68,7 @@ len=17  num=84  rssi=-81  lqi=108 crc=1
 #include "radio.h"
 #include "leds.h"
 #include "uart.h"
-//#include "sctimer.h"
+#include "sctimer.h"
 
 //=========================== defines =========================================
 
@@ -100,6 +100,8 @@ typedef struct {
                 uint8_t    uart_txFrame[LENGTH_SERIAL_FRAME];
                 uint8_t    uart_lastTxByte;
     volatile    uint8_t    uart_done;
+	
+				uint32_t   count;
 } app_vars_t;
 
 app_vars_t app_vars;
@@ -123,12 +125,15 @@ uint8_t cb_uartRxCb(void);
 int mote_main(void) {
 
     uint8_t i;
+	uint32_t count;
 
     // clear local variables
     memset(&app_vars,0,sizeof(app_vars_t));
 
     // initialize board
     board_init();
+	
+	board_timer_init();
 
     // add callback functions radio
     radio_setStartFrameCb(cb_startFrame);
@@ -164,34 +169,48 @@ int mote_main(void) {
 
         // format frame to send over serial port
         i = 0;
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0];  // packet length
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[1];  // packet number
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[2];  // RSSI
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[3];  // LQI
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[4];  // CRC
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[5];  // freq_offset
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[6];               // closing flag
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[7];               // closing flag
-        app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[8];
-		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[9];
-		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[10];
-		app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[11];
-		app_vars.uart_txFrame[i++] = '\r';
-		app_vars.uart_txFrame[i++] = '\n';
+		//if ((app_vars.rxpk_buf[0]=0xAA)&&(app_vars.rxpk_buf[1]=0xBB)) {
+			/*app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0]/10+'0';  // packet length
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[1]%10+'0';  // packet number
+			app_vars.uart_txFrame[i++] = ' ';  // RSSI
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[2]/10+'0';  // LQI
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[3]%10+'0';  // CRC
+			app_vars.uart_txFrame[i++] = ' ';  // freq_offset
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[4]/10+'0';               // closing flag
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[5]%10+'0';               // closing flag
+			app_vars.uart_txFrame[i++] = ' ';
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[6]/10+'0';
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[7]%10+'0';
+			app_vars.uart_txFrame[i++] = ' ';
+			app_vars.uart_txFrame[i++] = '\r';
+			app_vars.uart_txFrame[i++] = '\n';*/
+			
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0]; // address MSB
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[1]; // address MSB
+			app_vars.uart_txFrame[i++] = ' ';
+			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 24);
+			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 16);
+			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 8);
+			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count);
 
-        app_vars.uart_done          = 0;
-        app_vars.uart_lastTxByte    = 0;
+			//app_vars.uart_txFrame[i++] = '\r';
+			app_vars.uart_txFrame[i++] = '\n';
 
-        // send app_vars.uart_txFrame over UART
-        uart_clearTxInterrupts();
-        uart_clearRxInterrupts();
-        uart_enableInterrupts();
-        uart_writeByte(app_vars.uart_txFrame[app_vars.uart_lastTxByte]);
-        while (app_vars.uart_done==0); // busy wait to finish
-        uart_disableInterrupts();
+			app_vars.uart_done          = 0;
+			app_vars.uart_lastTxByte    = 0;
 
-        // led
-        leds_error_off();
+			// send app_vars.uart_txFrame over UART
+			uart_clearTxInterrupts();
+			uart_clearRxInterrupts();
+			uart_enableInterrupts();
+			uart_writeByte(app_vars.uart_txFrame[app_vars.uart_lastTxByte]);
+			while (app_vars.uart_done==0); // busy wait to finish
+			uart_disableInterrupts();
+
+			// led
+			leds_error_off();
+		//}
+
     }
 }
 
@@ -247,6 +266,7 @@ void cb_endFrame(PORT_TIMER_WIDTH timestamp) {
     // toggle led if the frame is expected
     if (expectedFrame){
         // indicate I just received a packet from bsp_radio_tx mote
+		app_vars.count = board_timer_get();
         app_vars.rxpk_done = 1;
 
         leds_debug_toggle();

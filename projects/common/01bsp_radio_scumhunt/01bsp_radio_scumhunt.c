@@ -1,7 +1,6 @@
 /**
 \brief This program shows the use of the "radio" bsp module.
 find scum channels with an OpenMote :)
-author: anonymous, not the hacker, obviously. this code is really bad
 */
 
 #include "stdint.h"

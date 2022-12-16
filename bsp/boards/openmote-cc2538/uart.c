@@ -24,6 +24,7 @@
 #include "board.h"
 #include "debugpins.h"
 #include "uart.h"
+#include "leds.h"
 
 //=========================== defines =========================================
 
@@ -72,7 +73,8 @@ void uart_init(void) {
     // frequency.  This could be also be a variable or hard coded value
     // instead of a function call.
     UARTConfigSetExpClk(UART0_BASE, SysCtrlIOClockGet(), 115200,
-                      (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
+    //UARTConfigSetExpClk(UART0_BASE, SysCtrlIOClockGet(), 19200,
+						(UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
                        UART_CONFIG_PAR_NONE));
 
     // Enable UART hardware
@@ -178,8 +180,11 @@ kick_scheduler_t uart_tx_isr(void) {
 
 kick_scheduler_t uart_rx_isr(void) {
     uart_clearRxInterrupts(); // TODO: do not clear, but disable when done
+		
     if (uart_vars.rxCb != NULL) {
+		
         uart_vars.rxCb();
     }
+
     return DO_NOT_KICK_SCHEDULER;
 }

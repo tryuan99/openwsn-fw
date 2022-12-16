@@ -24,6 +24,7 @@ end of frame event), it will turn on its error LED.
 #include "leds.h"
 #include "sctimer.h"
 #include "uart.h"
+#include "happyserial.h"
 
 //=========================== defines =========================================
 
@@ -31,7 +32,7 @@ end of frame event), it will turn on its error LED.
 //#define LEN_PKT_TO_SEND 9+LENGTH_CRC
 #define LEN_PKT_TO_SEND 9+LENGTH_CRC
 #define CHANNEL         17             ///< 11=2.405GHz
-#define TIMER_PERIOD    (0x7fff)  	   ///< 0xffff = 2s@32kHz
+#define TIMER_PERIOD    (0x1ffff)  	   ///< 0x7ffff = 16s@32kHz, 3ffff = 8s@32kHz, 1ffff = 4s@32kHz, ffff = 2s@32kHz
 #define ID              0x99           ///< byte sent in the packets
 
 #define MOTE_ADDRESS	0x1234
@@ -42,6 +43,9 @@ end of frame event), it will turn on its error LED.
 uint8_t stringToSend[]  = "+002 Ptest.24.00.12.-010\n";
 
 //=========================== variables =======================================
+
+// prototypes //
+
 
 enum {
     APP_FLAG_START_FRAME = 0x01,
@@ -76,7 +80,10 @@ typedef struct {
                 bool            rxpk_crc;
 				
 				uint8_t			target_address_msb;
-				uint8_t			target_address_lsb
+				uint8_t			target_address_lsb;
+				
+				uint8_t			source_address_lsb;
+				uint8_t			source_address_msb;
 } app_vars_t;
 
 app_vars_t app_vars;
@@ -89,6 +96,9 @@ void     cb_timer(void);
 
 void     cb_uart_tx_done(void);
 uint8_t  cb_uart_rx(void);
+
+void _happyserial_rx_cb(uint8_t* buf, uint8_t bufLen);
+
 
 //=========================== main ============================================
 
@@ -118,6 +128,9 @@ int mote_main(void) {
     // add callback functions radio
     radio_setStartFrameCb(cb_startFrame);
     radio_setEndFrameCb(cb_endFrame);
+	
+	happyserial_init(_happyserial_rx_cb);
+
 
     // prepare packet
     app_vars.packet_len = sizeof(app_vars.packet);
@@ -212,19 +225,34 @@ int mote_main(void) {
 								radio_rfOff();
 								for (j=0;j<0x2FF0;j++);
 								
-								
-								// prepare join req. response:
-								app_vars.packet[0] = 0x12;
-								app_vars.packet[1] = 0x34;
-								app_vars.packet[2] = 0xCA;
-								app_vars.packet[3] = 0xFE;
-								app_vars.packet[4] = 0x00;
-								app_vars.packet[5] = 0x44;
-								app_vars.packet[6] = 0X4D;
-								app_vars.packet[7] = 0xF9;
-								app_vars.packet[8] = 0x15;
-								app_vars.packet[9] = 0x66;
-								app_vars.packet[10] = 0x66;
+								if ((app_vars.target_address_msb==0xCA)&&(app_vars.target_address_lsb==0xFE)) {
+									// prepare join req. response:
+									app_vars.packet[0] = 0x12;
+									app_vars.packet[1] = 0x34;
+									app_vars.packet[2] = 0xCA;
+									app_vars.packet[3] = 0xFE;
+									app_vars.packet[4] = 0x00;
+									app_vars.packet[5] = 0x44;
+									app_vars.packet[6] = 0X4D;
+									app_vars.packet[7] = 0xF9;
+									app_vars.packet[8] = 0x15;
+									app_vars.packet[9] = (uint8_t)(((TIMER_PERIOD-0x48F)/8)>>8);
+									app_vars.packet[10] = (uint8_t)(((TIMER_PERIOD-0x48F)/8)&0xFF);
+								}
+								else if ((app_vars.target_address_msb==0x4E)&&(app_vars.target_address_lsb==0xE7)) {
+									// prepare join req. response:
+									app_vars.packet[0] = 0x12;
+									app_vars.packet[1] = 0x34;
+									app_vars.packet[2] = 0x4E;
+									app_vars.packet[3] = 0xE7;
+									app_vars.packet[4] = 0x00;
+									app_vars.packet[5] = 0x44;
+									app_vars.packet[6] = 0X4D;
+									app_vars.packet[7] = 0x29;
+									app_vars.packet[8] = 0x15;
+									app_vars.packet[9] = (uint8_t)(((TIMER_PERIOD-0x48F)/8)>>8);
+									app_vars.packet[10] = (uint8_t)(((TIMER_PERIOD-0x48F)/8)&0xFF);
+								}
 								
 								// send the packet
 								radio_loadPacket(app_vars.packet, 12);
@@ -251,6 +279,16 @@ int mote_main(void) {
 								}
 								
 							}
+							
+							else if ((app_vars.packet[2]==0x12)&&(app_vars.packet[3]==0x34)) { //uplink packet for me
+								app_vars.source_address_lsb = app_vars.packet[1];
+								app_vars.source_address_msb = app_vars.packet[0];
+								
+								uint8_t buf[] = {'a', 'b', 'c'};
+								
+								happyserial_tx(app_vars.packet,sizeof(app_vars.packet));
+								
+							}
 							else {
 							
 								memcpy(&stringToSend[i],&app_vars.packet[0],14);
@@ -266,11 +304,15 @@ int mote_main(void) {
 									uart_writeByte(stringToSend[app_vars.uart_lastTxByteIndex]);
 								}
 							}
+							radio_rxEnable();
+							radio_rxNow();
 						}
 						else {
 							radio_rxEnable();
 							radio_rxNow();
 						}
+						
+						
 
                         // led
                         leds_error_off();
@@ -323,8 +365,8 @@ int mote_main(void) {
                     app_vars.packet[1] = 0x34;
                     app_vars.packet[2] = 0xFF;
                     app_vars.packet[3] = 0xFF;
-					app_vars.packet[4] = (uint8_t)(TIMER_PERIOD>>8);
-					app_vars.packet[5] = (uint8_t)(TIMER_PERIOD&0xFF);
+					app_vars.packet[4] = (uint8_t)((TIMER_PERIOD/8)>>8);
+					app_vars.packet[5] = (uint8_t)((TIMER_PERIOD/8)&0xFF);
 					app_vars.packet[6] = 0x33;
 					app_vars.packet[7] = 0x33;
                     app_vars.packet[8] = CHANNEL;
@@ -397,4 +439,8 @@ uint8_t cb_uart_rx(void) {
     uart_writeByte(byte);
 
     return 0;
+}
+
+void _happyserial_rx_cb(uint8_t* buf, uint8_t bufLen) {
+    happyserial_tx(buf,bufLen);
 }
