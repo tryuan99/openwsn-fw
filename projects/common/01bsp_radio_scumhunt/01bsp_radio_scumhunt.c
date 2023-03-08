@@ -153,6 +153,7 @@ int mote_main(void) {
 			//===== send notification over serial port
 			if (app_vars.rx_tx == 2) {
 				uint16_t adc_output = (app_vars.rxpk_buf[5] * 256 + app_vars.rxpk_buf[4]);
+				uint32_t rssi_abs = (app_vars.rxpk_rssi < 0) ? -app_vars.rxpk_rssi : app_vars.rxpk_rssi;
 				// Write the ADC output to UART.
 				app_vars.uart_txFrame[0]	= app_vars.rxpk_buf[0] / 100 + 48;
 				app_vars.uart_txFrame[1]	= (app_vars.rxpk_buf[0] - 100 * (app_vars.rxpk_buf[0] / 100)) / 10 + 48;
@@ -170,8 +171,13 @@ int mote_main(void) {
 				app_vars.uart_txFrame[13]	= adc_output / 100 + 48;
 				app_vars.uart_txFrame[14]	= (adc_output - 100 * (adc_output / 100)) / 10 + 48;
 				app_vars.uart_txFrame[15]	= adc_output % 10 + 48;
-				app_vars.uart_txFrame[16]	= '\r';
-				app_vars.uart_txFrame[17]	= '\n';
+				app_vars.uart_txFrame[16]   = ' ';
+				app_vars.uart_txFrame[17]   = (app_vars.rxpk_rssi < 0) ? '-' : ' ';
+				app_vars.uart_txFrame[18]   = rssi_abs / 100 + 48;
+				app_vars.uart_txFrame[19]   = (rssi_abs - 100 * (rssi_abs / 100)) / 10 + 48;
+				app_vars.uart_txFrame[20]   = rssi_abs % 10 + 48;
+				app_vars.uart_txFrame[21]	= '\r';
+				app_vars.uart_txFrame[22]	= '\n';
 				app_vars.uart_done			= 0;
 				app_vars.uart_lastTxByte	= 0;
 				uart_clearTxInterrupts();
