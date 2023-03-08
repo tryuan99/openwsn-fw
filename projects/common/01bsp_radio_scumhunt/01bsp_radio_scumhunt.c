@@ -151,7 +151,38 @@ int mote_main(void) {
 			leds_error_on();
 
 			//===== send notification over serial port
-			print_packet_received();
+			if (app_vars.rx_tx == 2) {
+				uint16_t adc_output = (app_vars.rxpk_buf[5] * 256 + app_vars.rxpk_buf[4]);
+				// Write the ADC output to UART.
+				app_vars.uart_txFrame[0]	= app_vars.rxpk_buf[0] / 100 + 48;
+				app_vars.uart_txFrame[1]	= (app_vars.rxpk_buf[0] - 100 * (app_vars.rxpk_buf[0] / 100)) / 10 + 48;
+				app_vars.uart_txFrame[2]	= app_vars.rxpk_buf[0] % 10 + 48;
+				app_vars.uart_txFrame[3]	= ' ';
+				app_vars.uart_txFrame[4]	= app_vars.rxpk_buf[6] / 10 + 48;
+				app_vars.uart_txFrame[5]	= app_vars.rxpk_buf[6] % 10 + 48;
+				app_vars.uart_txFrame[6]	= ' ';
+				app_vars.uart_txFrame[7]	= app_vars.rxpk_buf[7] / 10 + 48;
+				app_vars.uart_txFrame[8]	= app_vars.rxpk_buf[7] % 10 + 48;
+				app_vars.uart_txFrame[9]	= ' ';
+				app_vars.uart_txFrame[10]	= app_vars.rxpk_buf[8] / 10 + 48;
+				app_vars.uart_txFrame[11]	= app_vars.rxpk_buf[8] % 10 + 48;
+				app_vars.uart_txFrame[12]	= ' ';
+				app_vars.uart_txFrame[13]	= adc_output / 100 + 48;
+				app_vars.uart_txFrame[14]	= (adc_output - 100 * (adc_output / 100)) / 10 + 48;
+				app_vars.uart_txFrame[15]	= adc_output % 10 + 48;
+				app_vars.uart_txFrame[16]	= '\r';
+				app_vars.uart_txFrame[17]	= '\n';
+				app_vars.uart_done			= 0;
+				app_vars.uart_lastTxByte	= 0;
+				uart_clearTxInterrupts();
+				uart_clearRxInterrupts();
+				uart_enableInterrupts();
+				uart_writeByte(app_vars.uart_txFrame[app_vars.uart_lastTxByte]);
+				while (app_vars.uart_done==0); // busy wait to finish
+				uart_disableInterrupts();
+			} else {
+				print_packet_received();
+			}
 	
 			// led
 			leds_error_off();
@@ -209,6 +240,10 @@ int mote_main(void) {
 				print_debug();
 				app_vars.rx_channel++;
 				app_vars.increment_channel_request = 0;
+
+				if (app_vars.rx_channel == RX_CHANNEL_MAX) {
+					app_vars.rx_tx = 2;
+				}
 			}
 			
 			// and start the timeout counter
@@ -315,6 +350,12 @@ void cb_scTimerCompare(void) {
 	
 	else if (app_vars.rx_tx == 1) { // handshake mode, timeout reached without reception, transmit a packet
 		app_vars.txpk_txNow = 1;
+	}
+
+	else if (app_vars.rx_tx == 2) {
+		radio_setFrequency(17,FREQ_RX);
+		radio_rxEnable();
+		radio_rxNow();
 	}
 
 }
