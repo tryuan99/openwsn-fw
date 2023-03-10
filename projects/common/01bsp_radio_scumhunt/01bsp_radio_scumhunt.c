@@ -123,7 +123,7 @@ int mote_main(void) {
     radio_rxNow();
 
     // do not start timer!!
-	app_vars.rx_tx = 0;
+	app_vars.rx_tx = 2;
 	
 	// debug SCuM RX mode:
 	// app_vars.rx_tx = 1;
