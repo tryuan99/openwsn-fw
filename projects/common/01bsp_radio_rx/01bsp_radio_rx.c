@@ -185,15 +185,17 @@ int mote_main(void) {
 			app_vars.uart_txFrame[i++] = '\r';
 			app_vars.uart_txFrame[i++] = '\n';*/
 			
-			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0]; // address MSB
-			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[1]; // address MSB
+			uint32_t rssi_abs = (app_vars.rxpk_rssi < 0) ? -app_vars.rxpk_rssi : app_vars.rxpk_rssi;
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0] / 100 + 48;
+			app_vars.uart_txFrame[i++] = (app_vars.rxpk_buf[0] - 100 * (app_vars.rxpk_buf[0] / 100)) / 10 + 48;
+			app_vars.uart_txFrame[i++] = app_vars.rxpk_buf[0] % 10 + 48;
 			app_vars.uart_txFrame[i++] = ' ';
-			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 24);
-			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 16);
-			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count >> 8);
-			app_vars.uart_txFrame[i++] = (uint8_t)(app_vars.count);
+			app_vars.uart_txFrame[i++] = (app_vars.rxpk_rssi < 0) ? '-' : ' ';
+			app_vars.uart_txFrame[i++] = rssi_abs / 100 + 48;
+			app_vars.uart_txFrame[i++] = (rssi_abs - 100 * (rssi_abs / 100)) / 10 + 48;
+			app_vars.uart_txFrame[i++] = rssi_abs % 10 + 48;
 
-			//app_vars.uart_txFrame[i++] = '\r';
+			app_vars.uart_txFrame[i++] = '\r';
 			app_vars.uart_txFrame[i++] = '\n';
 
 			app_vars.uart_done          = 0;

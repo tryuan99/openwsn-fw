@@ -108,6 +108,7 @@ int mote_main(void) {
         radio_txNow();
 		
 		// load next packet
+		app_vars.txpk_buf[0] = ++app_vars.txpk_num;
 		radio_loadPacket(app_vars.txpk_buf,app_vars.txpk_len);
 		
 		// led
