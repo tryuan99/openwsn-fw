@@ -43,7 +43,7 @@ The superframe reappears over time and can be arbitrarily long.
 */
 
 #ifndef NUMSLOTSOFF
-#define NUMSLOTSOFF          20
+#define NUMSLOTSOFF          5
 #endif
 
 /**
