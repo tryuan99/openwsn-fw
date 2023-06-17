@@ -936,7 +936,7 @@ port_INLINE void activity_ti1ORri1(void) {
                       (errorparameter_t)ieee154e_vars.slotOffset,
                       (errorparameter_t)0);
 #ifdef SCUM_DEBUG
-            printf("desync %d %d\r\n", ieee154e_vars.asn.bytes2and3, ieee154e_vars.asn.bytes0and1);
+      printf("desync %d %d\r\n", ieee154e_vars.asn.bytes2and3, ieee154e_vars.asn.bytes0and1);
 #endif
 
             // update the statistics
@@ -1345,6 +1345,9 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
                 TIME_TICS,                                        // timetype
                 isr_ieee154e_timer                                // callback
         );
+                // added by Fil - might not work? - temporarily revert to "old" code FIXFIX
+                radio_setGTFrequency(ieee154e_vars.freq, FREQ_RX);
+                //radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
 #endif
     } else {
         // indicate succesful Tx to schedule to keep statistics
@@ -1643,8 +1646,11 @@ port_INLINE void activity_ri2(void) {
     );
     
     // configure the radio to listen to the default synchronizing channel
-    radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
-    radio_rxEnable();
+    
+        //FIXFIX
+        //radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+    radio_setGTFrequency(ieee154e_vars.freq, FREQ_RX);
+        radio_rxEnable();
     
 #endif
     ieee154e_vars.radioOnInit = sctimer_readCounter();

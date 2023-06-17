@@ -21,7 +21,7 @@ remainder of the packet contains an incrementing bytes.
 
 //=========================== defines =========================================
 
-#define LENGTH_PACKET   8+LENGTH_CRC // maximum length is 127 bytes
+#define LENGTH_PACKET   12+LENGTH_CRC // maximum length is 127 bytes
 #define CHANNEL         17            // 24ghz: 11 = 2.405GHz, subghz: 11 = 865.325 in  FSK operating mode #1
 #define TIMER_PERIOD    (0x3FFF)    // (32768>>3) = 250ms @ 32kHz
 
@@ -78,21 +78,23 @@ int mote_main(void) {
     // start periodic overflow
     sctimer_setCompare(sctimer_readCounter()+ TIMER_PERIOD);
     sctimer_enable();
-	
-	// prepare packet
-	app_vars.txpk_num++;
-	app_vars.txpk_len           = sizeof(app_vars.txpk_buf);
-	app_vars.txpk_buf[0]        = app_vars.txpk_num;
-	for (i=1;i<app_vars.txpk_len;i++) {
-		app_vars.txpk_buf[i] = i;
-	}
-	app_vars.txpk_buf[0] = 0xCA;
-	app_vars.txpk_buf[1] = 0x34;
-	app_vars.txpk_buf[2] = 0xFF;
-	app_vars.txpk_buf[3] = 0xFF;
-	
-	radio_loadPacket(app_vars.txpk_buf,app_vars.txpk_len);
-		
+    
+    // prepare packet
+    app_vars.txpk_num++;
+    app_vars.txpk_len           = sizeof(app_vars.txpk_buf);
+    app_vars.txpk_buf[0]        = app_vars.txpk_num;
+    for (i=1;i<app_vars.txpk_len;i++) {
+        app_vars.txpk_buf[i] = i;
+    }
+    app_vars.txpk_buf[0] = '1';
+    app_vars.txpk_buf[1] = '2';
+    app_vars.txpk_buf[2] = '3';
+    app_vars.txpk_buf[3] = 'A';
+    app_vars.txpk_buf[4] = 'B';
+    app_vars.txpk_buf[5] = 'C';
+    
+    radio_loadPacket(app_vars.txpk_buf,app_vars.txpk_len);
+        
     while(1) {
 
         // wait for timer to elapse
@@ -106,11 +108,11 @@ int mote_main(void) {
         // send packet
         radio_txEnable();
         radio_txNow();
-		
-		// load next packet
-		radio_loadPacket(app_vars.txpk_buf,app_vars.txpk_len);
-		
-		// led
+        
+        // load next packet
+        radio_loadPacket(app_vars.txpk_buf,app_vars.txpk_len);
+        
+        // led
         leds_error_toggle();
     }
 }

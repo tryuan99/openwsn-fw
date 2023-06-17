@@ -34,7 +34,7 @@
 
 #define DEFAULT_CRC_CHECK       0x01    // this is an arbitrary value for now
 #define DEFAULT_RSSI            -50     // this is an arbitrary value for now
-#define DEFAULT_FREQ             11     // since the LC calibration has some problem, just use the channel 11 for now
+#define DEFAULT_FREQ             17     // since the LC calibration has some problem, just use the channel 11 for now
 
 // ==== for calibration
 
@@ -107,8 +107,11 @@ signed short cdr_tau_history[11] = {0};
 
 // rx = 24458  tx= 24495
 
-uint16_t freq_setting_rx[16] = {(23<<10 | 23<<5 | 6), 25070, 25265, 25852, 26094, 26286, 26504, 27091, 27306, 27449, 28109, 28252, 28466, 29078, 29291, 29456};
-uint16_t freq_setting_tx[16] = {(22<<10 | 21<<5 | 21), 25133, 25749, 25918, 26183, 26377, 26968, 27203, 27840, 28005, 28153, 28364, 28975, 29117, 29376, 29965};
+uint16_t freq_setting_rx[16] = {(23<<10 | 23<<5 | 6), 25070, 25265, 25852, 26094, 26286, (24<<10 | 18<<5 | 18), 27091, 27306, 27449, 28109, 28252, 28466, 29078, 29291, 29456};
+uint16_t freq_setting_tx[16] = {(22<<10 | 21<<5 | 21), 25133, 25749, 25918, 26183, 26377, (24<<10 | 22<<5 | 20) , 27203, 27840, 28005, 28153, 28364, 28975, 29117, 29376, 29965};
+    
+//uint16_t freq_setting_rx[16] = {(23<<10 | 23<<5 | 6), 25070, 25265, 25852, 26094, 26286, (24<<10 | 20<<5 | 20), 27091, 27306, 27449, 28109, 28252, 28466, 29078, 29291, 29456};
+//uint16_t freq_setting_tx[16] = {(22<<10 | 21<<5 | 21), 25133, 25749, 25918, 26183, 26377, (24<<10 | 22<<5 | 7) , 27203, 27840, 28005, 28153, 28364, 28975, 29117, 29376, 29965};
 
 //=========================== prototypes ======================================
 
@@ -210,6 +213,20 @@ void setFrequencyRX(uint8_t channel){
     
 }
 
+void setGTFrequencyRX(uint8_t channel){
+    uint8_t coarse;
+    uint8_t mid;
+    uint8_t fine;
+    
+    coarse = (uint8_t)((freq_setting_rx[channel-11]>>10) & 0x001f);
+    mid    = (uint8_t)((freq_setting_rx[channel-11]>>5)  & 0x001f);
+    fine   = (uint8_t)( freq_setting_rx[channel-11]      & 0x001f);
+
+    fine = fine + 5;
+    
+    LC_FREQCHANGE(coarse,mid,fine);
+    
+}
 
 // Call this to setup TX, followed quickly by a RX ack
 void setFrequencyTX(uint8_t channel){
@@ -242,6 +259,29 @@ void radio_setFrequency(uint8_t frequency, radio_freq_t tx_or_rx) {
     default:
         // shouldn't happen
         break;
+    }
+    
+    // change state
+    radio_vars.state = RADIOSTATE_FREQUENCY_SET;
+}
+
+void radio_setGTFrequency(uint8_t frequency, radio_freq_t tx_or_rx) {
+    // change state
+    radio_vars.state = RADIOSTATE_SETTING_FREQUENCY;
+    
+//    radio_vars.current_frequency = frequency;
+    radio_vars.current_frequency = DEFAULT_FREQ;
+    
+    switch(tx_or_rx) {
+        case FREQ_TX:
+            setFrequencyTX(radio_vars.current_frequency);
+            break;
+        case FREQ_RX:
+            setGTFrequencyRX(radio_vars.current_frequency);
+            break;
+        default:
+            // shouldn't happen
+            break;
     }
     
     // change state
