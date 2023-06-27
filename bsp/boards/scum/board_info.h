@@ -44,7 +44,7 @@ to return the board's description.
 
 //// time-slot related
 //#define PORT_TsSlotDuration                 9991   // 10000 ticks =   20ms  @500000hz
-#define PORT_TsSlotDuration                 10001   // 10000 ticks =   20ms  @500000hz
+#define PORT_TsSlotDuration                 10011   // 10000 ticks =   20ms  @500000hz
 #define PORT_maxTxDataPrepare               1650   // 1650  ticks = 3300us  @500000hz
 #define PORT_maxRxAckPrepare                604    // 504   ticks = 1006us  @500000hz
 #define PORT_maxRxDataPrepare               604    // 504   ticks = 1006us  @500000hz
