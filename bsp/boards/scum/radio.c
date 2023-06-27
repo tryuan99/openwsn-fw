@@ -34,7 +34,7 @@
 
 #define DEFAULT_CRC_CHECK       0x01    // this is an arbitrary value for now
 #define DEFAULT_RSSI            -50     // this is an arbitrary value for now
-#define DEFAULT_FREQ             11     // since the LC calibration has some problem, just use the channel 11 for now
+#define DEFAULT_FREQ             17     // since the LC calibration has some problem, just use the channel 11 for now
 
 // ==== for calibration
 
