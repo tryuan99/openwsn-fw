@@ -206,6 +206,10 @@ void setFrequencyRX(uint8_t channel){
     mid    = (uint8_t)((freq_setting_rx[channel-11]>>5)  & 0x001f);
     fine   = (uint8_t)( freq_setting_rx[channel-11]      & 0x001f);
 
+    // Fil discovered that for a RX guard time of less than 10 ms, the fine code
+    // should be increased by 5 LSBs.
+    fine = fine + 5;
+
     LC_FREQCHANGE(coarse,mid,fine);
     
 }
