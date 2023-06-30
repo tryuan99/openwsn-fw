@@ -19,6 +19,10 @@
 #include "openrandom.h"
 #include "msf.h"
 
+#ifdef SCUM
+#include "channel_cal.h"
+#endif  // SCUM
+
 //=========================== definition ======================================
 
 //=========================== variables =======================================
@@ -194,6 +198,12 @@ void ieee154e_init(void) {
 
     resetStats();
     ieee154e_stats.numDeSync = 0;
+
+#ifdef SCUM
+    if (channel_cal_init() == FALSE) {
+        printf("Failed to initialize channel calibration.\n");
+    }
+#endif  // SCUM
 
     // switch radio on
     radio_rfOn();
@@ -627,6 +637,10 @@ port_INLINE void activity_synchronize_newSlot(void) {
         radio_rxEnable();
         
         for (i=0;i<100;i++);
+
+#ifdef SCUM
+        channel_cal_start_rx();
+#endif  // SCUM
         
         radio_rxNow();
     } else {
@@ -639,16 +653,13 @@ port_INLINE void activity_synchronize_newSlot(void) {
         sctimer_setCapture(ACTION_RX_DONE);
 #endif
 
+#if !(IEEE802154E_SINGLE_CHANNEL)
         if (ieee154e_vars.asn.bytes0and1 % (NUM_CHANNELS * EB_PORTION) == 0) {
             // turn off the radio (in case it wasn't yet)
             radio_rfOff();
 
             // update record of current channel
-#if IEEE802154E_SINGLE_CHANNEL
-            ieee154e_vars.freq = IEEE802154E_SINGLE_CHANNEL;
-#else
             ieee154e_vars.freq = (openrandom_get16b() & 0x0F) + 11;
-#endif
 
             // configure the radio to listen to the frequency
             radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
@@ -657,6 +668,7 @@ port_INLINE void activity_synchronize_newSlot(void) {
         // switch on the radio in Rx mode.
         radio_rxEnable();
         radio_rxNow();
+#endif
     }
 
     // if I'm already in S_SYNCLISTEN, while not synchronized, but the synchronizing channel has been changed, change
@@ -834,6 +846,10 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
             // break from the do-while loop and execute the clean-up code below
             break;
         }
+
+#ifdef SCUM
+        channel_cal_end_rx();
+#endif  // SCUM
 
         // turn off the radio
         radio_rfOff();
@@ -2771,7 +2787,7 @@ different channel offsets in the same slot.
 \returns The calculated frequency channel, an integer between 11 and 26.
 */
 port_INLINE uint8_t calculateFrequency(uint8_t channelOffset) {
-    if (ieee154e_vars.singleChannel >= 11 && ieee154e_vars.singleChannel <= 26 ) {
+    if (ieee154e_vars.singleChannel >= MIN_CHANNEL && ieee154e_vars.singleChannel <= MAX_CHANNEL) {
         return ieee154e_vars.singleChannel; // single channel
     } else {
         // channel hopping enabled, use the channel depending on hopping template
