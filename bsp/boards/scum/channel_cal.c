@@ -46,9 +46,10 @@ static void channel_cal_rx_timer_cb(const opentimers_id_t timer_id) {
     printf("Tuning to %u.%u%.%u for RX channel calibration.\n",
            g_channel_cal_rx_tuning_code.coarse,
            g_channel_cal_rx_tuning_code.mid, g_channel_cal_rx_tuning_code.fine);
-    opentimers_scheduleAbsolute(g_channel_cal_timer_id, CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE *
+    opentimers_scheduleAbsolute(g_channel_cal_timer_id,
+                                CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE *
                                     SLOTFRAME_LENGTH * TsSlotDuration,
-                                sctimer_readCounter(), TIME_TICS,
+                                opentimers_getCurrentCompareValue(), TIME_TICS,
                                 channel_cal_rx_timer_cb);
 }
 
@@ -116,7 +117,8 @@ bool channel_cal_start_rx(void) {
                                     SLOTFRAME_LENGTH * TsSlotDuration,
                                 opentimers_getCurrentCompareValue(), TIME_TICS,
                                 channel_cal_rx_timer_cb);
-    printf("Scheduled channel cal timer %d for %u tics.\n", g_channel_cal_timer_id,
+    printf("Scheduled channel cal timer %d for %u tics.\n",
+           g_channel_cal_timer_id,
            CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE * SLOTFRAME_LENGTH *
                TsSlotDuration);
     return TRUE;
