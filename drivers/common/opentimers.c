@@ -355,7 +355,7 @@ whole timer buffer and find out the correct timer responding to the interrupt
 and call the callback recorded for that timer.
  */
 void opentimers_timer_callback(void){
-    uint8_t i;
+    uint8_t i, j;
     uint8_t idToSchedule;
     PORT_TIMER_WIDTH timerGap;
     PORT_TIMER_WIDTH tempTimerGap;
@@ -393,6 +393,10 @@ void opentimers_timer_callback(void){
                     } else {
                         if (opentimers_vars.timersBuf[i].wraps_remaining==0){
                             opentimers_vars.timersBuf[i].isrunning = FALSE;
+                            // The NOP and the dummy for loop are needed for ISRs to not get stuck and stop firing.
+                            for (j = 0; j < 5; ++j) {
+                                __asm("NOP");
+                            }
                             scheduler_push_task((task_cbt)(opentimers_vars.timersBuf[i].callback),(task_prio_t)opentimers_vars.timersBuf[i].timer_task_prio);
                             if (opentimers_vars.timersBuf[i].timerType==TIMER_PERIODIC){
                                 opentimers_vars.insideISR = TRUE;

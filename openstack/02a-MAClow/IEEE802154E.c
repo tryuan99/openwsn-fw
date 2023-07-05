@@ -19,9 +19,12 @@
 #include "openrandom.h"
 #include "msf.h"
 
-#ifdef SCUM
+// Enable channel calibration.
+#define CHANNEL_CAL_ENABLED
+
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 #include "channel_cal.h"
-#endif  // SCUM
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
 //=========================== definition ======================================
 
@@ -199,11 +202,11 @@ void ieee154e_init(void) {
     resetStats();
     ieee154e_stats.numDeSync = 0;
 
-#ifdef SCUM
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     if (channel_cal_init() == FALSE) {
         printf("Failed to initialize channel calibration.\n");
     }
-#endif  // SCUM
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
     // switch radio on
     radio_rfOn();
@@ -638,9 +641,11 @@ port_INLINE void activity_synchronize_newSlot(void) {
         
         for (i=0;i<100;i++);
 
-#ifdef SCUM
-        channel_cal_start_rx();
-#endif  // SCUM
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_rx_calibrated() == FALSE) {
+            channel_cal_rx_start();
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         
         radio_rxNow();
     } else {
@@ -847,9 +852,11 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
             break;
         }
 
-#ifdef SCUM
-        channel_cal_end_rx();
-#endif  // SCUM
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_rx_calibrated() == FALSE) {
+            channel_cal_rx_end();
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // turn off the radio
         radio_rfOff();

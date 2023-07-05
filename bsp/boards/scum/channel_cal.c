@@ -7,12 +7,18 @@
 #include "board_info.h"
 #include "opendefs.h"
 #include "opentimers.h"
+#include "radio.h"
 #include "schedule.h"
 #include "scheduler.h"
 #include "tuning.h"
 
-// Number of slotframes to wait on before proceeding to the next tuning code.
-#define CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE 8
+// Number of slotframes to wait for before proceeding to the next tuning code.
+#define CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE 2
+
+// Number of tics to wait for before proceeding to the next tuning code.
+#define CHANNEL_CAL_NUM_TICS_PER_TUNING_CODE                         \
+    (CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE * SLOTFRAME_LENGTH * \
+     TsSlotDuration)
 
 // RX channel calibration state.
 static bool g_channel_cal_rx_calibrated = FALSE;
@@ -30,25 +36,26 @@ static opentimers_id_t g_channel_cal_timer_id;
 // function is called, the mote did not receive an enhanced beacon on the
 // current tuning code.
 static void channel_cal_rx_timer_cb(const opentimers_id_t timer_id) {
-    printf("Channel cal RX timer callback.\n");
-    if (timer_id != g_channel_cal_timer_id) {
-        return;
-    }
     if (g_channel_cal_rx_calibrated == TRUE) {
         // RX channel calibration has finished.
         return;
     }
 
     // Increment the RX tuning code.
+    radio_rfOff();
     tuning_increment_code_for_sweep(&g_channel_cal_rx_tuning_code,
                                     &g_channel_cal_rx_sweep_config);
     tuning_tune_radio(&g_channel_cal_rx_tuning_code);
-    printf("Tuning to %u.%u%.%u for RX channel calibration.\n",
+    printf("Tuning to %u.%u.%u for RX channel calibration.\n",
            g_channel_cal_rx_tuning_code.coarse,
            g_channel_cal_rx_tuning_code.mid, g_channel_cal_rx_tuning_code.fine);
+    radio_rxEnable();
+    radio_rxNow();
+
+    // Schedule the next timer callback in case no enhanced beacons are
+    // received.
     opentimers_scheduleAbsolute(g_channel_cal_timer_id,
-                                CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE *
-                                    SLOTFRAME_LENGTH * TsSlotDuration,
+                                CHANNEL_CAL_NUM_TICS_PER_TUNING_CODE,
                                 opentimers_getCurrentCompareValue(), TIME_TICS,
                                 channel_cal_rx_timer_cb);
 }
@@ -110,26 +117,29 @@ bool channel_cal_init(void) {
     return TRUE;
 }
 
-bool channel_cal_start_rx(void) {
+bool channel_cal_rx_start(void) {
+    // Set the RX tuning code.
+    radio_rfOff();
     tuning_tune_radio(&g_channel_cal_rx_tuning_code);
+    radio_rxEnable();
+    radio_rxNow();
+
+    // Schedule the timer callback in case no enhanced beacons are received.
     opentimers_scheduleAbsolute(g_channel_cal_timer_id,
-                                CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE *
-                                    SLOTFRAME_LENGTH * TsSlotDuration,
+                                CHANNEL_CAL_NUM_TICS_PER_TUNING_CODE,
                                 opentimers_getCurrentCompareValue(), TIME_TICS,
                                 channel_cal_rx_timer_cb);
-    printf("Scheduled channel cal timer %d for %u tics.\n",
-           g_channel_cal_timer_id,
-           CHANNEL_CAL_NUM_SLOTFRAMES_PER_TUNING_CODE * SLOTFRAME_LENGTH *
-               TsSlotDuration);
     return TRUE;
 }
 
-bool channel_cal_end_rx(void) {
+bool channel_cal_rx_end(void) {
     g_channel_cal_rx_calibrated = TRUE;
-    printf("Channel cal RX ended.\n");
     opentimers_cancel(g_channel_cal_timer_id);
+    printf("RX channel calibration ended.\n");
     return TRUE;
 }
+
+bool channel_cal_rx_calibrated(void) { return g_channel_cal_rx_calibrated; }
 
 bool channel_cal_get_rx_tuning_code(tuning_code_t* tuning_code) {
     if (g_channel_cal_rx_calibrated == FALSE) {
