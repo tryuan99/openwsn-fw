@@ -27,6 +27,6 @@ bool channel_cal_rx_end(void);
 bool channel_cal_rx_calibrated(void);
 
 // Get the RX tuning code for the channel.
-bool channel_cal_get_rx_tuning_code(tuning_code_t* tuning_code);
+bool channel_cal_rx_get_tuning_code(tuning_code_t* tuning_code);
 
 #endif  // __CHANNEL_CAL_H

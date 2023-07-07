@@ -32,6 +32,14 @@ static tuning_sweep_config_t g_channel_cal_rx_sweep_config;
 // Channel calibration timer ID.
 static opentimers_id_t g_channel_cal_timer_id;
 
+// Tune the radio for RX channel calibration.
+static inline void channel_cal_rx_tune_radio(void) {
+    radio_rfOff();
+    tuning_tune_radio(&g_channel_cal_rx_tuning_code);
+    radio_rxEnable();
+    radio_rxNow();
+}
+
 // Timer callback function during RX channel calibration. If this callback
 // function is called, the mote did not receive an enhanced beacon on the
 // current tuning code.
@@ -42,15 +50,12 @@ static void channel_cal_rx_timer_cb(const opentimers_id_t timer_id) {
     }
 
     // Increment the RX tuning code.
-    radio_rfOff();
     tuning_increment_code_for_sweep(&g_channel_cal_rx_tuning_code,
                                     &g_channel_cal_rx_sweep_config);
-    tuning_tune_radio(&g_channel_cal_rx_tuning_code);
     printf("Tuning to %u.%u.%u for RX channel calibration.\n",
            g_channel_cal_rx_tuning_code.coarse,
            g_channel_cal_rx_tuning_code.mid, g_channel_cal_rx_tuning_code.fine);
-    radio_rxEnable();
-    radio_rxNow();
+    channel_cal_rx_tune_radio();
 
     // Schedule the next timer callback in case no enhanced beacons are
     // received.
@@ -118,11 +123,7 @@ bool channel_cal_init(void) {
 }
 
 bool channel_cal_rx_start(void) {
-    // Set the RX tuning code.
-    radio_rfOff();
-    tuning_tune_radio(&g_channel_cal_rx_tuning_code);
-    radio_rxEnable();
-    radio_rxNow();
+    channel_cal_rx_tune_radio();
 
     // Schedule the timer callback in case no enhanced beacons are received.
     opentimers_scheduleAbsolute(g_channel_cal_timer_id,
@@ -141,7 +142,7 @@ bool channel_cal_rx_end(void) {
 
 bool channel_cal_rx_calibrated(void) { return g_channel_cal_rx_calibrated; }
 
-bool channel_cal_get_rx_tuning_code(tuning_code_t* tuning_code) {
+bool channel_cal_rx_get_tuning_code(tuning_code_t* tuning_code) {
     if (g_channel_cal_rx_calibrated == FALSE) {
         return FALSE;
     }

@@ -23,7 +23,9 @@
 #define CHANNEL_CAL_ENABLED
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+#include "channel.h"
 #include "channel_cal.h"
+#include "tuning.h"
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
 //=========================== definition ======================================
@@ -854,7 +856,10 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         if (channel_cal_rx_calibrated() == FALSE) {
+            tuning_code_t tuning_code;
             channel_cal_rx_end();
+            channel_cal_rx_get_tuning_code(&tuning_code);
+            channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
         }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 

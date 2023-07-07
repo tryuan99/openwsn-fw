@@ -12,6 +12,8 @@
 #include "leds.h"
 #include "memory_map.h"
 #include "scm3c_hw_interface.h"
+#include "channel.h"
+#include "tuning.h"
 
 //=========================== defines =========================================
 
@@ -195,38 +197,21 @@ void radio_reset(void) {
 //===== RF admin
 
 
-// Call this to setup RX, followed quickly by a TX ack
-// Note that due to the two ASC program cycles, this function takes about 27ms to execute (@5MHz HCLK)
-void setFrequencyRX(uint8_t channel){
-    uint8_t coarse;
-    uint8_t mid;
-    uint8_t fine;
-    
-    coarse = (uint8_t)((freq_setting_rx[channel-11]>>10) & 0x001f);
-    mid    = (uint8_t)((freq_setting_rx[channel-11]>>5)  & 0x001f);
-    fine   = (uint8_t)( freq_setting_rx[channel-11]      & 0x001f);
-
+// Set the frequency for RX.
+static inline void setFrequencyRX(const uint8_t channel) {
+    tuning_code_t tuning_code;
+    channel_get_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
     // Fil discovered that for a RX guard time of less than 10 ms, the fine code
     // should be increased by 5 LSBs.
-    fine = fine + 5;
-
-    LC_FREQCHANGE(coarse,mid,fine);
-    
+    tuning_code.fine += 5;
+    tuning_tune_radio(&tuning_code);
 }
 
-
-// Call this to setup TX, followed quickly by a RX ack
-void setFrequencyTX(uint8_t channel){
-    
-    uint8_t coarse;
-    uint8_t mid;
-    uint8_t fine;
-    
-    coarse = (uint8_t)((freq_setting_tx[channel-11]>>10) & 0x001f);
-    mid    = (uint8_t)((freq_setting_tx[channel-11]>>5)  & 0x001f);
-    fine   = (uint8_t)( freq_setting_tx[channel-11]      & 0x001f);
-
-    LC_FREQCHANGE(coarse,mid,fine);
+// Set the frequency for TX.
+static inline void setFrequencyTX(const uint8_t channel) {
+    tuning_code_t tuning_code;
+    channel_get_tuning_code(channel, CHANNEL_MODE_TX, &tuning_code);
+    tuning_tune_radio(&tuning_code);
 }
 
 void radio_setFrequency(uint8_t frequency, radio_freq_t tx_or_rx) {
