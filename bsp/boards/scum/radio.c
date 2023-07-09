@@ -115,7 +115,7 @@ uint16_t freq_setting_tx[16] = {(22<<10 | 21<<5 | 21), 25133, 25749, 25918, 2618
 //=========================== prototypes ======================================
 
 void        setFrequencyTX(uint8_t channel);
-void        setFrequencyRX(uint8_t channel);
+void        setFrequencyRX(uint8_t channel, bool is_sync);
 
 void        radio_calibration(
     uint32_t IF_estimate,
@@ -198,12 +198,14 @@ void radio_reset(void) {
 
 
 // Set the frequency for RX.
-static inline void setFrequencyRX(const uint8_t channel) {
+static inline void setFrequencyRX(const uint8_t channel, const bool is_sync) {
     tuning_code_t tuning_code;
     channel_get_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
-    // Fil discovered that for a RX guard time of less than 10 ms, the fine code
-    // should be increased by 5 LSBs.
-    tuning_code.fine += 5;
+    if (is_sync == FALSE) {
+        // Fil discovered that for a RX guard time of less than 10 ms, the fine
+        // code should be increased by 5 LSBs.
+        tuning_code.fine += 5;
+    }
     tuning_tune_radio(&tuning_code);
 }
 
@@ -214,23 +216,29 @@ static inline void setFrequencyTX(const uint8_t channel) {
     tuning_tune_radio(&tuning_code);
 }
 
-void radio_setFrequency(uint8_t frequency, radio_freq_t tx_or_rx) {
+void radio_setFrequency(const uint8_t frequency, const radio_freq_t tx_or_rx) {
     // change state
     radio_vars.state = RADIOSTATE_SETTING_FREQUENCY;
     
-//    radio_vars.current_frequency = frequency;
+    // radio_vars.current_frequency = frequency;
     radio_vars.current_frequency = DEFAULT_FREQ;
     
-    switch(tx_or_rx){
-    case FREQ_TX:
-        setFrequencyTX(radio_vars.current_frequency);
-        break;
-    case FREQ_RX:
-        setFrequencyRX(radio_vars.current_frequency);
-        break;
-    default:
-        // shouldn't happen
-        break;
+    switch (tx_or_rx) {
+        case FREQ_TX: {
+            setFrequencyTX(radio_vars.current_frequency);
+            break;
+        }
+        case FREQ_RX: {
+            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/FALSE);
+            break;
+        }
+        case FREQ_RX_SYNC: {
+            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/TRUE);
+            break;
+        }
+        default: {
+            break;
+        }
     }
     
     // change state

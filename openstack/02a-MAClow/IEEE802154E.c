@@ -631,7 +631,7 @@ port_INLINE void activity_synchronize_newSlot(void) {
 #endif
 
         // configure the radio to listen to the frequency
-        radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+        radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
 
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
         sctimer_setCapture(ACTION_RX_SFD_DONE);
@@ -669,7 +669,7 @@ port_INLINE void activity_synchronize_newSlot(void) {
             ieee154e_vars.freq = (openrandom_get16b() & 0x0F) + 11;
 
             // configure the radio to listen to the frequency
-            radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+            radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
         }
 
         // switch on the radio in Rx mode.
@@ -688,7 +688,7 @@ port_INLINE void activity_synchronize_newSlot(void) {
         ieee154e_vars.freq = calculateFrequency(ieee154e_vars.singleChannel);
 
         // configure the radio to listen to the default synchronizing channel
-        radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+        radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
 
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
         sctimer_setCapture(ACTION_RX_SFD_DONE);
