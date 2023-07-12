@@ -37,6 +37,10 @@ void tuning_increment_code(tuning_code_t* tuning_code) {
     tuning_increment_multiple_codes(tuning_code, /*num_codes=*/1);
 }
 
+void tuning_decrement_code(tuning_code_t* tuning_code) {
+    tuning_decrement_multiple_codes(tuning_code, /*num_codes=*/1);
+}
+
 void tuning_increment_multiple_codes(tuning_code_t* tuning_code,
                                      const uint8_t num_codes) {
     const tuning_sweep_config_t sweep_config = {
@@ -59,6 +63,23 @@ void tuning_increment_multiple_codes(tuning_code_t* tuning_code,
     uint8_t i = 0;
     for (i = 0; i < num_codes; ++i) {
         tuning_increment_code_for_sweep(tuning_code, &sweep_config);
+    }
+}
+
+void tuning_decrement_multiple_codes(tuning_code_t* tuning_code,
+                                     const uint8_t num_codes) {
+    if (tuning_code->fine <= TUNING_MIN_CODE) {
+        tuning_code->fine = TUNING_MAX_CODE;
+        if (tuning_code->mid <= TUNING_MIN_CODE) {
+            tuning_code->mid = TUNING_MAX_CODE;
+            if (tuning_code->coarse > TUNING_MIN_CODE) {
+                --tuning_code->coarse;
+            }
+        } else {
+            --tuning_code->mid;
+        }
+    } else {
+        --tuning_code->fine;
     }
 }
 

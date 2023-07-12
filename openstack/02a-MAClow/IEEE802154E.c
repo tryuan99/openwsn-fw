@@ -860,6 +860,7 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
             channel_cal_rx_end();
             channel_cal_rx_get_tuning_code(&tuning_code);
             channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
+            tuning_feedback_adjust_rx(ieee154e_vars.freq, read_IF_estimate());
         }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
@@ -904,6 +905,7 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
 
     // return to listening state
     changeState(S_SYNCLISTEN);
+    radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
 }
 
 port_INLINE bool ieee154e_processIEs(OpenQueueEntry_t* pkt, uint16_t* lenIE) {

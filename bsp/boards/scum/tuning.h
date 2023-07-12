@@ -55,8 +55,15 @@ bool tuning_validate_sweep_config(const tuning_sweep_config_t* sweep_config);
 // Increment the tuning code by one fine code.
 void tuning_increment_code(tuning_code_t* tuning_code);
 
+// Decrement the tuning code by one fine code.
+void tuning_decrement_code(tuning_code_t* tuning_code);
+
 // Increment the tuning code by multiple fine codes.
 void tuning_increment_multiple_codes(tuning_code_t* tuning_code,
+                                     uint8_t num_codes);
+
+// Decrement the tuning code by multiple fine codes.
+void tuning_decrement_multiple_codes(tuning_code_t* tuning_code,
                                      uint8_t num_codes);
 
 // Increment the tuning code by one fine code, rolling over at the range
