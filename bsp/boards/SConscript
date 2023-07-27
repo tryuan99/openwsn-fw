@@ -13,11 +13,13 @@ sources_h = [
     'leds.h',
     'radio.h',
     'uart.h',
+    'uart_tx.h'
     'sctimer.h',
     'sensors.h',
 ]
 
 sources_c = [
+    'uart_tx.c',
 ]
 
 target = 'libbsp'
