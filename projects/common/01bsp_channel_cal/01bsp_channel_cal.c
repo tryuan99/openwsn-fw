@@ -26,6 +26,9 @@
 #include "sctimer.h"
 #include "uart_tx.h"
 
+// The 802.15.4 channel to use for receiving ADC data.
+#define SMART_STAKE_DEMO_CHANNEL 17
+
 // The 802.15.4 channel range to calibrate for.
 #define CHANNEL_CAL_CHANNEL_START 17
 #define CHANNEL_CAL_CHANNEL_END 18
@@ -94,7 +97,9 @@ typedef enum {
     CHANNEL_CAL_STATE_RX_ACK,
     CHANNEL_CAL_STATE_RX_ACK_IDLE,
     CHANNEL_CAL_STATE_RX_ACK_RECEIVED,
-    CHANNEL_CAL_STATE_DONE,
+    CHANNEL_CAL_STATE_SMART_STAKE_RX,
+    CHANNEL_CAL_STATE_SMART_STAKE_RX_IDLE,
+    CHANNEL_CAL_STATE_SMART_STAKE_RX_RECEIVED,
 } channel_cal_state_e;
 
 // Channel calibration RX command from SCuM.
@@ -155,6 +160,33 @@ typedef struct __attribute__((packed)) {
     uint16_t crc;
 } channel_cal_tx_packet_t;
 
+// SmartStake RX packet containing the ADC data.
+typedef struct __attribute__((packed)) {
+    // Sequence number.
+    uint8_t sequence_number;
+
+    // Channel.
+    uint8_t channel;
+
+    // Reserved.
+    uint8_t reserved1;
+
+    // Reserved.
+    uint8_t reserved2;
+
+    // ADC output.
+    uint16_t adc_output;
+
+    // Tuning code.
+    tuning_code_t tuning_code;
+
+    // Reserved.
+    uint8_t reserved3;
+
+    // CRC.
+    uint16_t crc;
+} smart_stake_rx_packet_t;
+
 // Channel calibration state.
 static channel_cal_state_e g_channel_cal_state = CHANNEL_CAL_STATE_INVALID;
 
@@ -193,6 +225,21 @@ static tuning_code_t g_channel_cal_scum_tx_tuning_codes_for_channel
 // Number of received SCuM TX tuning codes for the current channel.
 static uint8_t g_channel_cal_scum_tx_num_received_tuning_codes_for_channel = 0;
 
+// SmartStake RX packet buffer.
+static smart_stake_rx_packet_t g_smart_stake_rx_packet;
+
+// Length of the SmartStake RX packet.
+static uint8_t g_smart_stake_rx_packet_length = 0;
+
+// Received signal strength indicator of the SmartStake RX packet.
+static int8_t g_smart_stake_rx_packet_rssi = 0;
+
+// Link quality indicator of the SmartStake RX packet.
+static uint8_t g_smart_stake_rx_packet_lqi = 0;
+
+// If true, the CRC is valid on the SmartStake RX packet.
+static bool g_smart_stake_rx_packet_crc = false;
+
 // UART buffer.
 static char g_channel_cal_uart_buffer[UART_TX_MAX_LENGTH];
 
@@ -225,6 +272,24 @@ static void channel_cal_end_frame_callback(const PORT_TIMER_WIDTH timestamp) {
         } else if (g_channel_cal_state == CHANNEL_CAL_STATE_RX_ACK_IDLE) {
             g_channel_cal_state = CHANNEL_CAL_STATE_RX_ACK_RECEIVED;
         }
+    }
+}
+
+// End frame callback function for the ADC data.
+static void smart_stake_end_frame_callback(const PORT_TIMER_WIDTH timestamp) {
+    leds_sync_off();
+
+    // The OpenMote just finished receiving a packet from SCuM containing the
+    // ADC data. Read the received packet.
+    memset(&g_smart_stake_rx_packet, 0, sizeof(smart_stake_rx_packet_t));
+    radio_getReceivedFrame(
+        (uint8_t*)&g_smart_stake_rx_packet, &g_smart_stake_rx_packet_length,
+        sizeof(smart_stake_rx_packet_t), &g_smart_stake_rx_packet_rssi,
+        &g_smart_stake_rx_packet_lqi, &g_smart_stake_rx_packet_crc);
+    if (g_smart_stake_rx_packet_length <= sizeof(smart_stake_rx_packet_t) &&
+        g_smart_stake_rx_packet_crc &&
+        g_channel_cal_state == CHANNEL_CAL_STATE_SMART_STAKE_RX_IDLE) {
+        g_channel_cal_state = CHANNEL_CAL_STATE_SMART_STAKE_RX_RECEIVED;
     }
 }
 
@@ -330,6 +395,19 @@ static inline void channel_cal_print_received_scum_tx_tuning_code(void) {
         g_channel_cal_scum_tx_tuning_codes_for_channel
             [g_channel_cal_scum_tx_num_received_tuning_codes_for_channel - 1]
                 .fine);
+    uart_tx_send_str(g_channel_cal_uart_buffer);
+}
+
+// Print the latest received SCuM ADC data over UART.
+static inline void smart_stake_print_received_packet(void) {
+    snprintf(g_channel_cal_uart_buffer, UART_TX_MAX_LENGTH,
+             "%03d %02d %02d %02d %02d %03d %d\n",
+             g_smart_stake_rx_packet.sequence_number,
+             g_smart_stake_rx_packet.channel,
+             g_smart_stake_rx_packet.tuning_code.coarse,
+             g_smart_stake_rx_packet.tuning_code.mid,
+             g_smart_stake_rx_packet.tuning_code.fine,
+             g_smart_stake_rx_packet.adc_output, g_smart_stake_rx_packet_rssi);
     uart_tx_send_str(g_channel_cal_uart_buffer);
 }
 
@@ -444,18 +522,36 @@ int mote_main(void) {
 
                     g_channel_cal_state = CHANNEL_CAL_STATE_RX_ACK;
                     if (g_channel_cal_channel > CHANNEL_CAL_CHANNEL_END) {
-                        radio_rfOff();
                         uart_tx_send_str("Channel calibration done.\n");
-                        g_channel_cal_state = CHANNEL_CAL_STATE_DONE;
+                        g_channel_cal_state = CHANNEL_CAL_STATE_SMART_STAKE_RX;
                     }
                 } else {
                     g_channel_cal_state = CHANNEL_CAL_STATE_RX_ACK_IDLE;
                 }
                 break;
             }
+            case CHANNEL_CAL_STATE_SMART_STAKE_RX: {
+                uart_tx_send_str("Starting SmartStake RX.\n");
+
+                // Start receiving the ADC data.
+                radio_setEndFrameCb(smart_stake_end_frame_callback);
+                g_channel_cal_channel = SMART_STAKE_DEMO_CHANNEL;
+                radio_setFrequency(g_channel_cal_channel, FREQ_RX);
+                radio_rxEnable();
+                radio_rxNow();
+
+                g_channel_cal_state = CHANNEL_CAL_STATE_SMART_STAKE_RX_IDLE;
+                break;
+            }
+            case CHANNEL_CAL_STATE_SMART_STAKE_RX_RECEIVED: {
+                smart_stake_print_received_packet();
+
+                g_channel_cal_state = CHANNEL_CAL_STATE_SMART_STAKE_RX_IDLE;
+                break;
+            }
             case CHANNEL_CAL_STATE_RX_IDLE:
             case CHANNEL_CAL_STATE_RX_ACK_IDLE:
-            case CHANNEL_CAL_STATE_DONE:
+            case CHANNEL_CAL_STATE_SMART_STAKE_RX_IDLE:
             default: {
                 break;
             }
