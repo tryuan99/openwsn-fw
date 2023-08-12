@@ -19,14 +19,11 @@
 #include "openrandom.h"
 #include "msf.h"
 
-// Enable channel calibration.
-#define CHANNEL_CAL_ENABLED
-
-#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+#ifdef SCUM
 #include "channel.h"
 #include "channel_cal.h"
 #include "tuning.h"
-#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+#endif  // defined(SCUM)
 
 //=========================== definition ======================================
 
@@ -1119,6 +1116,14 @@ port_INLINE void activity_ti1ORri1(void) {
                 }
                 
                 // configure the radio to listen to the default synchronizing channel
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+                if (channel_cal_tx_calibrated() == FALSE) {
+                    tuning_code_t tuning_code;
+                    channel_cal_tx_get_tuning_code(&tuning_code);
+                    channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_TX, &tuning_code);
+
+                }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
                 radio_setFrequency(ieee154e_vars.freq, FREQ_TX);
 
                 // set the tx buffer address and length register.(packet is NOT loaded at this moment)
@@ -1223,6 +1228,14 @@ port_INLINE void activity_ti2(void) {
     }
 
     // configure the radio to listen to the default synchronizing channel
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    if (channel_cal_tx_calibrated() == FALSE) {
+        tuning_code_t tuning_code;
+        channel_cal_tx_get_tuning_code(&tuning_code);
+        channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_TX, &tuning_code);
+
+    }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     radio_setFrequency(ieee154e_vars.freq, FREQ_TX);
 
     // load the packet in the radio's Tx buffer
