@@ -21,7 +21,7 @@
      TsSlotDuration)
 
 // Number of failed transmissions before proceeding to the next tuning code.
-#define CHANNEL_CAL_TX_MAX_NUM_FAILURES 1
+#define CHANNEL_CAL_TX_MAX_NUM_FAILURES 2
 
 // RX channel calibration state.
 static bool g_channel_cal_rx_calibrated = FALSE;
@@ -184,7 +184,13 @@ bool channel_cal_rx_end(void) {
     return TRUE;
 }
 
-bool channel_cal_rx_calibrated(void) { return g_channel_cal_rx_calibrated; }
+bool channel_cal_rx_calibrated(void) {
+#ifdef CHANNEL_CAL_ENABLED
+    return g_channel_cal_rx_calibrated;
+#else   // !defined(CHANNEL_CAL_ENABLED)
+    return TRUE;
+#endif  // CHANNEL_CAL_ENABLED
+}
 
 void channel_cal_rx_get_tuning_code(tuning_code_t* tuning_code) {
     *tuning_code = g_channel_cal_rx_tuning_code;
@@ -210,7 +216,13 @@ bool channel_cal_tx_end(void) {
     return TRUE;
 }
 
-bool channel_cal_tx_calibrated(void) { return g_channel_cal_tx_calibrated; }
+bool channel_cal_tx_calibrated(void) {
+#ifdef CHANNEL_CAL_ENABLED
+    return g_channel_cal_tx_calibrated;
+#else   // !defined(CHANNEL_CAL_ENABLED)
+    return TRUE;
+#endif  // CHANNEL_CAL_ENABLED
+}
 
 void channel_cal_tx_get_tuning_code(tuning_code_t* tuning_code) {
     *tuning_code = g_channel_cal_tx_tuning_code;

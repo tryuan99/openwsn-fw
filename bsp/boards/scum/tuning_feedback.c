@@ -17,6 +17,10 @@
 // Number of IF estimates to average over.
 #define TUNING_FEEDBACK_NUM_IF_ESTIMATES_TO_AVERAGE 10
 
+// Minimum number of IF estimates to average over.
+#define TUNING_FEEDBACK_MIN_NUM_IF_ESTIMATES_TO_AVERAGE \
+    (TUNING_FEEDBACK_NUM_IF_ESTIMATES_TO_AVERAGE / 3)
+
 // Array of the latest IF estimates.
 static uint32_t
     g_tuning_feedback_if_estimates[TUNING_FEEDBACK_NUM_IF_ESTIMATES_TO_AVERAGE];
@@ -45,12 +49,17 @@ static inline void tuning_feedback_write_if_estimate(
     tuning_feedback_increment_if_estimate_index();
 }
 
+// Get the number of IF estimates in the array.
+static inline size_t tuning_feedback_num_if_estimates(void) {
+    return (g_tuning_feedback_if_estimates_full_array == TRUE)
+               ? TUNING_FEEDBACK_NUM_IF_ESTIMATES_TO_AVERAGE
+               : g_tuning_feedback_if_estimate_index;
+}
+
 // Average the IF estimates.
 static inline uint32_t tuning_feedback_average_if_estimates(void) {
-    uint32_t num_if_estimates_to_average =
-        (g_tuning_feedback_if_estimates_full_array == TRUE)
-            ? TUNING_FEEDBACK_NUM_IF_ESTIMATES_TO_AVERAGE
-            : g_tuning_feedback_if_estimate_index;
+    const size_t num_if_estimates_to_average =
+        tuning_feedback_num_if_estimates();
     uint32_t if_estimate_sum = 0;
     uint32_t i = 0;
     for (i = 0; i < num_if_estimates_to_average; ++i) {
@@ -74,6 +83,13 @@ void tuning_feedback_adjust_rx(const uint8_t channel,
 
     // Write the IF estimate.
     tuning_feedback_write_if_estimate(if_estimate);
+
+    // Only tune the tuning codes if there are sufficient IF estimates.
+    if (tuning_feedback_num_if_estimates() <
+        TUNING_FEEDBACK_MIN_NUM_IF_ESTIMATES_TO_AVERAGE) {
+        return;
+    }
+
     // Average the latest IF estimates.
     const uint32_t if_estimate_average = tuning_feedback_average_if_estimates();
 
@@ -86,6 +102,8 @@ void tuning_feedback_adjust_rx(const uint8_t channel,
         // TODO(titan): Handle fine code and mid code overflows.
         tuning_increment_code(&tuning_code);
         channel_set_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
+        printf("Incrementing RX tuning code to %d.%d.%d.\n", tuning_code.coarse,
+               tuning_code.mid, tuning_code.fine);
         tuning_feedback_reset_if_estimates();
     } else if (if_estimate_average < TUNING_FEEDBACK_NOMINAL_IF_COUNT -
                                          TUNING_FEEDBACK_MAX_IF_OFFSET) {
@@ -93,6 +111,8 @@ void tuning_feedback_adjust_rx(const uint8_t channel,
         // TODO(titan): Handle fine code and mid code underflows.
         tuning_decrement_code(&tuning_code);
         channel_set_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
+        printf("Decrementing RX tuning code to %d.%d.%d.\n", tuning_code.coarse,
+               tuning_code.mid, tuning_code.fine);
         tuning_feedback_reset_if_estimates();
     }
 }

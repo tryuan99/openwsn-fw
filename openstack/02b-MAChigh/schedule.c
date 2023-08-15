@@ -1181,9 +1181,6 @@ void schedule_indicateTx(asn_t *asnTimestamp, bool succesfullTx) {
                 // reset backoff
                 schedule_vars.backoff = 0;
             } else {
-#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-                channel_cal_tx_end();
-#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
                 neighbors_resetBackoff(&schedule_vars.currentScheduleEntry->neighbor);
             }
         } else {
@@ -1197,7 +1194,6 @@ void schedule_indicateTx(asn_t *asnTimestamp, bool succesfullTx) {
             } else {
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
                 if (channel_cal_tx_calibrated() == FALSE) {
-                    channel_cal_tx_handle_failure();
                     neighbors_resetBackoff(&schedule_vars.currentScheduleEntry->neighbor);
                 } else {
                     neighbors_updateBackoff(&schedule_vars.currentScheduleEntry->neighbor);

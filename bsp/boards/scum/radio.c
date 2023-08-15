@@ -14,7 +14,6 @@
 #include "scm3c_hw_interface.h"
 #include "channel.h"
 #include "tuning.h"
-#include "tuning_feedback.h"
 
 //=========================== defines =========================================
 
@@ -802,7 +801,6 @@ kick_scheduler_t radio_isr(void) {
         // update the radio state
         radio_vars.state        = RADIOSTATE_TXRX_DONE;
         if (radio_vars.endFrame_cb!=NULL) {
-            tuning_feedback_adjust_rx(radio_vars.current_frequency, IF_estimate);
             // call the callback
             radio_vars.endFrame_cb(capturedTime);
             

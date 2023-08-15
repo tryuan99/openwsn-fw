@@ -22,7 +22,9 @@
 #ifdef SCUM
 #include "channel.h"
 #include "channel_cal.h"
+#include "scm3c_hw_interface.h"
 #include "tuning.h"
+#include "tuning_feedback.h"
 #endif  // defined(SCUM)
 
 //=========================== definition ======================================
@@ -517,6 +519,10 @@ This function executes in ISR mode.
 */
 void ieee154e_endOfFrame(PORT_TIMER_WIDTH capturedTime) {
     PORT_TIMER_WIDTH referenceTime = capturedTime - ieee154e_vars.startOfSlotReference;
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    uint32_t if_estimate = read_IF_estimate();
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+
     if (ieee154e_vars.isSync == FALSE) {
         activity_synchronize_endOfFrame(referenceTime);
     } else {
@@ -545,6 +551,12 @@ void ieee154e_endOfFrame(PORT_TIMER_WIDTH capturedTime) {
         }
     }
     ieee154e_dbg.num_endOfFrame++;
+
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    if (channel_cal_rx_calibrated() == TRUE) {
+        tuning_feedback_adjust_rx(ieee154e_vars.freq, if_estimate);
+    }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 }
 
 //======= misc
@@ -857,7 +869,6 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
             channel_cal_rx_end();
             channel_cal_rx_get_tuning_code(&tuning_code);
             channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
-            tuning_feedback_adjust_rx(ieee154e_vars.freq, read_IF_estimate());
         }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
@@ -1121,7 +1132,6 @@ port_INLINE void activity_ti1ORri1(void) {
                     tuning_code_t tuning_code;
                     channel_cal_tx_get_tuning_code(&tuning_code);
                     channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_TX, &tuning_code);
-
                 }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
                 radio_setFrequency(ieee154e_vars.freq, FREQ_TX);
@@ -1464,9 +1474,21 @@ port_INLINE void activity_ti7(void) {
 port_INLINE void activity_tie5(void) {
     // indicate transmit failed to schedule to keep stats
     schedule_indicateTx(&ieee154e_vars.asn, FALSE);
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_tx_calibrated() == FALSE) {
+            channel_cal_tx_handle_failure();
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
-    // decrement transmits left counter
-    ieee154e_vars.dataToSend->l2_retriesLeft--;
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    if (channel_cal_tx_calibrated() == TRUE) {
+        // decrement transmits left counter
+        ieee154e_vars.dataToSend->l2_retriesLeft--;
+    }
+#else   // !(defined(SCUM) && defined(CHANNEL_CAL_ENABLED))
+     // decrement transmits left counter
+     ieee154e_vars.dataToSend->l2_retriesLeft--;
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
     if (ieee154e_vars.dataToSend->l2_retriesLeft == 0) {
         // indicate tx fail if no more retries left
@@ -1639,11 +1661,16 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
 
         if (idmanager_getIsDAGroot() == FALSE &&
             icmpv6rpl_isPreferredParent(&(ieee154e_vars.ackReceived->l2_nextORpreviousHop))) {
-            //synchronizeAck(ieee802514_header.timeCorrection);
+            synchronizeAck(ieee802514_header.timeCorrection);
         }
 
         // inform schedule of successful transmission
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_tx_calibrated() == FALSE) {
+            channel_cal_tx_end();
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // inform upper layer
         notif_sendDone(ieee154e_vars.dataToSend, E_SUCCESS);
@@ -1668,8 +1695,6 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
 //======= RX
 
 port_INLINE void activity_ri2(void) {
-    
-    uint32_t i;
     // change state
     changeState(S_RXDATAPREPARE);
 
@@ -2926,6 +2951,11 @@ void endSlot(void) {
         // if everything went well, dataToSend was set to NULL in ti9, getting here means transmit failed
         // indicate Tx fail to schedule to update stats
         schedule_indicateTx(&ieee154e_vars.asn, FALSE);
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_tx_calibrated() == FALSE) {
+            channel_cal_tx_handle_failure();
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         //decrement transmits left counter
         ieee154e_vars.dataToSend->l2_retriesLeft--;
