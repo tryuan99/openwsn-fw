@@ -53,8 +53,8 @@ to return the board's description.
 #define PORT_delayRx                        30     //  0us (can not measure)
 
 //===== Frequency related
-#define TUNING_MIN_COARSE_CODE              21     // Minimum coarse code
-#define TUNING_MAX_COARSE_CODE              21     // Maximum coarse code
+#define TUNING_MIN_COARSE_CODE              23     // Minimum coarse code
+#define TUNING_MAX_COARSE_CODE              23     // Maximum coarse code
 
 //===== adaptive_sync accuracy
 

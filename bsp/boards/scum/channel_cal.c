@@ -111,8 +111,8 @@ bool channel_cal_init(void) {
             },
         .mid =
             {
-                .start = TUNING_MIN_CODE,
-                .end = TUNING_MAX_CODE,
+                .start = 29,
+                .end = 29,
             },
         .fine =
             {
@@ -141,8 +141,8 @@ bool channel_cal_init(void) {
             },
         .mid =
             {
-                .start = TUNING_MIN_CODE,
-                .end = TUNING_MAX_CODE,
+                .start = 28,
+                .end = 30,
             },
         .fine =
             {

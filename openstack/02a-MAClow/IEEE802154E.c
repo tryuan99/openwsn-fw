@@ -794,6 +794,8 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
                                &ieee154e_vars.dataReceived->l1_lqi,
                                &ieee154e_vars.dataReceived->l1_crc);
 
+        printf("packet received with IF %d: %02x\n", read_IF_estimate(), ieee154e_vars.dataReceived->payload[0]);
+
         // break if packet too short
         if (ieee154e_vars.dataReceived->length < LENGTH_CRC ||
             ieee154e_vars.dataReceived->length > LENGTH_IEEE154_MAX) {
@@ -810,6 +812,7 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
 
         // break if invalid CRC
         if (ieee154e_vars.dataReceived->l1_crc == FALSE) {
+            printf("crc\n");
             // break from the do-while loop and execute abort code below
             break;
         }
@@ -860,6 +863,7 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
                         ieee154e_processIEs(ieee154e_vars.dataReceived, &lenIE)
                 ) == FALSE) {
             // break from the do-while loop and execute the clean-up code below
+            printf("incorrect IEs\n");
             break;
         }
 
@@ -1090,6 +1094,7 @@ port_INLINE void activity_ti1ORri1(void) {
             } else {
                 // change state
                 changeState(S_TXDATAOFFSET);
+                printf("tx in slot %d\n", ieee154e_vars.slotOffset);
                 // change owner
                 ieee154e_vars.dataToSend->owner = COMPONENT_IEEE802154E;
                 if (couldSendEB == TRUE) { // I will be sending an EB copy synch IE -- should be Little endian?
@@ -1401,6 +1406,7 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
 #endif
     } else {
         // indicate succesful Tx to schedule to keep statistics
+        printf("ti5 successful\n");
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
         // indicate to upper later the packet was sent successfully
         notif_sendDone(ieee154e_vars.dataToSend, E_SUCCESS);
@@ -1501,6 +1507,7 @@ port_INLINE void activity_tie5(void) {
     // reset local variable
     ieee154e_vars.dataToSend = NULL;
 
+    printf("tie5 ended slot\n");
     // abort
     endSlot();
 }
@@ -1605,6 +1612,8 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
                 &ieee154e_vars.ackReceived->l1_crc
         );
 
+        printf("packet2 (len %d)\n", ieee154e_vars.dataReceived->length);
+
         // break if wrong length
         if (ieee154e_vars.ackReceived->length < LENGTH_CRC || ieee154e_vars.ackReceived->length > LENGTH_IEEE154_MAX) {
             // break from the do-while loop and execute the clean-up code below
@@ -1665,6 +1674,7 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
         }
 
         // inform schedule of successful transmission
+        printf("ti9 (receive ack) successful\n");
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         if (channel_cal_tx_calibrated() == FALSE) {
@@ -1825,6 +1835,8 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
             isr_ieee154e_newSlot                              // callback
     );
 #endif
+    uint32_t if_estimate;
+    if_estimate = read_IF_estimate();
     // turn off the radio
     radio_rfOff();
     ieee154e_vars.radioOnTics += sctimer_readCounter() - ieee154e_vars.radioOnInit;
@@ -1854,6 +1866,8 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
                 &ieee154e_vars.dataReceived->l1_crc
         );
 
+        printf("packet1 in slot %d with IF %ld: %02x\n", ieee154e_vars.slotOffset, if_estimate, ieee154e_vars.dataReceived->payload[0]);
+
         // break if wrong length
         if (ieee154e_vars.dataReceived->length < LENGTH_CRC ||
             ieee154e_vars.dataReceived->length > LENGTH_IEEE154_MAX) {
@@ -1870,6 +1884,7 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
         // if CRC doesn't check, stop
         if (ieee154e_vars.dataReceived->l1_crc == FALSE) {
             // jump to the error code below this do-while loop
+            printf("crc1\n");
             break;
         }
 
@@ -1920,6 +1935,7 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
                 ) {
             if (ieee154e_processIEs(ieee154e_vars.dataReceived, &lenIE) == FALSE) {
                 // retrieve EB IE failed, break the do-while loop and execute the clean up code below
+                printf("incorrect IEs1\n");
                 break;
             }
         }
@@ -1949,6 +1965,7 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
 
         // check if ack requested
         if (ieee802514_header.ackRequested == 1 && ieee154e_vars.isAckEnabled == TRUE) {
+            printf("ack req1 in slot %d\n", ieee154e_vars.slotOffset);
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
             // get a buffer to put the ack to send in
             ieee154e_vars.ackToSend = openqueue_getFreePacketBuffer(COMPONENT_IEEE802154E);
@@ -2181,6 +2198,7 @@ port_INLINE void activity_ri7(void) {
     // give the 'go' to transmit
     radio_txNow();
 #endif
+    printf("ri7 complete (sent ack)\n");
 }
 
 port_INLINE void activity_rie5(void) {

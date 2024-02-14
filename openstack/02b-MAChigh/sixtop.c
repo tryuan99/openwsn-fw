@@ -175,6 +175,7 @@ owerror_t sixtop_request(
     // filter parameters: handler, status and neighbor
     if (sixtop_vars.six2six_state != SIX_STATE_IDLE || neighbor == NULL) {
         // neighbor can't be none or previous transcation doesn't finish yet
+        // printf("sixtop is still in state %d\n", sixtop_vars.six2six_state);
         return E_FAIL;
     }
     
@@ -616,6 +617,7 @@ owerror_t sixtop_send_internal(
         // no negotiated tx cell to that neighbor
         // no auto tx cell to that neighbor
 
+        printf("going to transmit sixtop on slot offset %d on channel offset %d\n", msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)), msf_hashFunction_getChanneloffset(&(msg->l2_nextORpreviousHop)));
         schedule_addActiveSlot(
                 msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)),    // slot offset
                 CELLTYPE_TX,                                                     // type of slot
@@ -867,6 +869,7 @@ port_INLINE void sixtop_sendKA(void) {
     kaPkt->l2_keyIndex = IEEE802154_security_getDataKeyIndex();
 
     // put in queue for MAC to handle
+    printf("sixtop sending KA\n");
     sixtop_send_internal(kaPkt, FALSE);
 
     // I'm now busy sending a KA
@@ -1016,6 +1019,7 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
     }
     // free the buffer
     openqueue_freePacketBuffer(msg);
+    printf("done w sixtop\n");
 }
 
 port_INLINE bool sixtop_processIEs(OpenQueueEntry_t* pkt, uint16_t* lenIE) {

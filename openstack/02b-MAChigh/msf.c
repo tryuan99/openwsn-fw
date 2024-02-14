@@ -452,6 +452,8 @@ void msf_housekeeping(void) {
     cellInfo_ht celllist_add[CELLLIST_MAX_LEN];
     cellInfo_ht celllist_delete[CELLLIST_MAX_LEN];
 
+    printf("msf housekeeping\n");
+
     if (ieee154e_isSynch() == FALSE) {
         return;
     }
@@ -481,6 +483,7 @@ void msf_housekeeping(void) {
 
     if (schedule_getNumberOfNegotiatedCells(&parentNeighbor, CELLTYPE_TX) == 0) {
         msf_vars.needAddTx = TRUE;
+        printf("adding msf TX\n");
         msf_trigger6pAdd();
         return;
     }
