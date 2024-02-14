@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>ARMCM0</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.7.0</PackID>
+          <PackID>ARM.CMSIS.5.3.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x20000) IROM(0x00000000,0x40000) CPUTYPE("Cortex-M0") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -184,8 +184,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -352,7 +350,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -507,6 +505,46 @@
               <FileName>scm3c_hw_interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\bsp\boards\scum\scm3c_hw_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>channel_cal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\channel_cal.c</FilePath>
+            </File>
+            <File>
+              <FileName>channel_cal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\channel_cal.h</FilePath>
+            </File>
+            <File>
+              <FileName>channel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\channel.c</FilePath>
+            </File>
+            <File>
+              <FileName>channel.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\channel.h</FilePath>
+            </File>
+            <File>
+              <FileName>tuning_feedback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\tuning_feedback.c</FilePath>
+            </File>
+            <File>
+              <FileName>tuning_feedback.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\tuning_feedback.h</FilePath>
+            </File>
+            <File>
+              <FileName>tuning.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\tuning.c</FilePath>
+            </File>
+            <File>
+              <FileName>tuning.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\tuning.h</FilePath>
             </File>
           </Files>
         </Group>
