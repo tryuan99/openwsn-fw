@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 // Maximum UART TX length in bytes.
-#define UART_TX_MAX_LENGTH 40
+#define UART_TX_MAX_LENGTH 80
 
 // Initialize UART TX.
 void uart_tx_init(void);
