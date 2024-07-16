@@ -432,7 +432,7 @@ int mote_main(void) {
 
   // Turn on the radio.
   radio_rfOn();
-  g_channel_cal_state = CHANNEL_CAL_STATE_RX;
+  g_channel_cal_state = CHANNEL_CAL_STATE_SMART_STAKE_RX;
   g_channel_cal_channel = CHANNEL_CAL_CHANNEL_START;
 
   while (true) {
