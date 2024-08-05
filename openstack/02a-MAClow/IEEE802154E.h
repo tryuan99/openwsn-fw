@@ -48,7 +48,7 @@ static const uint8_t ebIEsBytestream[] = {
 #define EB_PORTION                   2 // set EB on minimal cell for 1/EB_PORTION portion
 #endif
 #ifndef MAXKAPERIOD
-#define MAXKAPERIOD               1000  // in slots: 1500@20ms per slot -> ~30 seconds. Max value used by adaptive synchronization.
+#define MAXKAPERIOD                428  // in slots: 1500@20ms per slot -> ~30 seconds. Max value used by adaptive synchronization.
 #endif
 #ifndef DESYNCTIMEOUT
 #define DESYNCTIMEOUT              500  // in slots: 1750@20ms per slot -> ~35 seconds. A larger DESYNCTIMEOUT is needed if using a larger KATIMEOUT.
@@ -240,7 +240,7 @@ enum ieee154e_linkOption_enum {
 #define DURATION_rt7 ieee154e_vars.lastCapturedTime+TsTxAckDelay-delayTx+wdRadioTx
 #define DURATION_rt8 ieee154e_vars.lastCapturedTime+wdAckDuration
 // serialInhibit
-#define DURATION_si  ieee154e_vars.slotDuration-SERIALINHIBITGUARD
+#define DURATION_si  ieee154e_vars.slotDuration-6*SERIALINHIBITGUARD
 
 //=========================== typedef =========================================
 

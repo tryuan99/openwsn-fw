@@ -19,7 +19,7 @@ The superframe reappears over time and can be arbitrarily long.
 */
 
 #ifndef SLOTFRAME_LENGTH
-#define SLOTFRAME_LENGTH    101 //should be 101
+#define SLOTFRAME_LENGTH    11  //should be 101
 #endif
 
 //draft-ietf-6tisch-minimal-06
@@ -43,7 +43,7 @@ The superframe reappears over time and can be arbitrarily long.
 */
 
 #ifndef NUMSLOTSOFF
-#define NUMSLOTSOFF          20
+#define NUMSLOTSOFF          5
 #endif
 
 /**

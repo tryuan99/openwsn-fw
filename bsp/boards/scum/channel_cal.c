@@ -141,8 +141,8 @@ bool channel_cal_init(void) {
             },
         .mid =
             {
-                .start = 28,
-                .end = 30,
+                .start = 26,
+                .end = 27,
             },
         .fine =
             {
