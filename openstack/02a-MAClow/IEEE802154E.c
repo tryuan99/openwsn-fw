@@ -918,6 +918,8 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
     // return to listening state
     changeState(S_SYNCLISTEN);
     radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
+    radio_rxEnable();
+    radio_rxNow();
 }
 
 port_INLINE bool ieee154e_processIEs(OpenQueueEntry_t* pkt, uint16_t* lenIE) {
