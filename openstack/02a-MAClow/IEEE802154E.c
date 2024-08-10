@@ -909,6 +909,9 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
 
     } while (0);
 
+    // turn off the radio
+    radio_rfOff();
+
     // free the (invalid) received data buffer so RAM memory can be recycled
     openqueue_freePacketBuffer(ieee154e_vars.dataReceived);
 
