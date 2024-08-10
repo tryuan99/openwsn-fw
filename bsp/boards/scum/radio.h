@@ -46,6 +46,7 @@ typedef enum {
    FREQ_TX                        = 0x01,
    FREQ_RX                        = 0x02,
    FREQ_RX_SYNC                   = 0x03,
+   FREQ_RX_ACK                    = 0x04,
 } radio_freq_t;
 
 //=========================== typedef =========================================

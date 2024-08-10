@@ -115,7 +115,7 @@ uint16_t freq_setting_tx[16] = {(22<<10 | 21<<5 | 21), 25133, 25749, 25918, 2618
 //=========================== prototypes ======================================
 
 void        setFrequencyTX(uint8_t channel);
-void        setFrequencyRX(uint8_t channel, bool is_sync);
+void        setFrequencyRX(uint8_t channel, bool is_sync, bool is_ack);
 
 void        radio_calibration(
     uint32_t IF_estimate,
@@ -198,10 +198,14 @@ void radio_reset(void) {
 
 
 // Set the frequency for RX.
-static inline void setFrequencyRX(const uint8_t channel, const bool is_sync) {
+static inline void setFrequencyRX(const uint8_t channel, const bool is_sync, const bool is_ack) {
     tuning_code_t tuning_code;
     channel_get_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
-    if (is_sync == FALSE) {
+    if (is_sync == TRUE) {
+        tuning_code.fine += 0;
+    } else if (is_ack == TRUE) {
+        tuning_code.fine += 3;
+    } else {
         // Fil discovered that for a RX guard time of less than 10 ms, the fine
         // code should be increased by 5 LSBs.
         tuning_code.fine += 5;
@@ -229,11 +233,15 @@ void radio_setFrequency(const uint8_t frequency, const radio_freq_t tx_or_rx) {
             break;
         }
         case FREQ_RX: {
-            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/FALSE);
+            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/FALSE, /*is_ack=*/FALSE);
             break;
         }
         case FREQ_RX_SYNC: {
-            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/TRUE);
+            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/TRUE, /*is_ack=*/FALSE);
+            break;
+        }
+        case FREQ_RX_ACK: {
+            setFrequencyRX(radio_vars.current_frequency, /*is_sync=*/FALSE, /*is_ack=*/TRUE);
             break;
         }
         default: {

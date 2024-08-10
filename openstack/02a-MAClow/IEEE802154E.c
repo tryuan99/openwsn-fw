@@ -1398,7 +1398,7 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
         sctimer_setCapture(ACTION_RX_DONE);
 
         // configure the radio to listen to the default synchronizing channel
-        radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+        radio_setFrequency(ieee154e_vars.freq, FREQ_RX_ACK);
 #else
         // arm tt5
         opentimers_scheduleAbsolute(
@@ -1440,7 +1440,7 @@ port_INLINE void activity_ti6(void) {
     );
 
     // configure the radio to listen to the default synchronizing channel
-    radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
+    radio_setFrequency(ieee154e_vars.freq, FREQ_RX_ACK);
 
     radio_rxEnable();
 #endif
