@@ -402,6 +402,7 @@ void task_sixtopNotifSendDone(void) {
         LOG_CRITICAL(COMPONENT_SIXTOP, ERR_NO_SENT_PACKET, (errorparameter_t) 0, (errorparameter_t) 0);
         return;
     }
+    printf("sixtop notif senddone handler err %d creator %d\n", msg->l2_sendDoneError, msg->creator);
 
     // take ownership
     msg->owner = COMPONENT_SIXTOP;
@@ -608,6 +609,8 @@ owerror_t sixtop_send_internal(
     // change owner to IEEE802154E fetches it from queue
     msg->owner = COMPONENT_SIXTOP_TO_IEEE802154E;
 
+    printf("going to transmit sixtop on slot offset %d on channel offset %d\n", msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)), msf_hashFunction_getChanneloffset(&(msg->l2_nextORpreviousHop)));
+
     if (
             packetfunctions_isBroadcastMulticast(&(msg->l2_nextORpreviousHop)) == FALSE &&
             schedule_hasNegotiatedCellToNeighbor(&(msg->l2_nextORpreviousHop), CELLTYPE_TX) == FALSE &&
@@ -617,7 +620,6 @@ owerror_t sixtop_send_internal(
         // no negotiated tx cell to that neighbor
         // no auto tx cell to that neighbor
 
-        printf("going to transmit sixtop on slot offset %d on channel offset %d\n", msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)), msf_hashFunction_getChanneloffset(&(msg->l2_nextORpreviousHop)));
         schedule_addActiveSlot(
                 msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)),    // slot offset
                 CELLTYPE_TX,                                                     // type of slot
@@ -869,7 +871,6 @@ port_INLINE void sixtop_sendKA(void) {
     kaPkt->l2_keyIndex = IEEE802154_security_getDataKeyIndex();
 
     // put in queue for MAC to handle
-    printf("sixtop sending KA\n");
     sixtop_send_internal(kaPkt, FALSE);
 
     // I'm now busy sending a KA
@@ -1019,7 +1020,6 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
     }
     // free the buffer
     openqueue_freePacketBuffer(msg);
-    printf("done w sixtop\n");
 }
 
 port_INLINE bool sixtop_processIEs(OpenQueueEntry_t* pkt, uint16_t* lenIE) {
@@ -1671,7 +1671,7 @@ bool sixtop_addCells(
     }    
     
 #ifdef  SCUM_DEBUG
-    printf("slot add %d\r\n", hasCellsAdded);
+    printf("slot add %d num %d slot %d\r\n", hasCellsAdded, i, cellList[i - 1].slotoffset);
 #endif
     return hasCellsAdded;
 }

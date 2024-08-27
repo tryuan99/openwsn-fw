@@ -208,7 +208,7 @@ static inline void setFrequencyRX(const uint8_t channel, const bool is_sync, con
     } else {
         // Fil discovered that for a RX guard time of less than 10 ms, the fine
         // code should be increased by 5 LSBs.
-        tuning_code.fine += 5;
+        tuning_code.fine += 7;
     }
     tuning_tune_radio(&tuning_code);
 }

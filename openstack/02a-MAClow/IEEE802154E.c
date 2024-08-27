@@ -22,6 +22,7 @@
 #ifdef SCUM
 #include "channel.h"
 #include "channel_cal.h"
+#include "memory_map.h"
 #include "scm3c_hw_interface.h"
 #include "tuning.h"
 #include "tuning_feedback.h"
@@ -657,7 +658,8 @@ port_INLINE void activity_synchronize_newSlot(void) {
             channel_cal_rx_start();
         }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        
+
+        printf("receiving now\n");
         radio_rxNow();
     } else {
         // I'm listening last slot
@@ -919,6 +921,8 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
     ieee154e_vars.dataReceived = NULL;
 
     // return to listening state
+    UART_REG__TX_DATA = 'Y';
+    UART_REG__TX_DATA = '\n';
     changeState(S_SYNCLISTEN);
     radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
     radio_rxEnable();
@@ -1099,7 +1103,8 @@ port_INLINE void activity_ti1ORri1(void) {
             } else {
                 // change state
                 changeState(S_TXDATAOFFSET);
-                printf("tx in slot %d\n", ieee154e_vars.slotOffset);
+                UART_REG__TX_DATA = 'U';
+                UART_REG__TX_DATA = '\n';
                 // change owner
                 ieee154e_vars.dataToSend->owner = COMPONENT_IEEE802154E;
                 if (couldSendEB == TRUE) { // I will be sending an EB copy synch IE -- should be Little endian?
@@ -1385,6 +1390,8 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
     }
 
     if (listenForAck == TRUE) {
+        UART_REG__TX_DATA = 'K';
+        UART_REG__TX_DATA = '\n';
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
         // 1. schedule timer for enabling receiving
         // arm tt5
@@ -1411,7 +1418,8 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
 #endif
     } else {
         // indicate succesful Tx to schedule to keep statistics
-        printf("ti5 successful\n");
+        UART_REG__TX_DATA = 'S';
+        UART_REG__TX_DATA = '\n';
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
         // indicate to upper later the packet was sent successfully
         notif_sendDone(ieee154e_vars.dataToSend, E_SUCCESS);
@@ -1512,7 +1520,9 @@ port_INLINE void activity_tie5(void) {
     // reset local variable
     ieee154e_vars.dataToSend = NULL;
 
-    printf("tie5 ended slot\n");
+    UART_REG__TX_DATA = 'E';
+    UART_REG__TX_DATA = '\n';
+
     // abort
     endSlot();
 }
@@ -1617,8 +1627,6 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
                 &ieee154e_vars.ackReceived->l1_crc
         );
 
-        printf("packet2 (len %d)\n", ieee154e_vars.dataReceived->length);
-
         // break if wrong length
         if (ieee154e_vars.ackReceived->length < LENGTH_CRC || ieee154e_vars.ackReceived->length > LENGTH_IEEE154_MAX) {
             // break from the do-while loop and execute the clean-up code below
@@ -1679,7 +1687,6 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
         }
 
         // inform schedule of successful transmission
-        printf("ti9 (receive ack) successful\n");
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         if (channel_cal_tx_calibrated() == FALSE) {
@@ -1871,7 +1878,8 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
                 &ieee154e_vars.dataReceived->l1_crc
         );
 
-        printf("packet1 in slot %d with IF %ld: %02x\n", ieee154e_vars.slotOffset, if_estimate, ieee154e_vars.dataReceived->payload[0]);
+        UART_REG__TX_DATA = 'R';
+        UART_REG__TX_DATA = '\n';
 
         // break if wrong length
         if (ieee154e_vars.dataReceived->length < LENGTH_CRC ||
@@ -1966,7 +1974,7 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
         // record the timeCorrection and print out at end of slot
         ieee154e_vars.dataReceived->l2_timeCorrection = (PORT_SIGNED_INT_WIDTH)(
                 (PORT_SIGNED_INT_WIDTH) TsTxOffset - (PORT_SIGNED_INT_WIDTH) ieee154e_vars.syncCapturedTime);
-        
+
 
         // check if ack requested
         if (ieee802514_header.ackRequested == 1 && ieee154e_vars.isAckEnabled == TRUE) {
@@ -2203,7 +2211,8 @@ port_INLINE void activity_ri7(void) {
     // give the 'go' to transmit
     radio_txNow();
 #endif
-    printf("ri7 complete (sent ack)\n");
+    UART_REG__TX_DATA = 'Z';
+    UART_REG__TX_DATA = '\n';
 }
 
 port_INLINE void activity_rie5(void) {
@@ -2715,7 +2724,7 @@ void synchronizePacket(PORT_TIMER_WIDTH timeReceived) {
         LOG_WARNING(COMPONENT_IEEE802154E, ERR_LARGE_TIMECORRECTION,
                 (errorparameter_t) timeCorrection,
                 (errorparameter_t) 0);
-        
+
     }
 #ifdef SCUM_DEBUG
     printf("pkt sync in network %d us\r\n", timeCorrection*2);
@@ -2764,7 +2773,7 @@ void synchronizeAck(PORT_SIGNED_INT_WIDTH timeCorrection) {
                 (errorparameter_t) timeCorrection,
                 (errorparameter_t) 1);
     }
-            
+
 #ifdef SCUM_DEBUG
     printf("ack sync in network %d us\r\n", timeCorrection*2);
 #endif
