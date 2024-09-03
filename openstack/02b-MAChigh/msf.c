@@ -310,7 +310,6 @@ void msf_trigger6pAdd(void) {
         return;
     }
 
-    printf("sixtop requesting sixtop add\n");
     sixtop_request(
             IANA_6TOP_CMD_ADD,           // code
             &neighbor,                   // neighbor

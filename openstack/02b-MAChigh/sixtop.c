@@ -402,7 +402,6 @@ void task_sixtopNotifSendDone(void) {
         LOG_CRITICAL(COMPONENT_SIXTOP, ERR_NO_SENT_PACKET, (errorparameter_t) 0, (errorparameter_t) 0);
         return;
     }
-    printf("sixtop notif senddone handler err %d creator %d\n", msg->l2_sendDoneError, msg->creator);
 
     // take ownership
     msg->owner = COMPONENT_SIXTOP;
@@ -608,8 +607,6 @@ owerror_t sixtop_send_internal(
     }
     // change owner to IEEE802154E fetches it from queue
     msg->owner = COMPONENT_SIXTOP_TO_IEEE802154E;
-
-    printf("going to transmit sixtop on slot offset %d on channel offset %d\n", msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)), msf_hashFunction_getChanneloffset(&(msg->l2_nextORpreviousHop)));
 
     if (
             packetfunctions_isBroadcastMulticast(&(msg->l2_nextORpreviousHop)) == FALSE &&
