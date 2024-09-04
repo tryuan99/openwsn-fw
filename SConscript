@@ -97,6 +97,8 @@ if 'uexp-monitor' in env['apps'].split(','):
     env.Append(CPPDEFINES='OPENWSN_UEXP_MONITOR_C')
 if 'uinject' in env['apps'].split(','):
     env.Append(CPPDEFINES='OPENWSN_UINJECT_C')
+if 'usensor_network' in env['apps'].split(','):
+    env.Append(CPPDEFINES='OPENWSN_USENSOR_NETWORK_C')
 if 'userialbridge' in env['apps'].split(','):
     env.Append(CPPDEFINES='OPENWSN_USERIALBRIDGE_C')
 if 'cjoin' in env['apps'].split(','):

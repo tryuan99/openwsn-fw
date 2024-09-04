@@ -179,6 +179,16 @@
 #endif
 
 /**
+ * \def OPENWSN_SENSOR_NETWORK_C
+ *
+ * Requires: OPENWSN_UDP_C
+ *
+ */
+#ifndef OPENWSN_SENSOR_NETWORK_C
+#define OPENWSN_SENSOR_NETWORK_C (0)
+#endif
+
+/**
  * \def OPENWSN_USERIALBRIDGE_C
  *
  * Requires: OPENWSN_UDP_C

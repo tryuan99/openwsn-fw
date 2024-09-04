@@ -123,7 +123,7 @@ command_line_options = {
     ],
     'logging': [str(l) for l in range(6)],
     'apps': ['c6t', 'cexample', 'cinfo', 'cinfrared', 'cled', 'csensors', 'cstorm', 'cwellknown', 'rrt', 'uecho',
-             'uexpiration', 'uexp-monitor', 'uinject', 'userialbridge', 'cjoin', ''],
+             'uexpiration', 'uexp-monitor', 'uinject', 'usensor_network', 'userialbridge', 'cjoin', ''],
     'modules': ['coap', 'udp', 'fragmentation', 'icmpv6echo', 'l2-security', ''],
     'stackcfg': ['adaptive-msf', 'dagroot', 'channel', 'pktqueue', 'panid', ''],
     'boardopt' : ['hw-crypto', 'printf', 'fastsim', ''],

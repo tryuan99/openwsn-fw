@@ -14,6 +14,7 @@ apps = [
     'cwellknown',
     'uecho',
     'uinject',
+    'usensor_network',
     'userialbridge',
     'uexpiration',
     'uexpiration_monitor',
