@@ -982,7 +982,9 @@ port_INLINE void activity_ti1ORri1(void) {
                       (errorparameter_t)ieee154e_vars.slotOffset,
                       (errorparameter_t)0);
 #ifdef SCUM_DEBUG
-            printf("desync %d %d\r\n", ieee154e_vars.asn.bytes2and3, ieee154e_vars.asn.bytes0and1);
+            // printf("desync %d %d\r\n", ieee154e_vars.asn.bytes2and3, ieee154e_vars.asn.bytes0and1);
+            UART_REG__TX_DATA = 'D';
+            UART_REG__TX_DATA = '\n';
 #endif
 
             // update the statistics
@@ -2716,7 +2718,9 @@ void synchronizePacket(PORT_TIMER_WIDTH timeReceived) {
 
     }
 #ifdef SCUM_DEBUG
-    printf("pkt sync in network %d us\r\n", timeCorrection*2);
+    // printf("pkt sync in network %d us\r\n", timeCorrection*2);
+    UART_REG__TX_DATA = '*';
+    UART_REG__TX_DATA = '\n';
 #endif
 
     // update the stats
@@ -2764,7 +2768,9 @@ void synchronizeAck(PORT_SIGNED_INT_WIDTH timeCorrection) {
     }
 
 #ifdef SCUM_DEBUG
-    printf("ack sync in network %d us\r\n", timeCorrection*2);
+    // printf("ack sync in network %d us\r\n", timeCorrection*2);
+    UART_REG__TX_DATA = 'A';
+    UART_REG__TX_DATA = '\n';
 #endif
 
     // update the stats
