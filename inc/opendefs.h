@@ -103,6 +103,7 @@ enum {
     WKP_UDP_EXPIRATION = 5,
     WKP_UDP_MONITOR = 3,
     WKP_UDP_INJECT = 61617,// 0xf0b1
+    WKP_UDP_SENSOR_NETWORK = 43981, // 0xabcd
     WKP_UDP_RINGMASTER = 15000,
     WKP_UDP_SERIALBRIDGE = 2001,
 };
@@ -188,6 +189,7 @@ enum {
    COMPONENT_UEXPIRATION               = 0x2b,
    COMPONENT_UMONITOR                  = 0x2c,
    COMPONENT_CINFRARED                 = 0x2d,
+   COMPONENT_USENSOR_NETWORK           = 0x2e,
 };
 
 /**

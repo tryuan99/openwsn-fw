@@ -36,6 +36,10 @@
 #include "uinject.h"
 #endif
 
+#if OPENWSN_USENSOR_NETWORK_C
+#include "usensor_network.h"
+#endif
+
 #if OPENWSN_USERIALBRIDGE_C
 #include "userialbridge.h"
 #endif
@@ -91,6 +95,10 @@ void openapps_init(void) {
 
 #if OPENWSN_UINJECT_C
     uinject_init();
+#endif
+
+#if OPENWSN_USENSOR_NETWORK_C
+    usensor_network_init();
 #endif
 
 #if OPENWSN_USERIALBRIDGE_C

@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>SCUM, SCUM_DEBUG</Define>
+              <Define>SCUM, SCUM_DEBUG, OPENWSN_UDP_C, OPENWSN_USENSOR_NETWORK_C</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\bsp\boards\scum;..\..\..\bsp\boards;..\..\..\drivers\common;..\..\..\inc;..\..\..\openstack\02a-MAClow;..\..\..\openstack\02b-MAChigh;..\..\..\openstack\03a-IPHC;..\..\..\openstack\03b-IPv6;..\..\..\openstack\04-TRAN;..\..\..\openstack\cross-layers;..\..\..\kernel;..\..\..\openstack;..\..\..\bsp\boards\common;..\..\..\drivers\common\crypto;..\..\..\openweb;..\..\..\openapps</IncludePath>
+              <IncludePath>..\..\..\bsp\boards\scum;..\..\..\bsp\boards;..\..\..\drivers\common;..\..\..\inc;..\..\..\openstack\02a-MAClow;..\..\..\openstack\02b-MAChigh;..\..\..\openstack\03a-IPHC;..\..\..\openstack\03b-IPv6;..\..\..\openstack\04-TRAN;..\..\..\openstack\04-TRAN\sock;..\..\..\openstack\cross-layers;..\..\..\kernel;..\..\..\openstack;..\..\..\bsp\boards\common;..\..\..\drivers\common\crypto;..\..\..\openweb;..\..\..\openapps;..\..\..\openapps\usensor_network</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -761,6 +761,31 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\openstack\04-TRAN\udp.c</FilePath>
             </File>
+            <File>
+              <FileName>sock_internal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\sock_internal.h</FilePath>
+            </File>
+            <File>
+              <FileName>sock_types.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\sock_types.h</FilePath>
+            </File>
+            <File>
+              <FileName>sock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\sock.c</FilePath>
+            </File>
+            <File>
+              <FileName>sock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\sock.h</FilePath>
+            </File>
+            <File>
+              <FileName>udp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\udp.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -780,6 +805,16 @@
               <FileName>openapps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\openapps\openapps.c</FilePath>
+            </File>
+            <File>
+              <FileName>usensor_network.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\usensor_network.c</FilePath>
+            </File>
+            <File>
+              <FileName>usensor_network.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\usensor_network.h</FilePath>
             </File>
           </Files>
         </Group>

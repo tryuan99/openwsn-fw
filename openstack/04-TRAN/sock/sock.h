@@ -4,7 +4,7 @@
 #include "opendefs.h"
 #include "async_types.h"
 
-#if defined (__WIN32__)
+#if defined (__WIN32__) || defined (SCUM)
 #define EADDRINUSE      (1)
 #define EAFNOSUPPORT    (1)
 #define ENOBUFS         (1)
