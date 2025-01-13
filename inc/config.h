@@ -360,7 +360,7 @@
  *
  */
 #ifndef IEEE802154E_SINGLE_CHANNEL
-#define IEEE802154E_SINGLE_CHANNEL      17
+#define IEEE802154E_SINGLE_CHANNEL      0
 #endif
 
 /**
