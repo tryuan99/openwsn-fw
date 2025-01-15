@@ -31,7 +31,7 @@ to return the board's description.
 #define PORT_TICS_PER_MS                    500
 #define PORT_US_PER_TICK                    2 // number of us per 500kHz clock tick
 
-#define SCHEDULER_WAKEUP()                  
+#define SCHEDULER_WAKEUP()
 #define SCHEDULER_ENABLE_INTERRUPT()
 
 //===== radio
@@ -55,6 +55,7 @@ to return the board's description.
 //===== Frequency related
 #define TUNING_MIN_COARSE_CODE              23     // Minimum coarse code
 #define TUNING_MAX_COARSE_CODE              23     // Maximum coarse code
+#define TUNING_MID_CODE                     29     // Mid code for initial channel
 
 //===== adaptive_sync accuracy
 

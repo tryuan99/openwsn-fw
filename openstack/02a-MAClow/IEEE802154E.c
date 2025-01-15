@@ -205,8 +205,9 @@ void ieee154e_init(void) {
     ieee154e_stats.numDeSync = 0;
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-    if (channel_cal_init() == FALSE) {
-        printf("Failed to initialize channel calibration.\n");
+    if (channel_cal_initial_rx_calibrated() == FALSE &&
+        channel_cal_init_initial_rx_sweep() == FALSE) {
+        printf("Failed to initialize the initial RX sweep for channel calibration.\n");
     }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
@@ -554,7 +555,7 @@ void ieee154e_endOfFrame(PORT_TIMER_WIDTH capturedTime) {
     ieee154e_dbg.num_endOfFrame++;
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-    if (channel_cal_rx_calibrated() == TRUE) {
+    if (channel_cal_rx_calibrated(ieee154e_vars.freq) == TRUE) {
         tuning_feedback_adjust_rx(ieee154e_vars.freq, if_estimate);
     }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
@@ -613,7 +614,7 @@ bool debugPrint_macStats(void) {
 //======= SYNCHRONIZING
 
 port_INLINE void activity_synchronize_newSlot(void) {
-    
+
     uint16_t i;
 
     // I'm in the middle of receiving a packet
@@ -636,11 +637,20 @@ port_INLINE void activity_synchronize_newSlot(void) {
         // update record of current channel
 #if IEEE802154E_SINGLE_CHANNEL
         ieee154e_vars.freq = IEEE802154E_SINGLE_CHANNEL;
+#elif defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        ieee154e_vars.freq = CHANNEL_CAL_INITIAL_CHANNEL;
 #else
         ieee154e_vars.freq = (openrandom_get16b() & 0x0F) + 11;
 #endif
 
         // configure the radio to listen to the frequency
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_rx_calibrated(ieee154e_vars.freq) == FALSE) {
+            tuning_code_t tuning_code;
+            channel_cal_rx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
+            channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
 
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
@@ -650,12 +660,12 @@ port_INLINE void activity_synchronize_newSlot(void) {
 
         // switch on the radio in Rx mode.
         radio_rxEnable();
-        
+
         for (i=0;i<100;i++);
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        if (channel_cal_rx_calibrated() == FALSE) {
-            channel_cal_rx_start();
+        if (channel_cal_initial_rx_calibrated() == FALSE) {
+            channel_cal_start_initial_rx_sweep();
         }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
@@ -669,46 +679,6 @@ port_INLINE void activity_synchronize_newSlot(void) {
         sctimer_setCapture(ACTION_RX_SFD_DONE);
         sctimer_setCapture(ACTION_RX_DONE);
 #endif
-
-#if !(IEEE802154E_SINGLE_CHANNEL)
-        if (ieee154e_vars.asn.bytes0and1 % (NUM_CHANNELS * EB_PORTION) == 0) {
-            // turn off the radio (in case it wasn't yet)
-            radio_rfOff();
-
-            // update record of current channel
-            ieee154e_vars.freq = (openrandom_get16b() & 0x0F) + 11;
-
-            // configure the radio to listen to the frequency
-            radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
-        }
-
-        // switch on the radio in Rx mode.
-        radio_rxEnable();
-        radio_rxNow();
-#endif
-    }
-
-    // if I'm already in S_SYNCLISTEN, while not synchronized, but the synchronizing channel has been changed, change
-    // the synchronizing channel
-    if ((ieee154e_vars.state == S_SYNCLISTEN) && (ieee154e_vars.singleChannelChanged == TRUE)) {
-        // turn off the radio (in case it wasn't yet)
-        radio_rfOff();
-
-        // update record of current channel
-        ieee154e_vars.freq = calculateFrequency(ieee154e_vars.singleChannel);
-
-        // configure the radio to listen to the default synchronizing channel
-        radio_setFrequency(ieee154e_vars.freq, FREQ_RX_SYNC);
-
-#ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
-        sctimer_setCapture(ACTION_RX_SFD_DONE);
-        sctimer_setCapture(ACTION_RX_DONE);
-#endif
-
-        // switch on the radio in Rx mode.
-        radio_rxEnable();
-        radio_rxNow();
-        ieee154e_vars.singleChannelChanged = FALSE;
     }
 
     // increment dummy ASN to trigger debugprint every now and then
@@ -865,12 +835,17 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
         }
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        if (channel_cal_rx_calibrated() == FALSE) {
-            tuning_code_t tuning_code;
-            channel_cal_rx_end();
-            channel_cal_rx_get_tuning_code(&tuning_code);
-            channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
+        if (channel_cal_initial_rx_calibrated() == FALSE) {
+            channel_cal_end_initial_rx_sweep();
+            if (channel_cal_init_remaining_sweeps() == FALSE) {
+                printf("Faield to initialize remaining sweeps for channel calibration.\n");
+            }
+        } else {
+            channel_cal_rx_success(ieee154e_vars.freq);
         }
+        tuning_code_t tuning_code;
+        channel_cal_rx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
+        channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // turn off the radio
@@ -1137,12 +1112,12 @@ port_INLINE void activity_ti1ORri1(void) {
                     endSlot();
                     return;
                 }
-                
+
                 // configure the radio to listen to the default synchronizing channel
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-                if (channel_cal_tx_calibrated() == FALSE) {
+                if (channel_cal_tx_calibrated(ieee154e_vars.freq) == FALSE) {
                     tuning_code_t tuning_code;
-                    channel_cal_tx_get_tuning_code(&tuning_code);
+                    channel_cal_tx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
                     channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_TX, &tuning_code);
                 }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
@@ -1182,8 +1157,15 @@ port_INLINE void activity_ti1ORri1(void) {
             // 3.  set capture interrupt for Rx SFD done and receiving packet done
             sctimer_setCapture(ACTION_RX_SFD_DONE);
             sctimer_setCapture(ACTION_RX_DONE);
-        
+
             // configure the radio to listen to the default synchronizing channel
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+            if (channel_cal_rx_calibrated(ieee154e_vars.freq) == FALSE) {
+                tuning_code_t tuning_code;
+                channel_cal_rx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
+                channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
+            }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
             radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
 #else
             // arm rt1
@@ -1251,11 +1233,10 @@ port_INLINE void activity_ti2(void) {
 
     // configure the radio to listen to the default synchronizing channel
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-    if (channel_cal_tx_calibrated() == FALSE) {
+    if (channel_cal_tx_calibrated(ieee154e_vars.freq) == FALSE) {
         tuning_code_t tuning_code;
-        channel_cal_tx_get_tuning_code(&tuning_code);
+        channel_cal_tx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
         channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_TX, &tuning_code);
-
     }
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     radio_setFrequency(ieee154e_vars.freq, FREQ_TX);
@@ -1491,13 +1472,11 @@ port_INLINE void activity_tie5(void) {
     // indicate transmit failed to schedule to keep stats
     schedule_indicateTx(&ieee154e_vars.asn, FALSE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        if (channel_cal_tx_calibrated() == FALSE) {
-            channel_cal_tx_handle_failure();
-        }
+    channel_cal_tx_failure(ieee154e_vars.freq);
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-    if (channel_cal_tx_calibrated() == TRUE) {
+    if (channel_cal_tx_calibrated(ieee154e_vars.freq) == TRUE) {
         // decrement transmits left counter
         ieee154e_vars.dataToSend->l2_retriesLeft--;
     }
@@ -1686,9 +1665,7 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
         // inform schedule of successful transmission
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        if (channel_cal_tx_calibrated() == FALSE) {
-            channel_cal_tx_end();
-        }
+        channel_cal_tx_success(ieee154e_vars.freq);
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // inform upper layer
@@ -1725,11 +1702,18 @@ port_INLINE void activity_ri2(void) {
             TIME_TICS,                                        // timetype
             isr_ieee154e_timer                                // callback
     );
-    
+
     // configure the radio to listen to the default synchronizing channel
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    if (channel_cal_rx_calibrated(ieee154e_vars.freq) == FALSE) {
+        tuning_code_t tuning_code;
+        channel_cal_rx_get_tuning_code(ieee154e_vars.freq, &tuning_code);
+        channel_set_tuning_code(ieee154e_vars.freq, CHANNEL_MODE_RX, &tuning_code);
+    }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     radio_setFrequency(ieee154e_vars.freq, FREQ_RX);
     radio_rxEnable();
-    
+
 #endif
     ieee154e_vars.radioOnInit = sctimer_readCounter();
     ieee154e_vars.radioOnThisSlot = TRUE;
@@ -1770,6 +1754,10 @@ port_INLINE void activity_ri3(void) {
 }
 
 port_INLINE void activity_rie2(void) {
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    channel_cal_rx_failure(ieee154e_vars.freq);
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+
     // abort
     endSlot();
 }
@@ -2866,11 +2854,16 @@ different channel offsets in the same slot.
 \returns The calculated frequency channel, an integer between 11 and 26.
 */
 port_INLINE uint8_t calculateFrequency(uint8_t channelOffset) {
+#ifdef SCUM
+    if (channel_cal_initial_rx_calibrated() == FALSE) {
+        return CHANNEL_CAL_INITIAL_CHANNEL;
+    }
+#endif  // SCUM
     if (ieee154e_vars.singleChannel >= MIN_CHANNEL && ieee154e_vars.singleChannel <= MAX_CHANNEL) {
         return ieee154e_vars.singleChannel; // single channel
     } else {
         // channel hopping enabled, use the channel depending on hopping template
-        return 11 + ieee154e_vars.chTemplate[(ieee154e_vars.asnOffset + channelOffset) % NUM_CHANNELS];
+        return MIN_CHANNEL + ieee154e_vars.chTemplate[(ieee154e_vars.asnOffset + channelOffset) % NUM_CHANNELS];
     }
 }
 
@@ -2979,9 +2972,7 @@ void endSlot(void) {
         // indicate Tx fail to schedule to update stats
         schedule_indicateTx(&ieee154e_vars.asn, FALSE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        if (channel_cal_tx_calibrated() == FALSE) {
-            channel_cal_tx_handle_failure();
-        }
+        channel_cal_tx_failure(ieee154e_vars.freq);
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         //decrement transmits left counter
@@ -3035,6 +3026,10 @@ void endSlot(void) {
         // would have been set to NULL in ri9.
         // indicate  "received packet" to upper layer since we don't want to loose packets
         notif_receive(ieee154e_vars.dataReceived);
+
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        channel_cal_rx_failure(ieee154e_vars.freq);
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // reset local variable
         ieee154e_vars.dataReceived = NULL;
