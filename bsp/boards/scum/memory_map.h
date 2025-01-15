@@ -168,12 +168,12 @@
 
 #define UART_REG__TX_DATA       *(unsigned int*)(APB_UART_BASE)
 #define UART_REG__RX_DATA       *(unsigned int*)(APB_UART_BASE)
-    
+
 // ========================== GPIO Registers ==================================
 
 #define GPIO_REG__INPUT         *(unsigned int*)(APB_GPIO_BASE + 0x000000)
 #define GPIO_REG__OUTPUT        *(unsigned int*)(APB_GPIO_BASE + 0x040000)
-    
+
 // ========================== Analog Configure Registers ======================
 
 #define ANALOG_CFG_REG__0       *(unsigned int*)(APB_ANALOG_CFG_BASE + 0x000000)

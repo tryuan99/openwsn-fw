@@ -9,6 +9,7 @@
 #include "memory_map.h"
 #include "opendefs.h"
 #include "opentimers.h"
+#include "memory_map.h"
 #include "radio.h"
 #include "schedule.h"
 #include "scheduler.h"
@@ -39,7 +40,7 @@ typedef enum {
     CHANNEL_CAL_RX_DONE,
 } channel_cal_state_e;
 
-// Channel direction information.
+// Channel mode information.
 typedef struct {
     // RX channel calibration state.
     bool calibrated;
@@ -52,15 +53,15 @@ typedef struct {
 
     // Number of failures for the current tuning code.
     uint8_t num_failures;
-} channel_cal_channel_direction_info_t;
+} channel_cal_channel_mode_info_t;
 
 // Channel information.
 typedef struct {
     // RX information.
-    channel_cal_channel_direction_info_t rx;
+    channel_cal_channel_mode_info_t rx;
 
     // TX information.
-    channel_cal_channel_direction_info_t tx;
+    channel_cal_channel_mode_info_t tx;
 } channel_cal_channel_info_t;
 
 // Channel information for all channels.
@@ -72,16 +73,76 @@ static bool g_channel_cal_initial_rx_sweep_finished = FALSE;
 // Channel calibration timer ID.
 static opentimers_id_t g_channel_cal_timer_id;
 
-// Initialize the channel direction information.
-static inline bool channel_cal_init_channel_direction_info(
-    channel_cal_channel_direction_info_t* channel_direction_info,
+// Print the tuning code over UART.
+static inline void channel_cal_print_tuning_code(
+    const uint8_t channel, const channel_mode_e channel_mode,
     const tuning_code_t* tuning_code) {
-    memset(channel_direction_info, 0,
-           sizeof(channel_cal_channel_direction_info_t));
+    switch (channel_mode) {
+        case CHANNEL_MODE_TX: {
+            UART_REG__TX_DATA = 'T';
+            break;
+        }
+        case CHANNEL_MODE_RX: {
+            UART_REG__TX_DATA = 'R';
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    UART_REG__TX_DATA = 'X';
+    UART_REG__TX_DATA = ' ';
+    // Print the channel.
+    UART_REG__TX_DATA = '0' + channel / 10;
+    UART_REG__TX_DATA = '0' + channel % 10;
+    UART_REG__TX_DATA = ' ';
+    // Print the tuning code.
+    UART_REG__TX_DATA = '0' + tuning_code->coarse / 10;
+    UART_REG__TX_DATA = '0' + tuning_code->coarse % 10;
+    UART_REG__TX_DATA = '.';
+    UART_REG__TX_DATA = '0' + tuning_code->mid / 10;
+    UART_REG__TX_DATA = '0' + tuning_code->mid % 10;
+    UART_REG__TX_DATA = '.';
+    UART_REG__TX_DATA = '0' + tuning_code->fine / 10;
+    UART_REG__TX_DATA = '0' + tuning_code->fine % 10;
+    UART_REG__TX_DATA = '\n';
+}
+
+// Print that channel calibration is finished for a channel.
+static inline void channel_cal_print_channel_calibration_finished(
+    const uint8_t channel, const channel_mode_e channel_mode) {
+    switch (channel_mode) {
+        case CHANNEL_MODE_TX: {
+            UART_REG__TX_DATA = 'T';
+            break;
+        }
+        case CHANNEL_MODE_RX: {
+            UART_REG__TX_DATA = 'R';
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    UART_REG__TX_DATA = 'X';
+    UART_REG__TX_DATA = ' ';
+    // Print the channel.
+    UART_REG__TX_DATA = '0' + channel / 10;
+    UART_REG__TX_DATA = '0' + channel % 10;
+    UART_REG__TX_DATA = ' ';
+    UART_REG__TX_DATA = '*';
+    UART_REG__TX_DATA = '\n';
+}
+
+// Initialize the channel mode information.
+static inline bool channel_cal_init_channel_mode_info(
+    channel_cal_channel_mode_info_t* channel_mode_info,
+    const tuning_code_t* tuning_code) {
+    memset(channel_mode_info, 0, sizeof(channel_cal_channel_mode_info_t));
     tuning_code_t tuning_code_rolled_over = *tuning_code;
     tuning_rollover_mid_code(&tuning_code_rolled_over,
                              /*mid_code_threshold=*/1);
-    channel_direction_info->sweep_config = (tuning_sweep_config_t){
+    channel_mode_info->sweep_config = (tuning_sweep_config_t){
         .coarse =
             {
                 .start = tuning_code_rolled_over.coarse,
@@ -100,15 +161,15 @@ static inline bool channel_cal_init_channel_direction_info(
     };
 
     // Validate the sweep configuration.
-    if (tuning_validate_sweep_config(&channel_direction_info->sweep_config) ==
+    if (tuning_validate_sweep_config(&channel_mode_info->sweep_config) ==
         FALSE) {
         printf("Invalid sweep configuration.\n");
         return FALSE;
     }
-    channel_direction_info->calibrated = FALSE;
-    channel_direction_info->num_failures = 0;
-    tuning_init_for_sweep(&channel_direction_info->tuning_code,
-                          &channel_direction_info->sweep_config);
+    channel_mode_info->calibrated = FALSE;
+    channel_mode_info->num_failures = 0;
+    tuning_init_for_sweep(&channel_mode_info->tuning_code,
+                          &channel_mode_info->sweep_config);
     return TRUE;
 }
 
@@ -140,13 +201,9 @@ static void channel_cal_initial_rx_timer_cb(const opentimers_id_t timer_id) {
     tuning_increment_fine_code_for_sweep(
         &g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code,
         &g_channel_cal_channel_infos[initial_channel_index].rx.sweep_config);
-    printf(
-        "Tuning to %u.%u.%u for RX channel calibration on channel %u.\n",
-        g_channel_cal_channel_infos[initial_channel_index]
-            .rx.tuning_code.coarse,
-        g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code.mid,
-        g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code.fine,
-        CHANNEL_CAL_INITIAL_CHANNEL);
+    channel_cal_print_tuning_code(
+        CHANNEL_CAL_INITIAL_CHANNEL, CHANNEL_MODE_RX,
+        &g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code);
     channel_cal_initial_rx_tune_radio();
 
     // Schedule the next timer callback in case no enhanced beacons are
@@ -183,7 +240,7 @@ bool channel_cal_init_initial_rx_sweep(void) {
     const uint8_t initial_channel_index =
         channel_convert_channel_to_index(CHANNEL_CAL_INITIAL_CHANNEL);
     memset(&g_channel_cal_channel_infos[initial_channel_index].rx, 0,
-           sizeof(channel_cal_channel_direction_info_t));
+           sizeof(channel_cal_channel_mode_info_t));
     g_channel_cal_channel_infos[initial_channel_index].rx.sweep_config =
         (tuning_sweep_config_t){
             .coarse =
@@ -232,7 +289,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         channel_convert_channel_to_index(CHANNEL_CAL_INITIAL_CHANNEL);
     tuning_code_t initial_channel_rx_tuning_code =
         g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code;
-    if (channel_cal_init_channel_direction_info(
+    if (channel_cal_init_channel_mode_info(
             &g_channel_cal_channel_infos[initial_channel_index].rx,
             &initial_channel_rx_tuning_code) == FALSE) {
         printf("Invalid RX sweep configuration for channel %u.\n",
@@ -247,7 +304,7 @@ bool channel_cal_init_remaining_sweeps(void) {
     tuning_code_t initial_channel_tx_tuning_code =
         g_channel_cal_channel_infos[initial_channel_index].rx.tuning_code;
     tuning_estimate_tx_from_rx(&initial_channel_tx_tuning_code);
-    if (channel_cal_init_channel_direction_info(
+    if (channel_cal_init_channel_mode_info(
             &g_channel_cal_channel_infos[initial_channel_index].tx,
             &initial_channel_tx_tuning_code) == FALSE) {
         printf("Invalid TX sweep configuration for channel %u.\n",
@@ -267,7 +324,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         tuning_code_t channel_rx_tuning_code =
             g_channel_cal_channel_infos[last_channel_index].rx.tuning_code;
         tuning_estimate_previous_channel(&channel_rx_tuning_code);
-        if (channel_cal_init_channel_direction_info(
+        if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].rx,
                 &channel_rx_tuning_code) == FALSE) {
             printf("Invalid RX sweep configuration for channel %u.\n", channel);
@@ -278,7 +335,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         tuning_code_t channel_tx_tuning_code =
             g_channel_cal_channel_infos[last_channel_index].tx.tuning_code;
         tuning_estimate_previous_channel(&channel_tx_tuning_code);
-        if (channel_cal_init_channel_direction_info(
+        if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].tx,
                 &channel_tx_tuning_code) == FALSE) {
             printf("Invalid TX sweep configuration for channel %u.\n", channel);
@@ -296,7 +353,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         tuning_code_t channel_rx_tuning_code =
             g_channel_cal_channel_infos[last_channel_index].rx.tuning_code;
         tuning_estimate_next_channel(&channel_rx_tuning_code);
-        if (channel_cal_init_channel_direction_info(
+        if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].rx,
                 &channel_rx_tuning_code) == FALSE) {
             printf("Invalid RX sweep configuration for channel %u.\n", channel);
@@ -307,7 +364,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         tuning_code_t channel_tx_tuning_code =
             g_channel_cal_channel_infos[last_channel_index].tx.tuning_code;
         tuning_estimate_next_channel(&channel_tx_tuning_code);
-        if (channel_cal_init_channel_direction_info(
+        if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].tx,
                 &channel_tx_tuning_code) == FALSE) {
             printf("Invalid TX sweep configuration for channel %u.\n", channel);
@@ -331,7 +388,8 @@ void channel_cal_end_initial_rx_sweep(void) {
     channel_cal_rx_success(CHANNEL_CAL_INITIAL_CHANNEL);
     g_channel_cal_initial_rx_sweep_finished = TRUE;
     opentimers_cancel(g_channel_cal_timer_id);
-    printf("Initial RX channel calibration finished.\n");
+    channel_cal_print_channel_calibration_finished(CHANNEL_CAL_INITIAL_CHANNEL,
+                                                   CHANNEL_MODE_RX);
 }
 
 bool channel_cal_initial_rx_calibrated(void) {
@@ -373,7 +431,7 @@ void channel_cal_rx_success(const uint8_t channel) {
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     g_channel_cal_channel_infos[channel_index].rx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].rx.num_failures = 0;
-    printf("RX channel calibration finished on channel %u.", channel);
+    channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_RX);
 }
 
 void channel_cal_tx_get_tuning_code(const uint8_t channel,
@@ -411,5 +469,5 @@ void channel_cal_tx_success(const uint8_t channel) {
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     g_channel_cal_channel_infos[channel_index].tx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].tx.num_failures = 0;
-    printf("TX channel calibration finished on channel %u.", channel);
+    channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_TX);
 }
