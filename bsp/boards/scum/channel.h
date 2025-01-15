@@ -14,6 +14,12 @@ typedef enum {
     CHANNEL_MODE_RX,
 } channel_mode_e;
 
+// Convert the channel to an index.
+uint8_t channel_convert_channel_to_index(uint8_t channel);
+
+// Convert the index to a channel.
+uint8_t channel_convert_index_to_channel(uint8_t index);
+
 // Set the tuning code for a channel.
 void channel_set_tuning_code(uint8_t channel, channel_mode_e mode,
                              const tuning_code_t* tuning_code);

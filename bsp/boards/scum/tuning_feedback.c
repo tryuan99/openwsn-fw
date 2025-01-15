@@ -100,7 +100,7 @@ void tuning_feedback_adjust_rx(const uint8_t channel,
         TUNING_FEEDBACK_NOMINAL_IF_COUNT + TUNING_FEEDBACK_MAX_IF_OFFSET) {
         // The IF estimate is too high.
         // TODO(titan): Handle fine code and mid code overflows.
-        tuning_increment_code(&tuning_code);
+        tuning_increment_fine_codes(&tuning_code, /*num_fine_codes=*/1);
         channel_set_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
         printf("Incrementing RX tuning code to %d.%d.%d.\n", tuning_code.coarse,
                tuning_code.mid, tuning_code.fine);
@@ -109,7 +109,7 @@ void tuning_feedback_adjust_rx(const uint8_t channel,
                                          TUNING_FEEDBACK_MAX_IF_OFFSET) {
         // The IF estimate is too low.
         // TODO(titan): Handle fine code and mid code underflows.
-        tuning_decrement_code(&tuning_code);
+        tuning_decrement_fine_codes(&tuning_code, /*num_fine_codes=*/1);
         channel_set_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
         printf("Decrementing RX tuning code to %d.%d.%d.\n", tuning_code.coarse,
                tuning_code.mid, tuning_code.fine);

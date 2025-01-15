@@ -44,6 +44,38 @@ typedef struct __attribute__((packed)) {
     tuning_sweep_range_t fine;
 } tuning_sweep_config_t;
 
+// Increment the tuning code by some fine codes.
+void tuning_increment_fine_codes(tuning_code_t* tuning_code,
+                                 uint8_t num_fine_codes);
+
+// Decrement the tuning code by some fine codes.
+void tuning_decrement_fine_codes(tuning_code_t* tuning_code,
+                                 uint8_t num_fine_codes);
+
+// Increment the tuning code by some mid codes.
+void tuning_increment_mid_codes(tuning_code_t* tuning_code,
+                                uint8_t num_mid_codes);
+
+// Decrement the tuning code by some mid codes.
+void tuning_decrement_mid_codes(tuning_code_t* tuning_code,
+                                uint8_t num_mid_codes);
+
+// Rollover the mid code if it is too close to the maximum mid code.
+void tuning_rollover_mid_code(tuning_code_t* tuning_code,
+                              uint8_t mid_code_threshold);
+
+// Estimate the tuning code for the previous channel.
+void tuning_estimate_previous_channel(tuning_code_t* tuning_code);
+
+// Estimate the tuning code for the next channel.
+void tuning_estimate_next_channel(tuning_code_t* tuning_code);
+
+// Estimate the TX tuning code from the RX tuning code.
+void tuning_estimate_tx_from_rx(tuning_code_t* tuning_code);
+
+// Estimate the RX tuning code from the TX tuning code.
+void tuning_estimate_rx_from_tx(tuning_code_t* tuning_code);
+
 // Initialize the tuning code to the minimum value given by the sweep
 // configuration.
 void tuning_init_for_sweep(tuning_code_t* tuning_code,
@@ -52,24 +84,10 @@ void tuning_init_for_sweep(tuning_code_t* tuning_code,
 // Validate the sweep configuration.
 bool tuning_validate_sweep_config(const tuning_sweep_config_t* sweep_config);
 
-// Increment the tuning code by one fine code.
-void tuning_increment_code(tuning_code_t* tuning_code);
-
-// Decrement the tuning code by one fine code.
-void tuning_decrement_code(tuning_code_t* tuning_code);
-
-// Increment the tuning code by multiple fine codes.
-void tuning_increment_multiple_codes(tuning_code_t* tuning_code,
-                                     uint8_t num_codes);
-
-// Decrement the tuning code by multiple fine codes.
-void tuning_decrement_multiple_codes(tuning_code_t* tuning_code,
-                                     uint8_t num_codes);
-
 // Increment the tuning code by one fine code, rolling over at the range
 // boundaries given by the sweep configuration.
-void tuning_increment_code_for_sweep(tuning_code_t* tuning_code,
-                                     const tuning_sweep_config_t* sweep_config);
+void tuning_increment_fine_code_for_sweep(
+    tuning_code_t* tuning_code, const tuning_sweep_config_t* sweep_config);
 
 // Increment the tuning code by one mid code, rolling over at the range
 // boundaries given by the sweep configuration.
