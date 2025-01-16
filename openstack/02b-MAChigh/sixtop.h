@@ -152,6 +152,10 @@ void task_sixtopNotifSendDone(void);
 
 void task_sixtopNotifReceive(void);
 
+void task_sixtopNotifSendKA(void);
+
+void sixtop_setKAPeriod(uint16_t period);
+
 // debugging
 bool debugPrint_myDAGrank(void);
 
@@ -163,5 +167,3 @@ bool debugPrint_kaPeriod(void);
 */
 
 #endif /* OPENWSN_SIXTOP_H */
-
-

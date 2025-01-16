@@ -55,6 +55,9 @@ void channel_cal_rx_failure(uint8_t channel);
 // Handle a successful RX on the given channel.
 void channel_cal_rx_success(uint8_t channel);
 
+// Return whether all channels have finished RX calibration.
+bool channel_cal_all_rx_calibrated(void);
+
 // Get the TX tuning code for the channel, which may or may not be calibrated.
 void channel_cal_tx_get_tuning_code(uint8_t channel,
                                     tuning_code_t* tuning_code);
@@ -67,5 +70,8 @@ void channel_cal_tx_failure(uint8_t channel);
 
 // Handle a successful TX on the given channel.
 void channel_cal_tx_success(uint8_t channel);
+
+// Return whether all channels have finished TX calibration.
+bool channel_cal_all_tx_calibrated(void);
 
 #endif  // __CHANNEL_CAL_H

@@ -1039,7 +1039,6 @@ port_INLINE void activity_ti1ORri1(void) {
             // check whether we can send
             if (schedule_getOkToSend()) {
                 if (packetfunctions_isBroadcastMulticast(&neighbor) == FALSE) {
-
                     // look for a unicast packet to send
                     ieee154e_vars.dataToSend = openqueue_macGetUnicastPacket(&neighbor);
 
@@ -1076,6 +1075,7 @@ port_INLINE void activity_ti1ORri1(void) {
                 // change state
                 changeState(S_TXDATAOFFSET);
                 UART_REG__TX_DATA = 'U';
+                UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
                 UART_REG__TX_DATA = '\n';
                 // change owner
                 ieee154e_vars.dataToSend->owner = COMPONENT_IEEE802154E;
@@ -1369,6 +1369,7 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
 
     if (listenForAck == TRUE) {
         UART_REG__TX_DATA = 'K';
+        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
         UART_REG__TX_DATA = '\n';
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
         // 1. schedule timer for enabling receiving
@@ -1665,6 +1666,9 @@ port_INLINE void activity_ti9(PORT_TIMER_WIDTH capturedTime) {
         // inform schedule of successful transmission
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        UART_REG__TX_DATA = 'T';
+        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
+        UART_REG__TX_DATA = '\n';
         channel_cal_tx_success(ieee154e_vars.freq);
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
@@ -1955,6 +1959,9 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
         ieee154e_vars.dataReceived->l2_timeCorrection = (PORT_SIGNED_INT_WIDTH)(
                 (PORT_SIGNED_INT_WIDTH) TsTxOffset - (PORT_SIGNED_INT_WIDTH) ieee154e_vars.syncCapturedTime);
 
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        channel_cal_rx_success(ieee154e_vars.freq);
+#endif // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
         // check if ack requested
         if (ieee802514_header.ackRequested == 1 && ieee154e_vars.isAckEnabled == TRUE) {
@@ -3050,6 +3057,18 @@ void endSlot(void) {
         // reset local variable
         ieee154e_vars.ackReceived = NULL;
     }
+
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    // Continuously send keep-alive packets for the TX channel calibration.
+    if (channel_cal_all_tx_calibrated() == FALSE) {
+        UART_REG__TX_DATA = '&';
+        UART_REG__TX_DATA = '\n';
+        task_sixtopNotifSendKA();
+        sixtop_setKAPeriod(/*period=*/0);
+    } else {
+        sixtop_setKAPeriod(/*period=*/MAXKAPERIOD);
+    }
+#endif // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
 
     // check if this is auto tx cell
     if (

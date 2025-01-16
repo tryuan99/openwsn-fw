@@ -9,7 +9,6 @@
 #include "memory_map.h"
 #include "opendefs.h"
 #include "opentimers.h"
-#include "memory_map.h"
 #include "radio.h"
 #include "schedule.h"
 #include "scheduler.h"
@@ -69,6 +68,12 @@ static channel_cal_channel_info_t g_channel_cal_channel_infos[NUM_CHANNELS];
 
 // If true, the initial RX sweep is finished.
 static bool g_channel_cal_initial_rx_sweep_finished = FALSE;
+
+// Number of channels that have finished RX calibration.
+static uint8_t g_channel_cal_num_channels_rx_calibrated = 0;
+
+// Number of channels that have finished TX calibration.
+static uint8_t g_channel_cal_num_channels_tx_calibrated = 0;
 
 // Channel calibration timer ID.
 static opentimers_id_t g_channel_cal_timer_id;
@@ -277,6 +282,8 @@ bool channel_cal_init_initial_rx_sweep(void) {
         &g_channel_cal_channel_infos[initial_channel_index].rx.sweep_config);
 
     g_channel_cal_initial_rx_sweep_finished = FALSE;
+    g_channel_cal_num_channels_rx_calibrated = 0;
+    g_channel_cal_num_channels_tx_calibrated = 0;
     g_channel_cal_timer_id =
         opentimers_create(TIMER_GENERAL_PURPOSE, TASKPRIO_NONE);
     return TRUE;
@@ -431,7 +438,12 @@ void channel_cal_rx_success(const uint8_t channel) {
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     g_channel_cal_channel_infos[channel_index].rx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].rx.num_failures = 0;
+    ++g_channel_cal_num_channels_rx_calibrated;
     channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_RX);
+}
+
+bool channel_cal_all_rx_calibrated(void) {
+    return g_channel_cal_num_channels_rx_calibrated >= NUM_CHANNELS;
 }
 
 void channel_cal_tx_get_tuning_code(const uint8_t channel,
@@ -469,5 +481,10 @@ void channel_cal_tx_success(const uint8_t channel) {
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     g_channel_cal_channel_infos[channel_index].tx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].tx.num_failures = 0;
+    ++g_channel_cal_num_channels_tx_calibrated;
     channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_TX);
+}
+
+bool channel_cal_all_tx_calibrated(void) {
+    return g_channel_cal_num_channels_tx_calibrated >= NUM_CHANNELS;
 }

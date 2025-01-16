@@ -182,7 +182,7 @@ owerror_t sixtop_request(
         // printf("sixtop is still in state %d\n", sixtop_vars.six2six_state);
         return E_FAIL;
     }
-    
+
 #ifdef SCUM_DEBUG
     // printf("sixtop operation code %d\r\n", code);
     UART_REG__TX_DATA = 's';
@@ -532,6 +532,14 @@ void task_sixtopNotifReceive(void) {
                       (errorparameter_t) 0);
             break;
     }
+}
+
+void task_sixtopNotifSendKA(void) {
+    sixtop_sendKA();
+}
+
+void sixtop_setKAPeriod(uint16_t period) {
+    sixtop_vars.kaPeriod = period;
 }
 
 //======= debugging
@@ -906,13 +914,13 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
 
     // if this is a request send done
     if (msg->l2_sixtop_messageType == SIXTOP_CELL_REQUEST) {
-        
-#ifdef SCUM_DEBUG       
+
+#ifdef SCUM_DEBUG
         // printf("sixtop senddone %d state %d \r\n", error, sixtop_vars.six2six_state);
         UART_REG__TX_DATA = 'd';
         UART_REG__TX_DATA = '\n';
 #endif
-        
+
         if (error == E_FAIL) {
             // max retries, without ack
             switch (sixtop_vars.six2six_state) {
@@ -927,7 +935,7 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
                     break;
             }
         } else {
-            
+
             // the packet has been sent out successfully
             switch (sixtop_vars.six2six_state) {
                 case SIX_STATE_WAIT_ADDREQUEST_SENDDONE:
@@ -1515,13 +1523,13 @@ void sixtop_six2six_notifyReceive(
                             &(pkt->l2_nextORpreviousHop), // neighbor that cells to be added to
                             sixtop_vars.cellOptions       // cell options
                     );
-                    
+
 #ifdef SCUM_DEBUG
                     // printf("six top add cell\r\n");
                     UART_REG__TX_DATA = 'C';
                     UART_REG__TX_DATA = '\n';
 #endif
-                    
+
                     neighbors_updateSequenceNumber(&(pkt->l2_nextORpreviousHop));
                     break;
                 case SIX_STATE_WAIT_DELETERESPONSE:
@@ -1677,8 +1685,8 @@ bool sixtop_addCells(
             schedule_addActiveSlot(cellList[i].slotoffset, type, isShared, FALSE, cellList[i].channeloffset,
                                    &temp_neighbor);
         }
-    }    
-    
+    }
+
 #ifdef  SCUM_DEBUG
     // printf("slot add %d num %d slot %d\r\n", hasCellsAdded, i, cellList[i - 1].slotoffset);
     UART_REG__TX_DATA = 'a';
