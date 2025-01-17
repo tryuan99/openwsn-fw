@@ -69,6 +69,10 @@ void tuning_decrement_mid_codes(tuning_code_t* tuning_code,
 
 void tuning_rollover_mid_code(tuning_code_t* tuning_code,
                               const uint8_t mid_code_threshold) {
+    if (tuning_code->mid < TUNING_MIN_CODE + mid_code_threshold) {
+        tuning_code->mid += TUNING_NUM_MID_CODES_PER_COARSE_CODE_TRANSITION;
+        --tuning_code->coarse;
+    }
     if (tuning_code->mid + mid_code_threshold > TUNING_MAX_CODE) {
         tuning_code->mid -= TUNING_NUM_MID_CODES_PER_COARSE_CODE_TRANSITION;
         ++tuning_code->coarse;
@@ -98,7 +102,14 @@ void tuning_estimate_rx_from_tx(tuning_code_t* tuning_code) {
 void tuning_init_for_sweep(tuning_code_t* tuning_code,
                            const tuning_sweep_config_t* sweep_config) {
     tuning_code->coarse = sweep_config->coarse.start;
-    tuning_code->mid = sweep_config->mid.start;
+    // Start from the middle of the mid code range if the coarse code is
+    // constant.
+    if (sweep_config->coarse.start == sweep_config->coarse.end) {
+        tuning_code->mid =
+            (sweep_config->mid.start + sweep_config->mid.end) / 2;
+    } else {
+        tuning_code->mid = sweep_config->mid.start;
+    }
     tuning_code->fine = sweep_config->fine.start;
 }
 
