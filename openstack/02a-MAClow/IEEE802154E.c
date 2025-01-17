@@ -2662,7 +2662,12 @@ void synchronizePacket(PORT_TIMER_WIDTH timeReceived) {
     currentPeriod = ieee154e_vars.slotDuration;
 
     // calculate new period
+#ifdef SCUM
+    // For longer EB periods, add a backoff to the time correction to maintain time synchronization.
+    timeCorrection = (PORT_SIGNED_INT_WIDTH)((PORT_SIGNED_INT_WIDTH) timeReceived - (PORT_SIGNED_INT_WIDTH) TsTxOffset - (PORT_SIGNED_INT_WIDTH) 100);
+#else // !defined(SCUM)
     timeCorrection = (PORT_SIGNED_INT_WIDTH)((PORT_SIGNED_INT_WIDTH) timeReceived - (PORT_SIGNED_INT_WIDTH) TsTxOffset);
+#endif // defined(SCUM)
 
     // The interrupt beginning a new slot can either occur after the packet has been or while it is being received,
     // possibly because the mote is not yet synchronized. In the former case we simply take the usual slotLength and
