@@ -838,7 +838,7 @@ port_INLINE void activity_synchronize_endOfFrame(PORT_TIMER_WIDTH capturedTime) 
         if (channel_cal_initial_rx_calibrated() == FALSE) {
             channel_cal_end_initial_rx_sweep();
             if (channel_cal_init_remaining_sweeps() == FALSE) {
-                printf("Faield to initialize remaining sweeps for channel calibration.\n");
+                printf("Failed to initialize remaining sweeps for channel calibration.\n");
             }
         } else {
             channel_cal_rx_success(ieee154e_vars.freq);
@@ -1398,6 +1398,7 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
     } else {
         // indicate succesful Tx to schedule to keep statistics
         UART_REG__TX_DATA = 'S';
+        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
         UART_REG__TX_DATA = '\n';
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
         // indicate to upper later the packet was sent successfully
@@ -1498,6 +1499,7 @@ port_INLINE void activity_tie5(void) {
     ieee154e_vars.dataToSend = NULL;
 
     UART_REG__TX_DATA = 'E';
+    UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
     UART_REG__TX_DATA = '\n';
 
     // abort
@@ -1865,6 +1867,7 @@ port_INLINE void activity_ri5(PORT_TIMER_WIDTH capturedTime) {
         );
 
         UART_REG__TX_DATA = 'R';
+        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
         UART_REG__TX_DATA = '\n';
 
         // break if wrong length
