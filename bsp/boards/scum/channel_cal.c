@@ -162,7 +162,9 @@ static inline bool channel_cal_init_channel_mode_info(
         .fine =
             {
                 .start = TUNING_MIN_CODE,
-                .end = TUNING_MAX_CODE,
+                // The RX tuning code is incremented by 5 when receiving with a
+                // guard time of less than 10 ms.
+                .end = TUNING_MAX_CODE - 7,
             },
     };
 
@@ -264,7 +266,7 @@ bool channel_cal_init_initial_rx_sweep(void) {
                     .start = TUNING_MIN_CODE,
                     // The RX tuning code is incremented by 5 when receiving
                     // with a guard time of less than 10 ms.
-                    .end = TUNING_MAX_CODE - 5,
+                    .end = TUNING_MAX_CODE - 7,
                 },
         };
 
@@ -451,10 +453,27 @@ void channel_cal_rx_failure(const uint8_t channel) {
 
 void channel_cal_rx_success(const uint8_t channel) {
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
-    g_channel_cal_channel_infos[channel_index].rx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].rx.num_failures = 0;
-    ++g_channel_cal_num_channels_rx_calibrated;
     channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_RX);
+
+    if (g_channel_cal_channel_infos[channel_index].rx.calibrated == FALSE) {
+        ++g_channel_cal_num_channels_rx_calibrated;
+
+        // Set the TX sweep configuration.
+        if (channel_cal_tx_calibrated(channel) == FALSE) {
+            tuning_code_t tuning_code =
+                g_channel_cal_channel_infos[channel_index].rx.tuning_code;
+            tuning_estimate_tx_from_rx(&tuning_code);
+            if (channel_cal_init_channel_mode_info(
+                    &g_channel_cal_channel_infos[channel_index].tx,
+                    &tuning_code,
+                    /*extended=*/FALSE) == FALSE) {
+                printf("Invalid TX sweep configuration for channel %u.\n",
+                       CHANNEL_CAL_INITIAL_CHANNEL);
+            }
+        }
+    }
+    g_channel_cal_channel_infos[channel_index].rx.calibrated = TRUE;
 }
 
 bool channel_cal_all_rx_calibrated(void) {
