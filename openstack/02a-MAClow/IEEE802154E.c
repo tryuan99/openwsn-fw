@@ -3071,8 +3071,8 @@ void endSlot(void) {
     if (channel_cal_all_tx_calibrated() == FALSE) {
         UART_REG__TX_DATA = '&';
         UART_REG__TX_DATA = '\n';
-        task_sixtopNotifSendKA();
         sixtop_setKAPeriod(/*period=*/0);
+        task_sixtopNotifSendKA();
     } else {
         sixtop_setKAPeriod(/*period=*/MAXKAPERIOD);
     }

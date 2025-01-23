@@ -94,7 +94,7 @@ open_addr_t* neighbors_getKANeighbor(uint16_t kaPeriod) {
     if (icmpv6rpl_getPreferredParentIndex(&i)) {      // we have a Parent
         if (neighbors_vars.neighbors[i].used == 1) {     // that resolves to a neighbor in use (should always)
             timeSinceHeard = ieee154e_asnDiff(&neighbors_vars.neighbors[i].asn);
-            if (timeSinceHeard > kaPeriod) {
+            if (timeSinceHeard >= kaPeriod) {
                 // this neighbor needs to be KA'ed to
                 return &(neighbors_vars.neighbors[i].addr_64b);
             }
