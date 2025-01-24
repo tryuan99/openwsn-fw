@@ -12,6 +12,10 @@
 #include "packetfunctions.h"
 #include "openserial.h"
 
+#ifdef SCUM
+#include "channel_cal.h"
+#endif // SCUM
+
 //=========================== definition =====================================
 
 //=========================== variables =======================================
@@ -479,6 +483,23 @@ void msf_housekeeping(void) {
         return;
     }
 
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+    // If multiple TXs have failed during channel calibration, re-request a new cell.
+    if (channel_cal_num_tx_failures() > 20) {
+        sixtop_request(
+                IANA_6TOP_CMD_CLEAR,     // code
+                &parentNeighbor,         // neighbor
+                NUMCELLS_MSF,            // number cells
+                CELLOPTIONS_MSF,         // cellOptions
+                NULL,                    // celllist to add (not used)
+                NULL,                    // celllist to delete (not used)
+                IANA_6TISCH_SFID_MSF,    // sfid
+                0,                       // list command offset (not used)
+                0                        // list command maximum celllist (not used)
+        );
+    }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+
     if (schedule_getNumberOfNegotiatedCells(&parentNeighbor, CELLTYPE_TX) == 0) {
         msf_vars.needAddTx = TRUE;
         msf_trigger6pAdd();
@@ -494,7 +515,11 @@ void msf_housekeeping(void) {
     }
 
     memset(celllist_delete, 0, CELLLIST_MAX_LEN * sizeof(cellInfo_ht));
-    if (schedule_getCellsToBeRelocated(&parentNeighbor, celllist_delete)) {
+    if (
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        channel_cal_all_tx_calibrated() &&
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        schedule_getCellsToBeRelocated(&parentNeighbor, celllist_delete)) {
         if (msf_candidateAddCellList(celllist_add, NUMCELLS_MSF) == FALSE) {
             // failed to get cell list to add
             return;

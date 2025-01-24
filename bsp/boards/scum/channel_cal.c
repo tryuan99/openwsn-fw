@@ -69,6 +69,9 @@ static channel_cal_channel_info_t g_channel_cal_channel_infos[NUM_CHANNELS];
 // If true, the initial RX sweep is finished.
 static bool g_channel_cal_initial_rx_sweep_finished = FALSE;
 
+// Number of consecutive TX failures.
+static uint16_t g_channel_cal_num_tx_failures = 0;
+
 // Number of channels that have finished RX calibration.
 static uint8_t g_channel_cal_num_channels_rx_calibrated = 0;
 
@@ -285,6 +288,7 @@ bool channel_cal_init_initial_rx_sweep(void) {
         &g_channel_cal_channel_infos[initial_channel_index].rx.sweep_config);
 
     g_channel_cal_initial_rx_sweep_finished = FALSE;
+    g_channel_cal_num_tx_failures = 0;
     g_channel_cal_num_channels_rx_calibrated = 0;
     g_channel_cal_num_channels_tx_calibrated = 0;
     g_channel_cal_timer_id =
@@ -492,6 +496,8 @@ bool channel_cal_tx_calibrated(const uint8_t channel) {
 }
 
 void channel_cal_tx_failure(const uint8_t channel) {
+    ++g_channel_cal_num_tx_failures;
+
     if (channel_cal_tx_calibrated(channel) == TRUE) {
         return;
     }
@@ -512,11 +518,17 @@ void channel_cal_tx_failure(const uint8_t channel) {
 }
 
 void channel_cal_tx_success(const uint8_t channel) {
+    g_channel_cal_num_tx_failures = 0;
+
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     g_channel_cal_channel_infos[channel_index].tx.calibrated = TRUE;
     g_channel_cal_channel_infos[channel_index].tx.num_failures = 0;
     ++g_channel_cal_num_channels_tx_calibrated;
     channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_TX);
+}
+
+uint16_t channel_cal_num_tx_failures(void) {
+    return g_channel_cal_num_tx_failures;
 }
 
 bool channel_cal_all_tx_calibrated(void) {
