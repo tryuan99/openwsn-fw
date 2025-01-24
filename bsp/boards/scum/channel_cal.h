@@ -71,6 +71,9 @@ void channel_cal_tx_failure(uint8_t channel);
 // Handle a successful TX on the given channel.
 void channel_cal_tx_success(uint8_t channel);
 
+// Return the number of consecutive TX failures.
+uint16_t channel_cal_num_tx_failures(void);
+
 // Return whether all channels have finished TX calibration.
 bool channel_cal_all_tx_calibrated(void);
 
