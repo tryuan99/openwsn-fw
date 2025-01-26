@@ -145,12 +145,27 @@ void tuning_increment_fine_code_for_sweep(
 void tuning_increment_mid_code_for_sweep(
     tuning_code_t* tuning_code, const tuning_sweep_config_t* sweep_config) {
     tuning_code->fine = sweep_config->fine.start;
-    ++tuning_code->mid;
-    if (tuning_code->mid > sweep_config->mid.end) {
-        tuning_code->mid = sweep_config->mid.start;
-        ++tuning_code->coarse;
-        if (tuning_code->coarse > sweep_config->coarse.end) {
-            tuning_code->coarse = sweep_config->coarse.start;
+    if (sweep_config->coarse.start == sweep_config->coarse.end) {
+        uint8_t initial_mid_code =
+            (sweep_config->mid.start + sweep_config->mid.end) / 2;
+        int16_t mid_code_difference =
+            (int16_t)tuning_code->mid - (int16_t)initial_mid_code;
+        tuning_code->mid = (mid_code_difference <= 0)
+                               ? (initial_mid_code + 1 - mid_code_difference)
+                               : (initial_mid_code - mid_code_difference);
+        if (tuning_code->mid < sweep_config->mid.start ||
+            tuning_code->mid > sweep_config->mid.end) {
+            tuning_code->mid = initial_mid_code;
+        }
+        tuning_code->coarse = sweep_config->coarse.start;
+    } else {
+        ++tuning_code->mid;
+        if (tuning_code->mid > sweep_config->mid.end) {
+            tuning_code->mid = sweep_config->mid.start;
+            ++tuning_code->coarse;
+            if (tuning_code->coarse > sweep_config->coarse.end) {
+                tuning_code->coarse = sweep_config->coarse.start;
+            }
         }
     }
 }
