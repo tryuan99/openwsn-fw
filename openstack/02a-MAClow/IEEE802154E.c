@@ -3070,7 +3070,7 @@ void endSlot(void) {
     // Continuously send keep-alive packets for the TX channel calibration.
     if (channel_cal_all_tx_calibrated() == FALSE) {
         sixtop_setKAPeriod(/*period=*/0);
-        if (channel_cal_num_tx_failures() <= 20) {
+        if (channel_cal_num_tx_failures() <= CHANNEL_CAL_MAX_NUM_TX_FAILURES_PER_CELL) {
             // UART_REG__TX_DATA = '&';
             // UART_REG__TX_DATA = '\n';
             task_sixtopNotifSendKA();

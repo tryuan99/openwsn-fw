@@ -25,7 +25,8 @@
      (CHANNEL_CAL_ALL_CHANNELS_ENABLED ? NUM_CHANNELS : 1) * TsSlotDuration)
 
 // Number of failed TX or RX before proceeding to the next tuning code.
-#define CHANNEL_CAL_MAX_NUM_FAILURES 2
+#define CHANNEL_CAL_MAX_NUM_UNCALIBRATED_FAILURES 2
+#define CHANNEL_CAL_MAX_NUM_CALIBRATED_FAILURES 10
 
 // Channel calibration state enumeration.
 // The state only tracks the progress of calibrating the RX tuning codes. Each
@@ -442,14 +443,12 @@ bool channel_cal_rx_calibrated(const uint8_t channel) {
 }
 
 void channel_cal_rx_failure(const uint8_t channel) {
-    if (channel_cal_rx_calibrated(channel) == TRUE) {
-        return;
-    }
-
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     ++g_channel_cal_channel_infos[channel_index].rx.num_failures;
     if (g_channel_cal_channel_infos[channel_index].rx.num_failures ==
-        CHANNEL_CAL_MAX_NUM_FAILURES) {
+        (channel_cal_rx_calibrated(channel) == TRUE
+             ? CHANNEL_CAL_MAX_NUM_CALIBRATED_FAILURES
+             : CHANNEL_CAL_MAX_NUM_UNCALIBRATED_FAILURES)) {
         // Proceed to the next tuning code.
         tuning_increment_fine_code_for_sweep(
             &g_channel_cal_channel_infos[channel_index].rx.tuning_code,
@@ -484,6 +483,17 @@ void channel_cal_rx_success(const uint8_t channel) {
         }
     }
     g_channel_cal_channel_infos[channel_index].rx.calibrated = TRUE;
+
+    // Constrain the sweep range in case of future failures.
+    g_channel_cal_channel_infos[channel_index].rx.sweep_config.mid.start =
+        g_channel_cal_channel_infos[channel_index].rx.tuning_code.mid - 1;
+    g_channel_cal_channel_infos[channel_index].rx.sweep_config.mid.end =
+        g_channel_cal_channel_infos[channel_index].rx.tuning_code.mid + 1;
+    if (tuning_validate_sweep_config(
+            &g_channel_cal_channel_infos[channel_index].rx.sweep_config) ==
+        FALSE) {
+        printf("Invalid RX sweep configuration for channel %u.\n", channel);
+    }
 }
 
 bool channel_cal_all_rx_calibrated(void) {
@@ -504,14 +514,12 @@ bool channel_cal_tx_calibrated(const uint8_t channel) {
 void channel_cal_tx_failure(const uint8_t channel) {
     ++g_channel_cal_num_tx_failures;
 
-    if (channel_cal_tx_calibrated(channel) == TRUE) {
-        return;
-    }
-
     const uint8_t channel_index = channel_convert_channel_to_index(channel);
     ++g_channel_cal_channel_infos[channel_index].tx.num_failures;
     if (g_channel_cal_channel_infos[channel_index].tx.num_failures ==
-        CHANNEL_CAL_MAX_NUM_FAILURES) {
+        (channel_cal_tx_calibrated(channel) == TRUE
+             ? CHANNEL_CAL_MAX_NUM_CALIBRATED_FAILURES
+             : CHANNEL_CAL_MAX_NUM_UNCALIBRATED_FAILURES)) {
         // Proceed to the next tuning code.
         tuning_increment_fine_code_for_sweep(
             &g_channel_cal_channel_infos[channel_index].tx.tuning_code,
@@ -531,6 +539,17 @@ void channel_cal_tx_success(const uint8_t channel) {
     g_channel_cal_channel_infos[channel_index].tx.num_failures = 0;
     ++g_channel_cal_num_channels_tx_calibrated;
     channel_cal_print_channel_calibration_finished(channel, CHANNEL_MODE_TX);
+
+    // Constrain the sweep range in case of future failures.
+    g_channel_cal_channel_infos[channel_index].tx.sweep_config.mid.start =
+        g_channel_cal_channel_infos[channel_index].tx.tuning_code.mid - 1;
+    g_channel_cal_channel_infos[channel_index].tx.sweep_config.mid.end =
+        g_channel_cal_channel_infos[channel_index].tx.tuning_code.mid + 1;
+    if (tuning_validate_sweep_config(
+            &g_channel_cal_channel_infos[channel_index].tx.sweep_config) ==
+        FALSE) {
+        printf("Invalid RX sweep configuration for channel %u.\n", channel);
+    }
 }
 
 uint16_t channel_cal_num_tx_failures(void) {

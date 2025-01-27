@@ -17,6 +17,9 @@
 // Initial channel to calibrate.
 #define CHANNEL_CAL_INITIAL_CHANNEL 17
 
+// Maximum number of TX failures before requesting a new TX cell.
+#define CHANNEL_CAL_MAX_NUM_TX_FAILURES_PER_CELL 20
+
 // Initialize the channel calibration for the initial RX sweep. The sweep range
 // can be reduced if not all 802.15.4 channels need to be found.
 bool channel_cal_init_initial_rx_sweep(void);

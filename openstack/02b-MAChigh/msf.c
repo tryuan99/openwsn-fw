@@ -491,7 +491,7 @@ void msf_housekeeping(void) {
 
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     // If multiple TXs have failed during channel calibration, re-request a new cell.
-    if (channel_cal_num_tx_failures() > 20) {
+    if (channel_cal_num_tx_failures() > CHANNEL_CAL_MAX_NUM_TX_FAILURES_PER_CELL) {
         channel_cal_reset_num_tx_failures();
         sixtop_request(
                 IANA_6TOP_CMD_CLEAR,     // code
