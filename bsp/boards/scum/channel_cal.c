@@ -159,7 +159,8 @@ static inline bool channel_cal_init_channel_mode_info(
             },
         .mid =
             {
-                .start = tuning_code_rolled_over.mid - num_additional_mid_codes,
+                .start =
+                    tuning_code_rolled_over.mid - 1 - num_additional_mid_codes,
                 .end =
                     tuning_code_rolled_over.mid + 1 + num_additional_mid_codes,
             },
@@ -307,7 +308,7 @@ bool channel_cal_init_remaining_sweeps(void) {
     if (channel_cal_init_channel_mode_info(
             &g_channel_cal_channel_infos[initial_channel_index].rx,
             &initial_channel_rx_tuning_code,
-            /*num_additional_codes=*/0) == FALSE) {
+            /*num_additional_mid_codes=*/0) == FALSE) {
         printf("Invalid RX sweep configuration for channel %u.\n",
                CHANNEL_CAL_INITIAL_CHANNEL);
         return FALSE;
@@ -323,7 +324,7 @@ bool channel_cal_init_remaining_sweeps(void) {
     if (channel_cal_init_channel_mode_info(
             &g_channel_cal_channel_infos[initial_channel_index].tx,
             &initial_channel_tx_tuning_code,
-            /*num_additional_codes=*/0) == FALSE) {
+            /*num_additional_mid_codes=*/0) == FALSE) {
         printf("Invalid TX sweep configuration for channel %u.\n",
                CHANNEL_CAL_INITIAL_CHANNEL);
         return FALSE;
@@ -344,7 +345,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].rx,
                 &channel_rx_tuning_code,
-                /*num_additional_codes=*/
+                /*num_additional_mid_codes=*/
                 (uint8_t)(initial_channel_rx_tuning_code.coarse -
                               channel_rx_tuning_code.coarse >=
                           2)) == FALSE) {
@@ -359,11 +360,10 @@ bool channel_cal_init_remaining_sweeps(void) {
         if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].tx,
                 &channel_tx_tuning_code,
-                /*num_additional_codes=*/
+                /*num_additional_mid_codes=*/
                 (uint8_t)(initial_channel_tx_tuning_code.coarse -
                               channel_tx_tuning_code.coarse >=
-                          2) +
-                    1) == FALSE) {
+                          2)) == FALSE) {
             printf("Invalid TX sweep configuration for channel %u.\n", channel);
             return FALSE;
         }
@@ -382,7 +382,7 @@ bool channel_cal_init_remaining_sweeps(void) {
         if (channel_cal_init_channel_mode_info(
                 &g_channel_cal_channel_infos[channel_index].rx,
                 &channel_rx_tuning_code,
-                /*num_additional_codes=*/
+                /*num_additional_mid_codes=*/
                 (uint8_t)(channel_rx_tuning_code.coarse -
                               initial_channel_rx_tuning_code.coarse >=
                           2)) == FALSE) {
@@ -400,8 +400,7 @@ bool channel_cal_init_remaining_sweeps(void) {
                 /*num_additional_codes=*/
                 (uint8_t)(channel_tx_tuning_code.coarse -
                               initial_channel_tx_tuning_code.coarse >=
-                          2) +
-                    1) == FALSE) {
+                          2)) == FALSE) {
             printf("Invalid TX sweep configuration for channel %u.\n", channel);
             return FALSE;
         }
@@ -478,7 +477,7 @@ void channel_cal_rx_success(const uint8_t channel) {
             if (channel_cal_init_channel_mode_info(
                     &g_channel_cal_channel_infos[channel_index].tx,
                     &tuning_code,
-                    /*extended=*/FALSE) == FALSE) {
+                    /*num_additional_mid_codes=*/0) == FALSE) {
                 printf("Invalid TX sweep configuration for channel %u.\n",
                        CHANNEL_CAL_INITIAL_CHANNEL);
             }

@@ -7,7 +7,7 @@
 
 // Number of mid codes between neighboring channels.
 // This was empirically determined to be around 5-6 mid codes.
-#define TUNING_NUM_MID_CODES_BETWEEN_CHANNELS 5
+#define TUNING_NUM_MID_CODES_BETWEEN_CHANNELS 6
 
 // Number of fine codes per mid code transition.
 // This was empirically determined.
@@ -15,7 +15,7 @@
 
 // Number of mid codes per coarse code transition.
 // This was empirically determined.
-#define TUNING_NUM_MID_CODES_PER_COARSE_CODE_TRANSITION 14
+#define TUNING_NUM_MID_CODES_PER_COARSE_CODE_TRANSITION 13
 
 // Number of mid codes between TX and RX tuning codes (RX - TX).
 // This was empirically determined.
