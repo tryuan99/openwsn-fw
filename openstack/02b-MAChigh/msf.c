@@ -198,16 +198,22 @@ void msf_handleRCError(uint8_t code, open_addr_t *address) {
     uint16_t waitDuration;
 
     if (code == IANA_6TOP_RC_RESET || code == IANA_6TOP_RC_LOCKED) {
-        // waitretry
-        msf_vars.waitretry = TRUE;
-        waitDuration = WAITDURATION_MIN + openrandom_get16b() % WAITDURATION_RANDOM_RANGE;
-        opentimers_scheduleIn(
-                msf_vars.waitretryTimerId,
-                waitDuration,
-                TIME_MS,
-                TIMER_ONESHOT,
-                msf_timer_waitretry_cb
-        );
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        if (channel_cal_all_tx_calibrated() == TRUE) {
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+            // waitretry
+            msf_vars.waitretry = TRUE;
+            waitDuration = WAITDURATION_MIN + openrandom_get16b() % WAITDURATION_RANDOM_RANGE;
+            opentimers_scheduleIn(
+                    msf_vars.waitretryTimerId,
+                    waitDuration,
+                    TIME_MS,
+                    TIMER_ONESHOT,
+                    msf_timer_waitretry_cb
+            );
+#if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
+        }
+#endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     }
 
     if (code == IANA_6TOP_RC_ERROR || code == IANA_6TOP_RC_VER_ERR || code == IANA_6TOP_RC_SFID_ERR) {
@@ -486,6 +492,7 @@ void msf_housekeeping(void) {
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
     // If multiple TXs have failed during channel calibration, re-request a new cell.
     if (channel_cal_num_tx_failures() > 20) {
+        channel_cal_reset_num_tx_failures();
         sixtop_request(
                 IANA_6TOP_CMD_CLEAR,     // code
                 &parentNeighbor,         // neighbor
@@ -517,7 +524,7 @@ void msf_housekeeping(void) {
     memset(celllist_delete, 0, CELLLIST_MAX_LEN * sizeof(cellInfo_ht));
     if (
 #if defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
-        channel_cal_all_tx_calibrated() &&
+        channel_cal_all_tx_calibrated() == TRUE &&
 #endif  // defined(SCUM) && defined(CHANNEL_CAL_ENABLED)
         schedule_getCellsToBeRelocated(&parentNeighbor, celllist_delete)) {
         if (msf_candidateAddCellList(celllist_add, NUMCELLS_MSF) == FALSE) {

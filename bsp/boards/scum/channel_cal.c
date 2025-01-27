@@ -537,6 +537,10 @@ uint16_t channel_cal_num_tx_failures(void) {
     return g_channel_cal_num_tx_failures;
 }
 
+void channel_cal_reset_num_tx_failures(void) {
+    g_channel_cal_num_tx_failures = 0;
+}
+
 bool channel_cal_all_tx_calibrated(void) {
     return g_channel_cal_num_channels_tx_calibrated >= NUM_CHANNELS;
 }
