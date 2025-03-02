@@ -16,6 +16,8 @@
 #include "channel_cal.h"
 #endif // SCUM
 
+#include "memory_map.h"
+
 //=========================== definition =====================================
 
 //=========================== variables =======================================
@@ -289,16 +291,22 @@ void msf_trigger6pAdd(void) {
     uint8_t cellOptions;
 
     if (ieee154e_isSynch() == FALSE) {
+        UART_REG__TX_DATA = '>';
+        UART_REG__TX_DATA = '\n';
         return;
     }
 
     if (msf_vars.waitretry) {
+        UART_REG__TX_DATA = '?';
+        UART_REG__TX_DATA = '\n';
         return;
     }
 
     // get preferred parent
     foundNeighbor = icmpv6rpl_getPreferredParentEui64(&neighbor);
     if (foundNeighbor == FALSE) {
+        UART_REG__TX_DATA = '<';
+        UART_REG__TX_DATA = '\n';
         return;
     }
 
@@ -317,9 +325,13 @@ void msf_trigger6pAdd(void) {
 
     if (msf_candidateAddCellList(celllist_add, NUMCELLS_MSF) == FALSE) {
         // failed to get cell list to add
+        UART_REG__TX_DATA = '-';
+        UART_REG__TX_DATA = '\n';
         return;
     }
 
+    UART_REG__TX_DATA = '#';
+    UART_REG__TX_DATA = '\n';
     sixtop_request(
             IANA_6TOP_CMD_ADD,           // code
             &neighbor,                   // neighbor
@@ -468,6 +480,8 @@ void msf_housekeeping(void) {
 
     foundNeighbor = icmpv6rpl_getPreferredParentEui64(&parentNeighbor);
     if (foundNeighbor == FALSE) {
+        UART_REG__TX_DATA = 'N';
+        UART_REG__TX_DATA = '\n';
         return;
     }
 
@@ -509,6 +523,8 @@ void msf_housekeeping(void) {
 
     if (schedule_getNumberOfNegotiatedCells(&parentNeighbor, CELLTYPE_TX) == 0) {
         msf_vars.needAddTx = TRUE;
+        UART_REG__TX_DATA = '=';
+        UART_REG__TX_DATA = '\n';
         msf_trigger6pAdd();
         return;
     }
@@ -531,6 +547,8 @@ void msf_housekeeping(void) {
             // failed to get cell list to add
             return;
         }
+        UART_REG__TX_DATA = 'b';
+        UART_REG__TX_DATA = '\n';
         sixtop_request(
                 IANA_6TOP_CMD_RELOCATE,  // code
                 &parentNeighbor,         // neighbor

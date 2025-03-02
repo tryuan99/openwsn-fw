@@ -238,6 +238,7 @@ void schedule_getSlotInfo(slotOffset_t slotOffset, slotinfo_element_t *info) {
 \param neighbor         The neighbor associated with this cell (all 0's if
    none)
 */
+#include "memory_map.h"
 owerror_t schedule_addActiveSlot(
         slotOffset_t slotOffset,
         cellType_t type,
@@ -261,6 +262,12 @@ owerror_t schedule_addActiveSlot(
 
     INTERRUPT_DECLARATION();
     DISABLE_INTERRUPTS();
+
+    UART_REG__TX_DATA = 's';
+    UART_REG__TX_DATA = '0' + slotOffset;
+    UART_REG__TX_DATA = '0' + neighbor->addr_16b[0];
+    UART_REG__TX_DATA = '0' + neighbor->addr_16b[1];
+    UART_REG__RX_DATA = '\n';
 
     // find an empty schedule entry container
     entry_found = FALSE;
@@ -452,6 +459,7 @@ owerror_t schedule_addActiveSlot(
 \param neighbor         The neighbor associated with this cell (all 0's if
    none)
 */
+#include "memory_map.h"
 owerror_t schedule_removeActiveSlot(slotOffset_t slotOffset, cellType_t type, bool isShared, open_addr_t *neighbor) {
     uint8_t i;
     bool entry_found;
@@ -466,6 +474,8 @@ owerror_t schedule_removeActiveSlot(slotOffset_t slotOffset, cellType_t type, bo
     DISABLE_INTERRUPTS();
 
     // find the schedule entry
+    // UART_REG__TX_DATA = 'F';
+    // UART_REG__TX_DATA = '\n';
     entry_found = FALSE;
     isbackupEntry = FALSE;
     slotContainer = &schedule_vars.scheduleBuf[0];
@@ -641,6 +651,8 @@ void schedule_removeAllNegotiatedCellsToNeighbor(uint8_t slotframeID, open_addr_
                         schedule_vars.scheduleBuf[i].type == CELLTYPE_RX
                 )
                 ) {
+            // UART_REG__TX_DATA = 'x';
+            // UART_REG__TX_DATA = '\n';
             schedule_removeActiveSlot(
                     schedule_vars.scheduleBuf[i].slotOffset,
                     schedule_vars.scheduleBuf[i].type,
@@ -1282,4 +1294,3 @@ void schedule_resetBackupEntry(backupEntry_t *e) {
     e->lastUsedAsn.byte4 = 0;
     e->next = NULL;
 }
-

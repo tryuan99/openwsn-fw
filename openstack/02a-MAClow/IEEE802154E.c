@@ -1035,6 +1035,12 @@ port_INLINE void activity_ti1ORri1(void) {
             ieee154e_vars.dataToSend = NULL;
             // get the neighbor
             schedule_getNeighbor(&neighbor);
+            if (cellType == CELLTYPE_TX) {
+                // UART_REG__TX_DATA = 't';
+                // UART_REG__TX_DATA = '0' + ieee154e_vars.asnOffset;
+                // UART_REG__TX_DATA = '0' + ieee154e_vars.slotOffset;
+                // UART_REG__TX_DATA = '\n';
+            }
 
             // check whether we can send
             if (schedule_getOkToSend()) {
@@ -1065,6 +1071,13 @@ port_INLINE void activity_ti1ORri1(void) {
                 }
             }
 
+            // if (cellType == CELLTYPE_TX) {
+            //     UART_REG__TX_DATA = 'L';
+            //     UART_REG__TX_DATA = '0' + (ieee154e_vars.dataToSend == NULL);
+            //     UART_REG__TX_DATA = '0' + schedule_getOkToSend();
+            //     UART_REG__TX_DATA = '\n';
+            // }
+
             if (ieee154e_vars.dataToSend == NULL) {
                 if (cellType == CELLTYPE_TX) {
                     // abort
@@ -1074,9 +1087,9 @@ port_INLINE void activity_ti1ORri1(void) {
             } else {
                 // change state
                 changeState(S_TXDATAOFFSET);
-                UART_REG__TX_DATA = 'U';
-                UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
-                UART_REG__TX_DATA = '\n';
+                // UART_REG__TX_DATA = 'U';
+                // UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
+                // UART_REG__TX_DATA = '\n';
                 // change owner
                 ieee154e_vars.dataToSend->owner = COMPONENT_IEEE802154E;
                 if (couldSendEB == TRUE) { // I will be sending an EB copy synch IE -- should be Little endian?
@@ -1368,9 +1381,9 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
     }
 
     if (listenForAck == TRUE) {
-        UART_REG__TX_DATA = 'K';
-        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
-        UART_REG__TX_DATA = '\n';
+        // UART_REG__TX_DATA = 'K';
+        // UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
+        // UART_REG__TX_DATA = '\n';
 #ifdef SLOT_FSM_IMPLEMENTATION_MULTIPLE_TIMER_INTERRUPT
         // 1. schedule timer for enabling receiving
         // arm tt5
@@ -1397,9 +1410,9 @@ port_INLINE void activity_ti5(PORT_TIMER_WIDTH capturedTime) {
 #endif
     } else {
         // indicate succesful Tx to schedule to keep statistics
-        UART_REG__TX_DATA = 'S';
-        UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
-        UART_REG__TX_DATA = '\n';
+        // UART_REG__TX_DATA = 'S';
+        // UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
+        // UART_REG__TX_DATA = '\n';
         schedule_indicateTx(&ieee154e_vars.asn, TRUE);
         // indicate to upper later the packet was sent successfully
         notif_sendDone(ieee154e_vars.dataToSend, E_SUCCESS);
@@ -1498,9 +1511,9 @@ port_INLINE void activity_tie5(void) {
     // reset local variable
     ieee154e_vars.dataToSend = NULL;
 
-    UART_REG__TX_DATA = 'E';
-    UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
-    UART_REG__TX_DATA = '\n';
+    // UART_REG__TX_DATA = 'E';
+    // UART_REG__TX_DATA = '0' + ieee154e_vars.freq - MIN_CHANNEL;
+    // UART_REG__TX_DATA = '\n';
 
     // abort
     endSlot();
@@ -3088,6 +3101,16 @@ void endSlot(void) {
         // check if there are unicast packets to the neighbor of this slot if not, remove the cell
         schedule_getNeighbor(&slotNeighbor);
         if (openqueue_macGetUnicastPacket(&slotNeighbor) == NULL) {
+            // UART_REG__TX_DATA = 'z';
+            // open_addr_t* kaNeighAddr = neighbors_getKANeighbor(0);
+            // UART_REG__TX_DATA = '0' + kaNeighAddr->addr_16b[0];
+            // UART_REG__TX_DATA = '0' + kaNeighAddr->addr_16b[1];
+            // UART_REG__TX_DATA = '0' + slotNeighbor.addr_16b[0];
+            // UART_REG__TX_DATA = '0' + slotNeighbor.addr_16b[1];
+            // UART_REG__TX_DATA = '0' + memcmp(kaNeighAddr, &slotNeighbor, 8);
+            // UART_REG__TX_DATA = '0' + kaNeighAddr->type;
+            // UART_REG__TX_DATA = '0' + slotNeighbor.type;
+            // UART_REG__TX_DATA = '\n';
             schedule_removeActiveSlot(
                     ieee154e_vars.slotOffset,
                     CELLTYPE_TX,

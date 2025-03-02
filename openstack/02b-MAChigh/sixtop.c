@@ -180,6 +180,10 @@ owerror_t sixtop_request(
     if (sixtop_vars.six2six_state != SIX_STATE_IDLE || neighbor == NULL) {
         // neighbor can't be none or previous transcation doesn't finish yet
         // printf("sixtop is still in state %d\n", sixtop_vars.six2six_state);
+        UART_REG__TX_DATA = 'w';
+        UART_REG__TX_DATA = '0' + (neighbor == NULL);
+        UART_REG__TX_DATA = '0' + sixtop_vars.six2six_state;
+        UART_REG__TX_DATA = '\n';
         return E_FAIL;
     }
 
@@ -630,6 +634,9 @@ owerror_t sixtop_send_internal(
         // the frame source address is not broadcast/multicast
         // no negotiated tx cell to that neighbor
         // no auto tx cell to that neighbor
+        UART_REG__TX_DATA = '@';
+        UART_REG__TX_DATA = '0' + msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop));
+        UART_REG__TX_DATA = '\n';
 
         schedule_addActiveSlot(
                 msf_hashFunction_getSlotoffset(&(msg->l2_nextORpreviousHop)),    // slot offset
@@ -825,6 +832,9 @@ port_INLINE void sixtop_sendKA(void) {
 
     if (ieee154e_isSynch() == FALSE) {
         // I'm not sync'ed
+        // UART_REG__TX_DATA = 'k';
+        // UART_REG__TX_DATA = '1';
+        // UART_REG__TX_DATA = '\n';
 
         // delete packets genereted by this module (EB and KA) from openqueue
         openqueue_removeAllCreatedBy(COMPONENT_SIXTOP);
@@ -838,17 +848,27 @@ port_INLINE void sixtop_sendKA(void) {
     }
 
     if (sixtop_vars.busySendingKA == TRUE) {
+        // UART_REG__TX_DATA = 'k';
+        // UART_REG__TX_DATA = '2';
+        // UART_REG__TX_DATA = '\n';
         // don't proceed if I'm still sending a KA
         return;
     }
 
     kaNeighAddr = neighbors_getKANeighbor(sixtop_vars.kaPeriod);
     if (kaNeighAddr == NULL) {
+        // UART_REG__TX_DATA = 'k';
+        // UART_REG__TX_DATA = '3';
+        // UART_REG__TX_DATA = '0' + sixtop_vars.kaPeriod;
+        // UART_REG__TX_DATA = '\n';
         // don't proceed if I have no neighbor I need to send a KA to
         return;
     }
 
     if (schedule_hasNegotiatedCellToNeighbor(kaNeighAddr, CELLTYPE_TX) == FALSE) {
+        // UART_REG__TX_DATA = 'k';
+        // UART_REG__TX_DATA = '4';
+        // UART_REG__TX_DATA = '\n';
         // delete packets genereted by this module (EB and KA) from openqueue
         openqueue_removeAllCreatedBy(COMPONENT_SIXTOP);
 
@@ -860,6 +880,9 @@ port_INLINE void sixtop_sendKA(void) {
     }
 
     // if I get here, I will send a KA
+    UART_REG__TX_DATA = 'k';
+    UART_REG__TX_DATA = '5';
+    UART_REG__TX_DATA = '\n';
 
     // get a free packet buffer
     kaPkt = openqueue_getFreePacketBuffer(COMPONENT_SIXTOP);
@@ -899,6 +922,8 @@ void timer_sixtop_six2six_timeout_fired(void) {
 
     if (sixtop_vars.six2six_state == SIX_STATE_WAIT_CLEARRESPONSE) {
         // no response for the 6p clear, just clear locally
+        // UART_REG__TX_DATA = 'b';
+        // UART_REG__TX_DATA = '\n';
         schedule_removeAllNegotiatedCellsToNeighbor(sixtop_vars.cb_sf_getMetadata(), &sixtop_vars.neighborToClearCells);
         neighbors_resetSequenceNumber(&sixtop_vars.neighborToClearCells);
         memset(&sixtop_vars.neighborToClearCells, 0, sizeof(open_addr_t));
@@ -917,8 +942,13 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
 
 #ifdef SCUM_DEBUG
         // printf("sixtop senddone %d state %d \r\n", error, sixtop_vars.six2six_state);
-        UART_REG__TX_DATA = 'd';
-        UART_REG__TX_DATA = '\n';
+        // UART_REG__TX_DATA = 'd';
+        // UART_REG__TX_DATA = 'a' + error;
+        // UART_REG__TX_DATA = '0' + sixtop_vars.six2six_state;
+        // UART_REG__TX_DATA = '0' + msg->l2_sixtop_messageType;
+        // UART_REG__TX_DATA = '0' + msg->l2_sixtop_returnCode;
+        // UART_REG__TX_DATA = '0' + msg->l2_sixtop_command;
+        // UART_REG__TX_DATA = '\n';
 #endif
 
         if (error == E_FAIL) {
@@ -978,6 +1008,8 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
             // in case a response is sent out, check the return code
             if (msg->l2_sixtop_returnCode == IANA_6TOP_RC_SUCCESS) {
                 if (msg->l2_sixtop_command == IANA_6TOP_CMD_ADD) {
+                    UART_REG__TX_DATA = 'i';
+                    UART_REG__TX_DATA = '\n';
                     sixtop_addCells(
                             msg->l2_sixtop_frameID,
                             msg->l2_sixtop_celllist_add,
@@ -1002,6 +1034,8 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
                             &(msg->l2_nextORpreviousHop),
                             msg->l2_sixtop_cellOptions
                     );
+                    UART_REG__TX_DATA = 'k';
+                    UART_REG__TX_DATA = '\n';
                     sixtop_addCells(
                             msg->l2_sixtop_frameID,
                             msg->l2_sixtop_celllist_add,
@@ -1026,6 +1060,8 @@ void sixtop_six2six_sendDone(OpenQueueEntry_t *msg, owerror_t error) {
 
             // if the response is for CLEAR command, remove all the cells and reset seqnum regardless NO ack received.
             if (msg->l2_sixtop_command == IANA_6TOP_CMD_CLEAR) {
+                // UART_REG__TX_DATA = 'm';
+                // UART_REG__TX_DATA = '\n';
                 schedule_removeAllNegotiatedCellsToNeighbor(msg->l2_sixtop_frameID, &(msg->l2_nextORpreviousHop));
                 neighbors_resetSequenceNumber(&(msg->l2_nextORpreviousHop));
             }
@@ -1498,6 +1534,7 @@ void sixtop_six2six_notifyReceive(
 #ifdef SCUM_DEBUG
         // printf("six top response received: RC %d status %d\r\n", code, sixtop_vars.six2six_state);
         UART_REG__TX_DATA = 'X';
+        UART_REG__TX_DATA = '0' + code;
         UART_REG__TX_DATA = '\n';
 #endif
 
@@ -1517,6 +1554,8 @@ void sixtop_six2six_notifyReceive(
                         pktLen -= 4;
                         i++;
                     }
+                    UART_REG__TX_DATA = 'j';
+                    UART_REG__TX_DATA = '\n';
                     sixtop_addCells(
                             sixtop_vars.cb_sf_getMetadata(),     // frame id
                             pkt->l2_sixtop_celllist_add,  // celllist to be added
@@ -1546,6 +1585,8 @@ void sixtop_six2six_notifyReceive(
                         pktLen -= 4;
                         i++;
                     }
+                    // UART_REG__TX_DATA = 'l';
+                    // UART_REG__TX_DATA = '\n';
                     sixtop_removeCells(
                             sixtop_vars.cb_sf_getMetadata(),
                             pkt->l2_sixtop_celllist_delete,
@@ -1573,6 +1614,8 @@ void sixtop_six2six_notifyReceive(
                             &(pkt->l2_nextORpreviousHop),
                             sixtop_vars.cellOptions
                     );
+                    UART_REG__TX_DATA = '9';
+                    UART_REG__TX_DATA = '\n';
                     sixtop_addCells(
                             sixtop_vars.cb_sf_getMetadata(),     // frame id
                             pkt->l2_sixtop_celllist_add,  // celllist to be added
@@ -1610,6 +1653,8 @@ void sixtop_six2six_notifyReceive(
                     neighbors_updateSequenceNumber(&(pkt->l2_nextORpreviousHop));
                     break;
                 case SIX_STATE_WAIT_CLEARRESPONSE:
+                    // UART_REG__TX_DATA = ',';
+                    // UART_REG__TX_DATA = '\n';
                     schedule_removeAllNegotiatedCellsToNeighbor(
                             sixtop_vars.cb_sf_getMetadata(),
                             &(pkt->l2_nextORpreviousHop)
@@ -1622,6 +1667,8 @@ void sixtop_six2six_notifyReceive(
                     break;
             }
         } else {
+            // UART_REG__TX_DATA = 'c';
+            // UART_REG__TX_DATA = '\n';
             sixtop_vars.cb_sf_handleRCError(code, &(pkt->l2_nextORpreviousHop));
         }
 
@@ -1682,6 +1729,11 @@ bool sixtop_addCells(
     for (i = 0; i < CELLLIST_MAX_LEN; i++) {
         if (cellList[i].isUsed) {
             hasCellsAdded = TRUE;
+            UART_REG__TX_DATA = 'a';
+            UART_REG__TX_DATA = '0' + cellList[i - 1].slotoffset;
+            UART_REG__TX_DATA = '0' + temp_neighbor.addr_16b[0];
+            UART_REG__TX_DATA = '0' + temp_neighbor.addr_16b[1];
+            UART_REG__TX_DATA = '\n';
             schedule_addActiveSlot(cellList[i].slotoffset, type, isShared, FALSE, cellList[i].channeloffset,
                                    &temp_neighbor);
         }
@@ -1689,8 +1741,6 @@ bool sixtop_addCells(
 
 #ifdef  SCUM_DEBUG
     // printf("slot add %d num %d slot %d\r\n", hasCellsAdded, i, cellList[i - 1].slotoffset);
-    UART_REG__TX_DATA = 'a';
-    UART_REG__TX_DATA = '\n';
 #endif
     return hasCellsAdded;
 }
@@ -1728,6 +1778,8 @@ bool sixtop_removeCells(
     for (i = 0; i < CELLLIST_MAX_LEN; i++) {
         if (cellList[i].isUsed) {
             hasCellsRemoved = TRUE;
+            // UART_REG__TX_DATA = 'v';
+            // UART_REG__TX_DATA = '\n';
             schedule_removeActiveSlot(
                     cellList[i].slotoffset,
                     type,
