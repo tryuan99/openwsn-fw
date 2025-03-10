@@ -30,11 +30,11 @@
 #define SMART_STAKE_MAX_NUM_SENSORS 8
 
 // The 802.15.4 channel to use for receiving ADC data.
-#define SMART_STAKE_DEMO_CHANNEL 17
+#define SMART_STAKE_DEMO_CHANNEL 26
 
 // The 802.15.4 channel range to calibrate for.
-#define CHANNEL_CAL_CHANNEL_START 17
-#define CHANNEL_CAL_CHANNEL_END 18
+#define CHANNEL_CAL_CHANNEL_START 26
+#define CHANNEL_CAL_CHANNEL_END 26
 
 // Valid 802.15.4 channel range.
 #define CHANNEL_CAL_MIN_CHANNEL 11
