@@ -323,7 +323,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>SCUM, SCUM_DEBUG, OPENWSN_UDP_C, OPENWSN_USENSOR_NETWORK_C</Define>
+              <Define>SCUM, SCUM_DEBUG OPENWSN_UDP_C OPENWSN_USENSOR_NETWORK_C</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\bsp\boards\scum;..\..\..\bsp\boards;..\..\..\drivers\common;..\..\..\inc;..\..\..\openstack\02a-MAClow;..\..\..\openstack\02b-MAChigh;..\..\..\openstack\03a-IPHC;..\..\..\openstack\03b-IPv6;..\..\..\openstack\04-TRAN;..\..\..\openstack\04-TRAN\sock;..\..\..\openstack\cross-layers;..\..\..\kernel;..\..\..\openstack;..\..\..\bsp\boards\common;..\..\..\drivers\common\crypto;..\..\..\openweb;..\..\..\openapps;..\..\..\openapps\usensor_network</IncludePath>
+              <IncludePath>..\..\..\bsp\boards\scum;..\..\..\bsp\boards;..\..\..\drivers\common;..\..\..\inc;..\..\..\openstack\02a-MAClow;..\..\..\openstack\02b-MAChigh;..\..\..\openstack\03a-IPHC;..\..\..\openstack\03b-IPv6;..\..\..\openstack\04-TRAN;..\..\..\openstack\cross-layers;..\..\..\kernel;..\..\..\openstack;..\..\..\bsp\boards\common;..\..\..\drivers\common\crypto;..\..\..\openweb;..\..\..\openapps;..\..\..\openstack\04-TRAN\sock;..\..\..\openapps/usensor_network</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -545,6 +545,16 @@
               <FileName>tuning.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\bsp\boards\scum\tuning.h</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\bsp\boards\scum\gpio.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -762,6 +772,16 @@
               <FilePath>..\..\..\openstack\04-TRAN\udp.c</FilePath>
             </File>
             <File>
+              <FileName>async_types.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\async_types.h</FilePath>
+            </File>
+            <File>
+              <FileName>async.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openstack\04-TRAN\sock\async.h</FilePath>
+            </File>
+            <File>
               <FileName>sock_internal.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\openstack\04-TRAN\sock\sock_internal.h</FilePath>
@@ -780,11 +800,6 @@
               <FileName>sock.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\openstack\04-TRAN\sock\sock.h</FilePath>
-            </File>
-            <File>
-              <FileName>udp.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\openstack\04-TRAN\udp.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -805,6 +820,31 @@
               <FileName>openapps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\openapps\openapps.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensor_potentiometric.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\sensor_potentiometric.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensor_potentiometric.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\sensor_potentiometric.h</FilePath>
+            </File>
+            <File>
+              <FileName>sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\sensor.h</FilePath>
+            </File>
+            <File>
+              <FileName>sensors.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\sensors.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensors.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\openapps\usensor_network\sensors.h</FilePath>
             </File>
             <File>
               <FileName>usensor_network.c</FileName>
