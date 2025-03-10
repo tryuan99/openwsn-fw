@@ -27,7 +27,7 @@
 #include "uart_tx.h"
 
 // Number of sensors.
-#define SMART_STAKE_MAX_NUM_SENSORS 4
+#define SMART_STAKE_MAX_NUM_SENSORS 8
 
 // The 802.15.4 channel to use for receiving ADC data.
 #define SMART_STAKE_DEMO_CHANNEL 17
