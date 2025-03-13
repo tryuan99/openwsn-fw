@@ -6,13 +6,14 @@
 #include "adc.h"
 
 // Number of samples to average over.
-#define NUM_SAMPLES_TO_AVERAGE 64
+#define NUM_SAMPLES_TO_AVERAGE 4
 
 uint16_t sensor_potentiometric_measure(void) {
   // Average over multiple ADC outputs.
-  uint16_t adc_output_sum = 0;
-  for (size_t i = 0; i < NUM_SAMPLES_TO_AVERAGE; ++i) {
-    adc_output_sum += adc_read_output();
-  }
-  return adc_output_sum / NUM_SAMPLES_TO_AVERAGE;
+  // uint16_t adc_output_sum = 0;
+  // for (size_t i = 0; i < NUM_SAMPLES_TO_AVERAGE; ++i) {
+  //   adc_output_sum += adc_read_output();
+  // }
+  // return adc_output_sum / NUM_SAMPLES_TO_AVERAGE;
+  return 100;
 }
