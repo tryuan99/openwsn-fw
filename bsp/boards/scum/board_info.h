@@ -31,7 +31,7 @@ to return the board's description.
 #define PORT_TICS_PER_MS                    500
 #define PORT_US_PER_TICK                    2 // number of us per 500kHz clock tick
 
-#define SCHEDULER_WAKEUP()                  
+#define SCHEDULER_WAKEUP()
 #define SCHEDULER_ENABLE_INTERRUPT()
 
 //===== radio
@@ -43,7 +43,7 @@ to return the board's description.
 #define SLOTDURATION 20 // in miliseconds
 
 //// time-slot related
-#define PORT_TsSlotDuration                 10011  // 10000 ticks =   20ms  @500000hz
+#define PORT_TsSlotDuration                 9975   // 10000 ticks =   20ms  @500000hz
 #define PORT_maxTxDataPrepare               1650   // 1650  ticks = 3300us  @500000hz
 #define PORT_maxRxAckPrepare                604    // 504   ticks = 1006us  @500000hz
 #define PORT_maxRxDataPrepare               604    // 504   ticks = 1006us  @500000hz

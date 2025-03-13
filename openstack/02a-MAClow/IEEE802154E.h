@@ -183,7 +183,7 @@ enum ieee154e_atomicdurations_enum {
     TsLongGT                  =  (1311/PORT_US_PER_TICK),                  //  1311us
     TsTxAckDelay              =  (5521/PORT_US_PER_TICK),                  //  5521us
     TsShortGT                 =   (700/PORT_US_PER_TICK),                  //   700us
-    wdRadioTx                 =  (1342/PORT_US_PER_TICK),                  //  1000us (needs to be >delayTx) (SCuM need a larger value, 45 is tested and works)
+    wdRadioTx                 =  (1420/PORT_US_PER_TICK),                  //  1000us (needs to be >delayTx) (SCuM need a larger value, 45 is tested and works)
     wdDataDuration            =  (5000/PORT_US_PER_TICK),                  //  5000us (measured 4280us with max payload)
     wdAckDuration             =  (3000/PORT_US_PER_TICK),                  //  3000us (measured 1000us)
 #endif

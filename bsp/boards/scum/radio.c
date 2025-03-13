@@ -202,7 +202,7 @@ static inline void setFrequencyRX(const uint8_t channel, const bool is_sync, con
     tuning_code_t tuning_code;
     channel_get_tuning_code(channel, CHANNEL_MODE_RX, &tuning_code);
     if (is_sync == TRUE) {
-        tuning_code.fine += 0;
+        tuning_code.fine += 2;
     } else if (is_ack == TRUE) {
         tuning_code.fine += 3;
     } else {
