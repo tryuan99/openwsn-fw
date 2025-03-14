@@ -7,7 +7,9 @@
 #include "memory_map.h"
 #include "board.h"
 #include "debugpins.h"
+#include "opendefs.h"
 // bsp modules
+#include "adc.h"
 #include "leds.h"
 #include "uart.h"
 #include "radio.h"
@@ -54,6 +56,21 @@ unsigned short doing_initial_packet_search;
 unsigned short current_RF_channel;
 unsigned short do_debug_print = 0;
 
+// ADC configuration.
+static const adc_config_t g_adc_config = {
+    .reset_source = ADC_RESET_SOURCE_FSM,
+    .convert_source = ADC_CONVERT_SOURCE_FSM,
+    .pga_amplify_source = ADC_PGA_AMPLIFY_SOURCE_FSM,
+    .pga_gain = 0,
+    .settling_time = 0,
+    .bandgap_reference_tuning_code = 1,
+    .const_gm_tuning_code = 0xFF,
+    .vbat_div_4_enabled = FALSE,
+    .ldo_enabled = TRUE,
+    .input_mux_select = ADC_INPUT_MUX_SELECT_EXTERNAL_SIGNAL,
+    .pga_bypass = TRUE,
+};
+
 //=========================== prototypes ======================================
 
 unsigned reverse(unsigned x);
@@ -83,7 +100,13 @@ void board_init(void) {
     // Set up mote configuration
     // This function handles all the analog scan chain setup
     initialize_mote();
-    
+
+    // Configure the ADC.
+    adc_config(&g_adc_config);
+    adc_enable_interrupt();
+    analog_scan_chain_write();
+    analog_scan_chain_load();
+
     // Check CRC to ensure there were no errors during optical programming
     printf("\r\n-------------------\r\n");
     printf("Validating program integrity..."); 

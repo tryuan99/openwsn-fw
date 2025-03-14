@@ -83,21 +83,6 @@ typedef struct __attribute__((packed)) {
 } sensor_network_packet_t;
 
 #ifdef SCUM
-// ADC configuration.
-static const adc_config_t g_sensor_network_adc_config = {
-    .reset_source = ADC_RESET_SOURCE_FSM,
-    .convert_source = ADC_CONVERT_SOURCE_FSM,
-    .pga_amplify_source = ADC_PGA_AMPLIFY_SOURCE_FSM,
-    .pga_gain = 0,
-    .settling_time = 0,
-    .bandgap_reference_tuning_code = 1,
-    .const_gm_tuning_code = 0xFF,
-    .vbat_div_4_enabled = FALSE,
-    .ldo_enabled = TRUE,
-    .input_mux_select = ADC_INPUT_MUX_SELECT_EXTERNAL_SIGNAL,
-    .pga_bypass = TRUE,
-};
-
 // Sensors configuration.
 static const sensors_config_t g_sensor_network_sensors_config = {
   .gpio_strobe = GPIO_0,
@@ -295,10 +280,6 @@ void usensor_network_init(void) {
   sock_udp_set_cb(&g_sensor_network_sock, sensor_network_sock_handler, NULL);
 
 #ifdef SCUM
-  // Configure the ADC.
-  adc_config(&g_sensor_network_adc_config);
-  adc_enable_interrupt();
-
   // Configure the sensors.
   sensors_init(&g_sensor_network_sensors_config);
 #endif // SCUM
