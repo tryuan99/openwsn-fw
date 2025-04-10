@@ -2719,7 +2719,16 @@ void synchronizePacket(PORT_TIMER_WIDTH timeReceived) {
     }
 #ifdef SCUM_DEBUG
     // printf("pkt sync in network %d us\r\n", timeCorrection*2);
+    PORT_SIGNED_INT_WIDTH signedTimeCorrection = timeCorrection;
     UART_REG__TX_DATA = '*';
+    if (timeCorrection < 0) {
+        UART_REG__TX_DATA = '-';
+        signedTimeCorrection = -signedTimeCorrection;
+    }
+    UART_REG__TX_DATA = '0' + (signedTimeCorrection % 10000) / 1000;
+    UART_REG__TX_DATA = '0' + (signedTimeCorrection % 1000) / 100;
+    UART_REG__TX_DATA = '0' + (signedTimeCorrection % 100) / 10;
+    UART_REG__TX_DATA = '0' + (signedTimeCorrection % 10);
     UART_REG__TX_DATA = '\n';
 #endif
 
