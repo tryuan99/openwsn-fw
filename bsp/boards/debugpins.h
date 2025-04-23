@@ -9,7 +9,6 @@
 
 \brief Cross-platform declaration "leds" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 //=========================== define ==========================================

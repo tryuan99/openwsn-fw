@@ -9,7 +9,6 @@ Load this program on your board. When you run it, the error LED should blink.
 Use a logic analyzer to see the activity on the 6 debug pins; one after another
 they will transition 4 times.
 
-\author Chuang Qian <cqian@berkeley.edu>, May 2012.
 */
 
 #include "stdint.h"

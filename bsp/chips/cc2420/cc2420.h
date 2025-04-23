@@ -1,7 +1,6 @@
 /**
 \brief Register definitions for the Texas Instruments CC2420 radio chip.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #ifndef __CC2420_H

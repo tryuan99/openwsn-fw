@@ -1,7 +1,6 @@
 /**
 \brief Wrapper of software implementation of CCM.
 
-\author Malisa Vucinic <malishav@gmail.com>, March 2015.
 */
 
 #include <stdint.h>

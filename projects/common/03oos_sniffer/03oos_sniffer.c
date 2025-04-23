@@ -1,7 +1,6 @@
 /**
 \brief This program shows the use of the "sniffer" module.
 
-\author Tengfei Chang <tengfei.chang@eecs.berkeley.edu>, June 2015.
 */
 
 #include "board.h"

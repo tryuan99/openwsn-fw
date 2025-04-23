@@ -1,7 +1,4 @@
 /**
- * Author: Xavier Vilajosana (xvilajosana@eecs.berkeley.edu)
- *         Pere Tuset (peretuset@openmote.com)
- * Modified: Tengfei Chang (tengfei.chang@eecs.berkeley.edu)
  * Date:   July 2013
  * Description: CC2538-specific board information bsp module.
  */

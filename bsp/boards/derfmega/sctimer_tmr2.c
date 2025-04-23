@@ -4,7 +4,6 @@
 
 on the derfmega we use timer 2 with asynchronous operation
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 #include <avr/io.h>

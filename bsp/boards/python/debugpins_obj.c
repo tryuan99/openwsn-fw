@@ -1,7 +1,6 @@
 /**
 \brief Python-specific definition of the "debugpins" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #include "debugpins_obj.h"

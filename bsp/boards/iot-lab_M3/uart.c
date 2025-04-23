@@ -1,9 +1,6 @@
 /**
 \brief iot-lab_M3 definition of the "uart" bsp module (based on openmoteSTM32 code).
 
-\author Chang Tengfei <tengfei.chang@gmail.com>, July 2012.
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>, January 2014.
-\author Elodie Morin <elodie.morin@imag.fr>, July 2015.
 */
 
 #include "stm32f10x_conf.h"

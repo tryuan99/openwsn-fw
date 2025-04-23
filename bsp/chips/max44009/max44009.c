@@ -2,7 +2,6 @@
  * \file
  *         Device drivers for MAX44009 light sensor in OpenMote-CC2538.
  * \author
- *         Pere Tuset, OpenMote <peretuset@openmote.com>
  */
 
 #include "i2c.h"

@@ -1,7 +1,6 @@
 /**
 \brief Crypto engine implementation for OpenMote-CC2538
   
-\author Malisa Vucinic <malishav@gmail.com>, March 2015.
 */
 
 #include "config.h"

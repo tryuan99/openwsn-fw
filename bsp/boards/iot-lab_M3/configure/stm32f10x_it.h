@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * @file    Project/STM32F10x_StdPeriph_Template/stm32f10x_it.h 
-  * @author  MCD Application Team, modified by Keoma Brun (november 2016)
   * @version V3.5.0
   * @date    08-April-2011
   * @brief   This file contains the headers of the interrupt handlers.

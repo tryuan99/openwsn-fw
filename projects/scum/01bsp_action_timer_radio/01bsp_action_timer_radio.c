@@ -8,7 +8,6 @@ defined in board_info.h, or this project doesn't compile.
 This project is to verify the StartOfFrame interrupt is not triggered when 
 schedule Tx_SEND command with a compare timer.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2018.
 */
 
 #include "board.h"

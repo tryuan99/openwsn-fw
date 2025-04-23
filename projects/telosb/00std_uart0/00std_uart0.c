@@ -2,7 +2,6 @@
 \brief This is a standalone test program for serial communication over both
        UART1 and UART0 between the TelosB and a computer.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "msp430f1611.h"

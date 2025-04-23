@@ -1,7 +1,6 @@
 /**
 \brief CC2420-specific library.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #include "board.h"

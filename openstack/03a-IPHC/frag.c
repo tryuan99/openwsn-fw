@@ -2,9 +2,7 @@
 \brief Definition of the "6LoWPAN fragmentation" module.
 
 This module implements 6LoWPAN fragmentation according to RFC 4944,
- RFC 6282 and https://hal.inria.fr/hal-02061838/document.
 
-\author Timothy Claeys <timothy.claeys@inria.fr>, January 2020.
 */
 
 #include "config.h"

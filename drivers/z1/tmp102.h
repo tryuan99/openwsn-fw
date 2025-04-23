@@ -2,9 +2,6 @@
  * \file
  *         Device drivers header file for tmp102 temperature sensor in Zolertia Z1 WSN Platform.
  * \author
- *         Enric M. Calvo, Zolertia <ecalvo@zolertia.com>
- *         Marcus Lundén, SICS <mlunden@sics.se>
- *         Xavi Vilajosana, UCB <xvilajosana@eecs.berkeley.edu>
  */
 
 #ifndef __TMP102_H__

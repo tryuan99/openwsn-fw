@@ -1,7 +1,6 @@
 /**
 \brief derfmega definition of the "uart" bsp module.
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 #include <avr/io.h>

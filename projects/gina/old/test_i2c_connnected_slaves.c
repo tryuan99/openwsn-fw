@@ -28,7 +28,6 @@ Speed:
   - checking one address takes 40us
   - the whole test takes 6.112ms
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 #include "msp430x26x.h"

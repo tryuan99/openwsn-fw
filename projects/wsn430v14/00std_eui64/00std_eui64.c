@@ -10,7 +10,6 @@ there, watch variable eui. I contains the 64-bits read from the DS2411, i.e.
 - [6B] unique 48-bit identifier
 - [1B] always 0x01
  
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "msp430f1611.h"

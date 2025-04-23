@@ -38,7 +38,6 @@ overflow                                  overflow
     - the fsm debugpin toggles
     - the radio LED toggles
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "stdint.h"

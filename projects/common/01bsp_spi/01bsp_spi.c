@@ -7,7 +7,6 @@ can use this project with any platform.
 This program was written to communicate with the AT86RF231 radio chip. It will
 run regardless of your radio, but might not return anything useful.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "stdint.h"

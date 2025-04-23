@@ -1,7 +1,6 @@
 /**
 \brief Definition of the "opensensors" driver.
 
-\author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #include "config.h"

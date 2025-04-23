@@ -1,7 +1,6 @@
 /**
 \brief Cross-platform declaration "spi" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #ifndef __SPI_H

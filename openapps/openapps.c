@@ -1,8 +1,6 @@
 /**
 \brief Applications running on top of the OpenWSN stack.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, September 2014.
-\author Timothy Claeys <timothy.claeys@inria.fr>, March 2020.
 */
 
 #include "config.h"

@@ -1,6 +1,4 @@
 /**
- * Author: Xavier Vilajosana (xvilajosana@eecs.berkeley.edu)
- *         Pere Tuset (peretuset@openmote.com)
  * Date:   Jan 2016
  * Description: ezr32wg-specific definition of the "board" bsp module.
  */

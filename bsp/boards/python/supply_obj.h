@@ -1,7 +1,6 @@
 /**
 \brief Python-based emulation of the mote's power supply.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #ifndef __SUPPLY_H

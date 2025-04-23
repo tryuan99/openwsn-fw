@@ -1,8 +1,6 @@
 /**
 \brief iot-lab_A8-M3 definition of the "board" bsp module.
 
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>, January 2014.
-\author Tengfei Chang <tengfei.chang@inria.fr>,  May 2017.
 */
 
 #include "config.h"

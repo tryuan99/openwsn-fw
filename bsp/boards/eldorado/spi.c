@@ -1,7 +1,6 @@
 /**
 \brief GINA-specific definition of the "spi" bsp module.
 
-\author Renato/Fabien, February 2012.
 */
 
 #include "string.h"

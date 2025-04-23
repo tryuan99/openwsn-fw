@@ -14,7 +14,6 @@ Every TIMER_PERIOD, it will also send a packet containing LENGTH_PACKET bytes
 set to ID. While sending a packet (i.e. from the start of frame event to the
 end of frame event), it will turn on its error LED.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 

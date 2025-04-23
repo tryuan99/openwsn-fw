@@ -1,7 +1,6 @@
 /**
 \brief Python-specific definition of the "eui64" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #include "eui64_obj.h"

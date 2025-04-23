@@ -4,7 +4,6 @@
 This module file defines board-related element, but which are applicable only
 to this board.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #ifndef __BOARD_INFO_H

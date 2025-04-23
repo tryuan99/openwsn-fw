@@ -4,7 +4,6 @@
 Since the bsp modules for different platforms have the same declaration, you
 can use this project with any platform.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, December 2019.
 */
 
 #include "board.h"

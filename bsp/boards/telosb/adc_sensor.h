@@ -1,7 +1,6 @@
 /**
 \brief Definitions for the analog light sensors (total solar and photosynthetic)
 
-\author Pedro Henrique Gomes <pedrohenriquegomes@gmail.com>
 */
 
 #ifndef __ADC_SENSOR_H__

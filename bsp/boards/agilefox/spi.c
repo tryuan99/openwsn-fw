@@ -1,9 +1,6 @@
 /**
 \brief agilefox definition of the "spi" bsp module (based on openmoteSTM32 code).
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>,  August 2013.
 */
 #include "stm32f10x_lib.h"
 #include "stdio.h"

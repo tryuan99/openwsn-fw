@@ -1,6 +1,5 @@
 /**
     \brief Declaration of the "csensors" app.
-    \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #ifndef __CSENSORS_H

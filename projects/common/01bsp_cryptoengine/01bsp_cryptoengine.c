@@ -8,7 +8,6 @@
 Load this program on your boards. Radio LED will stay on indefinitely if all
 tests passed. If there was an error, we use the Error LED to signal.
 
-\author Malisa Vucinic <malishav@gmail.com>, March 2015.
 */
 
 #include "stdint.h"

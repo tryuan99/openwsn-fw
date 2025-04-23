@@ -1,7 +1,6 @@
 /**
 \brief z1-specific definition of the "uart" bsp module.
 
-\author Xavier Vilajosana <xvilajosana@eecs.berkeley.edu>, May 2013.
 */
 
 #include "msp430x26x.h"

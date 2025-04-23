@@ -11,7 +11,6 @@ TeraTerm):
 - when you enter a character on the client, the board echoes it back (i.e. you
   see the character on the terminal client) and the "ERROR" led blinks.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "stdint.h"

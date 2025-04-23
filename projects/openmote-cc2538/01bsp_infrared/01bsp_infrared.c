@@ -9,7 +9,6 @@ The sctimer is periodic, of period SCTIMER_PERIOD ticks. Each time it elapses:
     - the frame debugpin toggles
     - the error LED toggles
 
-\author Tengfei Chang <tengfei.chang@eecs.berkeley.edu>, April 2017.
 */
 
 #include "stdint.h"

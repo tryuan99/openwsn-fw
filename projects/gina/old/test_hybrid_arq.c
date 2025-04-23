@@ -1,7 +1,6 @@
 /**
 \brief This is a standalone test program for testing the hybrid ARQ concept
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, September 2010
 */
 
 //board

@@ -4,7 +4,6 @@
  * Freescale Confidential Proprietary
  * \file    MC13192_regs.h
  * \brief   Defines the MC13192 registers.
- * \author  a19259
  * \version 4.1a
  * \date    2005/07/29 02:27:50 
  *

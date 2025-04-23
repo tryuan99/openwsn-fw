@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * @file      startup_stm32f10x_xl.s
-  * @author    MCD Application Team
   * @version   V3.5.0
   * @date      11-March-2011
   * @brief     STM32F10x XL-Density Devices vector table for TrueSTUDIO toolchain. 

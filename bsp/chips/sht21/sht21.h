@@ -2,7 +2,6 @@
  * \file
  *         Device drivers for SHT21 temperature and humidity sensor in OpenMote-CC2538.
  * \author
- *         Pere Tuset, OpenMote <peretuset@openmote.com>
  */
 
 #ifndef __SHT21_H__

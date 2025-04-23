@@ -1,6 +1,5 @@
 /**
     \brief Declaration of the nrf52480 ADC driver.
-    \author Frank Senf <frank.senf@imms.de>, July 2018.
 */
 
 #ifndef __ADC_SENSOR_H__

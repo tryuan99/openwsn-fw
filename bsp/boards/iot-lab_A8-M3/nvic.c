@@ -1,7 +1,6 @@
 /**
 \brief iot-lab_A8-M3 definition of the "nvic" bsp module.
 
-\author Chang Tengfei <tengfei.chang@inria.fr>,  May 2017.
 */
 
 #include "stm32f10x_lib.h"

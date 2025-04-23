@@ -3,7 +3,6 @@
 
 On msp430f5438a, we use timerA0 for the bsp_timer module.
 
-\author Jonathan Munoz <jonathan.munoz@inria.fr>, August 2016.
 */
 
 #include "msp430f5438a.h"

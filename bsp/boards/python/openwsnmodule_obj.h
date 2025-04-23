@@ -1,7 +1,6 @@
 /**
 \brief Source code of the Python openwsn module, written in C.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #ifndef __OPENWSNMODULE_H

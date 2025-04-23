@@ -3,7 +3,6 @@ import json
 import time
 
 #============================ defines =========================================
-BROKER_ADDRESS        = "argus.paris.inria.fr"
 
 #============================ class ===========================================
 class mqtt_client(object):

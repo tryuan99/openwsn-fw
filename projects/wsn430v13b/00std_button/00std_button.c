@@ -15,7 +15,6 @@ The digital outputs are:
 The digital inputs are:
    - P2.7: button
  
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "msp430f1611.h"

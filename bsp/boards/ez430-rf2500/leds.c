@@ -1,7 +1,6 @@
 /**
 \brief eZ430_RF2500-specific definition of the "leds" bsp module.
 
-\author Chuang Qian <cqian@berkeley.edu>, April 2012.
 
 */
 

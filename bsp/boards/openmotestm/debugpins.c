@@ -1,7 +1,6 @@
 /**
 \brief opemnstm32 definition of the "debugpins" bsp module.
 
-\author Tengfei Chang <tengfei.chang@eecs.berkeley.edu>, February 2012.
 */
 #include "stm32f10x_lib.h"
 #include "debugpins.h"

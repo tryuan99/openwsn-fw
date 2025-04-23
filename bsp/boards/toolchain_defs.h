@@ -4,7 +4,6 @@
 /**
 \brief Definitions which depends on the toolchain used.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, June 2014.
 */
 
 #include <stdint.h>

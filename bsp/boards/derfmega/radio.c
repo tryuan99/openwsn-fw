@@ -1,7 +1,6 @@
 /**
 \brief derfmega definition of the "radio" bsp module. Adapted from the AT86RF231 code since its the same register layout and all
 
-\author Kevin Weekly June 2012.
 */
 
 #include <avr/io.h>

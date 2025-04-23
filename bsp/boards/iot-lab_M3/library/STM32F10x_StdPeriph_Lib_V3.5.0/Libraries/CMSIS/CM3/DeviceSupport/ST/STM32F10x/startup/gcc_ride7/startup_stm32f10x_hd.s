@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * @file      startup_stm32f10x_hd.s
-  * @author    MCD Application Team
   * @version   V3.5.0
   * @date      11-March-2011
   * @brief     STM32F10x High Density Devices vector table for RIDE7 toolchain. 

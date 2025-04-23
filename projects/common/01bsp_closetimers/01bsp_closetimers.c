@@ -23,7 +23,6 @@ Because the values of BSP_TIMER_PERIOD and RADIOTIMER_OVERFLOW_PERIOD are so
 close, you should see the LEDs (and debugpins) slowly go out of phase and in
 phase.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2012.
 */
 
 #include "stdint.h"

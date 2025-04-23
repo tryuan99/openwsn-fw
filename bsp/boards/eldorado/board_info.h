@@ -1,7 +1,6 @@
 /*
  *
  *  Created on: Feb 27, 2012
- *      Author: Vitor Mangueira, Branko Kerkez <bkerkez@berkeley.edu>
  */
 
 #ifndef BOARD_INFO_H_

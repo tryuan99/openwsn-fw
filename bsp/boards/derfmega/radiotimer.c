@@ -3,7 +3,6 @@
 
 using the MAC timer with some trickery
 
-\author Kevin Weekly June 2012.
 */
 
 #include <avr/io.h>

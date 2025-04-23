@@ -14,7 +14,6 @@ data less often (controlled with a do-nothing for loop).
 3. The interrupt for RX_ENABLE is missing all the time if UART is busying 
 sending always. 
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, November 2017.
 */
 
 #include "board.h"

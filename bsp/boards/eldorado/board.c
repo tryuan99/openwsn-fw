@@ -1,7 +1,6 @@
 /**
 \brief ELDORADO-specific definition of the "board" bsp module.
 
-\ authos Vitor Mangueira, Branko Kerkez <bkerkez@berkeley.edu>
 */
 #include "eldorado.h"
 #include "board.h"

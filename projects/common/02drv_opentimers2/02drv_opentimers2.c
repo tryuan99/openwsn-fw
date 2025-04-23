@@ -11,8 +11,6 @@ APP_DLY_TIMER1_ticks and APP_DLY_TIMER2_ticks. Each timer is attached an LED
 
 When you run the application, you should see the LEDs blinking.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, April 2017.
-\author Thomas Watteyne <thomas.watteyne@inria.fr>, July 2017.
 */
 
 #include "stdint.h"

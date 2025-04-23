@@ -6,7 +6,6 @@
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose, without fee, and without written
 # agreement is hereby granted, provided that the above copyright
-# notice, the (updated) modification history and the author appear in
 # all copies of this source code.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS `AS IS'
@@ -20,8 +19,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 # THE POSSIBILITY OF SUCH DAMAGE.
 
-# @author Chieh-Jan Mike Liang <cliang4@cs.jhu.edu>
-# @author Razvan Musaloiu-E. <razvanm@cs.jhu.edu>
 
 import sys, subprocess
 import struct

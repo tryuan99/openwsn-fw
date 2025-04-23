@@ -1,7 +1,6 @@
 /**
 \brief iot-lab_A8-M3 definition of the NVIC.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>,  May 2017.
 */
 
 #ifndef __NVIC_H

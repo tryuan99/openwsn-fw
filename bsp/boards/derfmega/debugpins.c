@@ -2,7 +2,6 @@
 \brief derfmega definition of the "debugpins" bsp module.
 
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 

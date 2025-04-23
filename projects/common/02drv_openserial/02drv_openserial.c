@@ -9,8 +9,6 @@ Once your board is running this application, use the serialTesterCli Python
 application (part of the openwsn-sw repo) to issue serial echo commands, making
 sure all is well.
 
-\author Xavi Vilajosana <xvilajosana@eecs.berkeley.edu>, January 2013.
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, January 2014.
 */
 
 #include "stdint.h"

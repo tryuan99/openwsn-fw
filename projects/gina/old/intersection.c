@@ -1,7 +1,6 @@
 /**
 \brief Smart intersection application on GINA
 
-\author Fabien Chraim <chraim@eecs.berkeley.edu>, October 2010
 */
 
 //board

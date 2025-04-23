@@ -1,7 +1,6 @@
 /**
 \brief iot-lab_A8-M3 definition of the "eui64" bsp module.
 
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>, January 2014.
 \amend Guillaume Gaillard <guillaume.gaillard.maze@gmail.com>, January 2014.
 */
 

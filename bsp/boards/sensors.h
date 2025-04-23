@@ -1,6 +1,5 @@
 /**
     \brief Declaration of the "sensors" board-specif driver.
-    \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #ifndef __SENSORS_H__

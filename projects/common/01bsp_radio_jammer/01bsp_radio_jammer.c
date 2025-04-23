@@ -7,7 +7,6 @@ can use this project with any platform.
 The board running this program will continuously send a packet on channel CHANNEL
 The packet contains LENGTH_PACKET bytes. The send bytes are random.
 
-\author Xavier Vilajosana <xvilajosana@eecs.berkeley.edu>, September 2016.
 */
 
 #include "stdint.h"

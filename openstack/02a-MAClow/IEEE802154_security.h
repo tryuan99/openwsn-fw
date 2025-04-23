@@ -1,11 +1,6 @@
 /**
 \brief Security operations defined by IEEE802.15.4 standard
 
-\author Savio Sciancalepore <savio.sciancalepore@poliba.it>, June 2015.
-\author Giuseppe Piro <giuseppe.piro@poliba.it>, June 2015
-\author Gennaro Boggia <gennaro.boggia@poliba.it>, June 2015
-\author Luigi Alfredo Grieco <alfredo.grieco@poliba.it>, June 2015
-\author Malisa Vucinic <malishav@gmail.com>, June 2015.
 */
 
 #ifndef OPENWSN_IEEE802154_SECURITY_H

@@ -1,8 +1,5 @@
 /**
-\brief Mercator firmware, see https://github.com/openwsn-berkeley/mercator/.
 
-\author Constanza Perez Garcia <constanza.perezgarcia@gmail.com>, November 2014.
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, November 2014.
 */
 
 #include "03oos_mercator.h"

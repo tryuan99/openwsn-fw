@@ -1,7 +1,6 @@
 /**
 \brief definition of the "leds" bsp module for Eldo and Jorge boards. 
 
-\author USP and Berkeley colab, February 2012.
 */
 
 #include "leds.h"

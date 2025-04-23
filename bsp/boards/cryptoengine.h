@@ -1,8 +1,6 @@
 /**
 \brief Definitions for crypto engine initialization
 
-\author Malisa Vucinic <malishav@gmail.com>, March 2015.
-\author Marcelo Barros de Almeida <marcelobarrosalmeida@gmail.com>, March 2015.
 */
 #ifndef __CRYPTO_ENGINE_H__
 #define __CRYPTO_ENGINE_H__

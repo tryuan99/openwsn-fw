@@ -1,8 +1,6 @@
 /**
 \brief SCuM board's addresses of the memory-mapped registers .
 
-\author Sahar Mesri     <smesri@berkeley.edu>       August 2016.
-\author Tengfei Chang   <tengfei.chang@inria.fr>    August 2016.
 */
 
 // ========================== AHB Peripheral ==================================

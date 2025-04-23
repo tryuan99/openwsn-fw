@@ -1,7 +1,6 @@
 /**
 \brief Driver for the fuelgauge of the GINA daughter card
 
-\author Ankur Mehta <mehtank@eecs.berkeley.edu>, August 2010
 */
 
 //!!!!!!!!!!THIS CODE IS STILL UNDER DVELOPMENT. DO NOT USE.

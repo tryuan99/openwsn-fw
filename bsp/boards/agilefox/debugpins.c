@@ -1,8 +1,6 @@
 /**
 \brief agilefox definition of the "debugpins" bsp module (based on openmoteSTM32 code).
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>,  August 2013.
 */
 #include "stm32f10x_lib.h"
 #include "debugpins.h"

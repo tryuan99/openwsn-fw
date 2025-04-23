@@ -23,7 +23,6 @@ Note that these pins are connected to the LEDs, so they will blink (so fast
 they will appear simply on to your slow eyes). Use a scope os logic analyzer
 to see the clock signals and measure their frequency.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 #include "msp430f5438a.h"
 #include "stdint.h"

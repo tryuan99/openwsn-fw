@@ -1,7 +1,6 @@
 /**
 \brief CC1200-specific library.
 
-\author Jonathan Munoz <jonathan.munoz@inria.fr>, August 2016.
 */
 
 #include "board.h"

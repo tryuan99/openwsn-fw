@@ -1,7 +1,6 @@
 /**
 \brief at86rf215-specific definition of the "radio" bsp module.
 
-\author Jonathan Munoz <jonathan.munoz@inria.fr>, July 2016.
 */
 
 #include "board.h"

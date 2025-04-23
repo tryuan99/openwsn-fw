@@ -1,7 +1,6 @@
 /**
 \brief A PWM module. 
 
-\author Tengfei Chang     <tengfei.chang@inria.fr> April 2017
 */
 
 #include "board_info.h"

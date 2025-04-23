@@ -1,7 +1,6 @@
 /**
 \brief GINA-specific definition of the "eui64" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, March 2012.
 */
 
 #include "string.h"

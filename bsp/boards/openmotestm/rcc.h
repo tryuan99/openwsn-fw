@@ -1,7 +1,6 @@
 /**
 \brief openmoteSTM32 definition of the RCC.
 
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
 */
 
 #ifndef __RCC_H

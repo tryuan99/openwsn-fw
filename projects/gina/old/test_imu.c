@@ -27,7 +27,6 @@ The debug pins are:
 Speed:
  - one measurement every ~1.29ms
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 #include "msp430x26x.h"

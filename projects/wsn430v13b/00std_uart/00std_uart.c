@@ -26,7 +26,6 @@ The digital UART interface is:
    - P3.6: UART1TX
    - P3.7: UART1RX
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 //#define BAUDRATE_115200 // uncomment this to communicate at 115200baud

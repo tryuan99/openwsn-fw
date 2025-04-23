@@ -1,6 +1,5 @@
 /**
    \brief Definition of the openmote-ezr32wg ADC temperature sensor driver.
-   \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #include "adc_sensor.h"

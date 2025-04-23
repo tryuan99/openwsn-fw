@@ -1,7 +1,6 @@
 /**
 \brief this file is used for the time synchronizatino between different hardware platform
 
-\author Tengfei Chang <tengfei.chang@gmail.com>, January ,2014.
 */
 #include "config.h"
 

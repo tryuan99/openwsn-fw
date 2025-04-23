@@ -6,7 +6,6 @@ The digital UART interface is:
    - P3.7: A1_SOMI_RX
    - P3.8: A1_SOMI_TX
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 //#define BAUDRATE_256000 // uncomment this to communicate at 245000baud

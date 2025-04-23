@@ -3,8 +3,6 @@
 
 \brief UDP Expiration monitor application
 
-\author Shalu R <shalur@cdac.in>, June 2017
-\author Lijo Thomas <lijo@cdac.in>, June 2017
 */
 
 uexpiration_monitor is a simple application to monitor the performance of the

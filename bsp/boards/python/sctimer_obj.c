@@ -1,7 +1,6 @@
 /**
 \brief Python-specific definition of the "sctimer" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #include "sctimer_obj.h"

@@ -1,6 +1,4 @@
 /**
- * Author: Xavier Vilajosana (xvilajosana@eecs.berkeley.edu)
- *         Pere Tuset (peretuset@openmote.com)
  * Date:   Jan 2016
  * Description: EZR32WG-specific definition of the "radio" bsp module.
  */

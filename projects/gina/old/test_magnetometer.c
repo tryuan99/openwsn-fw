@@ -20,8 +20,6 @@ Speed:
    - one measurement every ~242us (no data crunching, just the measurement)
    - one *new* measurement at 32Hz on average
 
-\author Leo Keselman <lkeselman@berkeley.edu>, July 2010
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, September 2010
 */
 
 #include "msp430x26x.h"

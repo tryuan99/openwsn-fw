@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * @file    stm32f10x_iwdg.c
-  * @author  MCD Application Team
   * @version V3.5.0
   * @date    11-March-2011
   * @brief   This file provides all the IWDG firmware functions.

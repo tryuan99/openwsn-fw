@@ -4,7 +4,6 @@
 This driver uses a single hardware timer, which it virtualizes to support
 at most MAX_NUM_TIMERS timers.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, April 2017.
  */
 
 #include "opendefs.h"

@@ -12,7 +12,6 @@ The debug pins are:
    - P1.1 toggles when interrupt TIMERA0_VECTOR fires
    - P1.2 toggles when interrupt TIMERA0_VECTOR fires
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "msp430x26x.h"

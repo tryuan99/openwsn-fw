@@ -1,7 +1,6 @@
 /**
 \brief Register definitions for the Texas Instruments CC1200 radio chip.
 
-\author Jonathan Munoz <jonathan.munoz@inria.fr>, August 2016.
 */
 
 #ifndef __CC1200_H

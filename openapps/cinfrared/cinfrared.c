@@ -1,7 +1,6 @@
 /**
 \brief CoAP infrared application.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, December, 2017
 */
 
 #include "config.h"

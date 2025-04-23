@@ -4,7 +4,6 @@
 This module simply defines some strings describing the board, which CoAP uses
 to return the board's description.
 
-\author Tengfei Chang <tengfei.chang@inria.com>,  August 2016.
 */
 
 #ifndef __BOARD_INFO_H

@@ -71,7 +71,6 @@ elif plat[:3] == 'dgux':     #Digital UNIX (not tested)
 else:
     #platform detection has failed...
     info = "sys.platform = %r\nos.name = %r\nserialposix.py version = %s" % (sys.platform, os.name, VERSION)
-    print """send this information to the author of this module:
 
 %s
 

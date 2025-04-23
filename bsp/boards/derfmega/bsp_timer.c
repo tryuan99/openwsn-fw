@@ -3,7 +3,6 @@
 
 On derfmega, we use the MAC timer + COMPARE1
 
-\author Kevin Weekly June 2012.
 */
 
 #include <avr/io.h>

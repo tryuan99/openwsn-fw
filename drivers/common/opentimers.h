@@ -1,7 +1,6 @@
 /**
 \brief Declaration of the "opentimers" driver.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, April 2017.
 */
 
 #ifndef __OPENTIMERS_H

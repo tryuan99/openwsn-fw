@@ -1,7 +1,6 @@
 /**
 \brief TelosB-specific definition of the "debugpins" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #include "msp430x26x.h"

@@ -15,7 +15,6 @@ matches
     . [3B] OpenWSN OUI hex(14-15-92)
     . [5B] 5 last bytes from 6-byte serial number
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, March 2012.
 */
 
 #include "msp430f1611.h"

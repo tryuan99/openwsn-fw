@@ -9,7 +9,6 @@
 
 \brief Cross-platform declaration "eui64" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, March 2012.
 */
 
 #include <stdint.h>

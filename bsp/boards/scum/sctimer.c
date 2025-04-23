@@ -1,7 +1,6 @@
 /**
 \brief SCuM-specific definition of the "sctimer" bsp module, A timer module with only a single compare value. 
 
-\author Tengfei Chang     <tengfei.chang@inria.fr> Novemeber 22, 2017.
 */
 
 #include "memory_map.h"

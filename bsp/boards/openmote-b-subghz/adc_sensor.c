@@ -1,6 +1,5 @@
 /**
    \brief Definition of the OpenMote-CC2538 ADC temperature sensor driver.
-   \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #include <headers/hw_cctest.h>

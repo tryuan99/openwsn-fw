@@ -12,7 +12,6 @@
 
 \brief adaptive sync module
 
-\author Tengfei Chang <tengfei.chang@eecs.berkeley.edu>, January 2014.
 */
 
 //=========================== define ==========================================

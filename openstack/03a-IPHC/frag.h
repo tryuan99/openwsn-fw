@@ -2,7 +2,6 @@
 \brief Definition of the "6LoWPAN fragmentation" module.
 
 
-\author Timothy Claeys <timothy.claeys@inria.fr>, January 2020.
 */
 
 #ifndef OPENWSN_FRAG_H

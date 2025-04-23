@@ -22,8 +22,6 @@ The debug pins are:
 
 Speed: one measurement takes ~738us
 
-\author Leo Keselman <lkeselman@berkeley.edu>, July 2010
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 #include "msp430x26x.h"

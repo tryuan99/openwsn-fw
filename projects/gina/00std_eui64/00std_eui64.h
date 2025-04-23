@@ -22,7 +22,6 @@ where:
 - zz-zz is the unique identifier of the board, in hex, big endian (the one 
   printed on the sticker).
  
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 #ifndef __PROGRAM_EUI64_H

@@ -1,8 +1,6 @@
 /**
 \brief Definition of the "openserial" driver.
 
-\author Fabien Chraim <chraim@eecs.berkeley.edu>, March 2012.
-\author Thomas Watteyne <thomas.watteyne@inria.fr>, August 2016.
 */
 #include <stdarg.h>
 #include <string.h>

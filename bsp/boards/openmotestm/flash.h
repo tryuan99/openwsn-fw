@@ -1,7 +1,6 @@
 /**
 \brief openmoteSTM32 definition of the FLASH.
 
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
 */
 #ifndef __FLASH_H
 #define __FLASH_H

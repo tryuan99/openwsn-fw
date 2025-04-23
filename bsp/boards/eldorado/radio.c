@@ -1,7 +1,6 @@
 /**
 \brief Eldorado-specific definition of the "radio" bsp module.
 
-\author Fabien Chraim <chraim@eecs.berkeley.edu>, February 2012.
 */
 
 #include "stdint.h"

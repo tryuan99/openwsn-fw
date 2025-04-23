@@ -1,7 +1,6 @@
 /**
     \brief Definition of the "csensors" app. A CoAP resource which allows an application to GET/SET the state of
    sensors.
-    \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #include "config.h"

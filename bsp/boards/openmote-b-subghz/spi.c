@@ -1,7 +1,6 @@
 /**
 \brief definition of the "spi" bsp module.
 
-\author Xavier Vilajosana <xvilajosana@eecs.berkeley.edu>, September 2017.
 */
 #include "board.h"
 #include "board_info.h"

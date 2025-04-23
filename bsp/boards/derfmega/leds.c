@@ -2,7 +2,6 @@
 \brief eZ430_RF2500-specific definition of the "leds" bsp module.
 
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 #include <avr/io.h>

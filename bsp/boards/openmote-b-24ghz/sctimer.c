@@ -1,7 +1,6 @@
 /**
 \brief A timer module with only a single compare value. 
 
-\author Tengfei Chang     <tengfei.chang@inria.fr> April 2017
 */
 
 #include "board_info.h"

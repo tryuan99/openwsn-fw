@@ -19,7 +19,6 @@ The digital UART interface is:
 - P3.4: UTXD0
 - P3.5: URXD0
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2012.
 */
 
 #include "msp430f1611.h"

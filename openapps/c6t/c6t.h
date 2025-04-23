@@ -1,8 +1,6 @@
 /**
 \brief CoAP 6top application
 
-\author Xavi Vilajosana <xvilajosana@eecs.berkeley.edu>, February 2013.
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, July 2014
 */
 
 #ifndef __C6T_H

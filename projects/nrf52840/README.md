@@ -15,4 +15,3 @@ To run an OpenWSN network, cjoin needs to be disabled by commenting out the
            ...
         }
         
-in [openapp.c](https://github.com/openwsn-berkeley/openwsn-fw/blob/develop/openapps/openapps.c#L40) file.

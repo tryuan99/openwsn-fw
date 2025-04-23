@@ -20,7 +20,6 @@ The debug pins are:
    - P5.6 output the ACLK (should be 32768Hz)
    - P1.1 toggles when interrupt TIMERA0_VECTOR fires
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "msp430x26x.h"

@@ -1,7 +1,6 @@
 /**
 \brief Python-specific definition of the "leds" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #include <stdio.h>

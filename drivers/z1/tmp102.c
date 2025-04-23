@@ -2,9 +2,6 @@
  * \file
  *         Device drivers for tmp102 temperature sensor in Zolertia Z1.
  * \author
- *         Enric M. Calvo, Zolertia <ecalvo@zolertia.com>
- *         Marcus Lundén, SICS <mlunden@sics.se>
- *         Xavi Vilajosana, UCB <xvilajosana@eecs.berkeley.edu>
  */
 
 #include "i2c.h"

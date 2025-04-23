@@ -9,7 +9,6 @@
 
 <TODO, what to expect when it runs>
  
-\author <TODO, name> <TODO, e-mail>, <TODO date>
 */
 
 #include "msp430f1611.h"

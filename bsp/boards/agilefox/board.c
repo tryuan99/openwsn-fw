@@ -1,9 +1,6 @@
 /**
 \brief openmoteSTM32 definition of the "board" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
-\author Alaeddine Weslati <alaeddine.weslati@inria.fr>,  August 2013.
 */
 #include "stm32f10x_lib.h"
 #include "board.h"

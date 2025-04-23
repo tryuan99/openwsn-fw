@@ -10,7 +10,6 @@ APP_DLY_TIMER1_ms and APP_DLY_TIMER2_ms. Each timer is attached an LED (error.
 radio and sync). When you run the application, you should see the LEDs
 "counting".
 
-\author Pere Tuset <peretuset@openmote.com>, January 2015.
 */
 
 #include "stdint.h"

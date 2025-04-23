@@ -1,7 +1,6 @@
 /**
 \brief OpenOS scheduler.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #include "opendefs.h"

@@ -3,7 +3,6 @@
 
 On GINA, we use timerB0 for the bsp_timer module.
 
-\author Chuang Qian for eZ430-RF2500. April 2012.
 
 */
 

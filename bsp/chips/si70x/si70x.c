@@ -2,7 +2,6 @@
  * \file
  *         Device drivers for SI70X temperature and humidity sensor in OpenMote-CC2538.
  * \author
- *         Xavi Vilajosana, xvilajosana@eecs.berkeley.edu
  */
 
 #include "stdint.h"

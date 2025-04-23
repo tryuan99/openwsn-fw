@@ -1,8 +1,6 @@
 /**
 \brief Definitions for AES CCMS implementation
 
-\author Marcelo Barros de Almeida <marcelobarrosalmeida@gmail.com>, March 2015.
-\author Malisa Vucinic <malishav@gmail.com>, June 2017.
 */
 #ifndef OPENWSN_CCMS_H
 #define OPENWSN_CCMS_H

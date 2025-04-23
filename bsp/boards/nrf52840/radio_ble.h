@@ -5,7 +5,6 @@
 
 \brief declaration "radio_ble" bsp module.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2020.
 */
 
 //=========================== define ==========================================

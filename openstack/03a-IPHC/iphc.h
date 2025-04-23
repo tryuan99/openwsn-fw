@@ -13,7 +13,6 @@
 //=========================== define ==========================================
 
 #define IPHC_DEFAULT_HOP_LIMIT    65
-#define IPv6HOP_HDR_LEN           2  // tengfei: should be 2
 #define MAXNUM_RH3                3
 
 enum IPHC_enums {

@@ -4,7 +4,6 @@
 This module simply defines some strings describing the board, which CoAP uses
 to return the board's description.
 
-\author Chuang Qian <cqian@berkeley.edu>, April 2012.
 
 */
 

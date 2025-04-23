@@ -58,8 +58,6 @@ len=17  num=84  rssi=-80  lqi=108 crc=1
 len=17  num=84  rssi=-81  lqi=108 crc=1
 
 
-\author Xavi Vilajosana xvilajosana@eecs.berkeley.edu>, June 2012.
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "stdint.h"

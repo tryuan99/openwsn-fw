@@ -3,7 +3,6 @@
 
 On Iot_Lab_A8-M3, we use RTC for the sctimer module.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>,  May 2017.
 */
 
 #include "stdint.h"

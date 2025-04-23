@@ -2,7 +2,6 @@
  * \file
  *         Device drivers for SI70X temperature and humidity sensor in OpenMote-B.
  * \author
- *         Pere Tuset, OpenMote <peretuset@openmote.com>
  */
 
 #ifndef __SI70X_H__

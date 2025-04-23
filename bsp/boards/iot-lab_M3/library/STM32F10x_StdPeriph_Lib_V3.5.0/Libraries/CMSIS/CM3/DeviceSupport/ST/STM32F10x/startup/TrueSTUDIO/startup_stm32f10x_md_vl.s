@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * @file      startup_stm32f10x_md_vl.s
-  * @author    MCD Application Team
   * @version   V3.5.0
   * @date      11-March-2011
   * @brief     STM32F10x Medium Density Value Line Devices vector table for Atollic 

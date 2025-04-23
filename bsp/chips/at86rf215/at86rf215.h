@@ -6,8 +6,6 @@
  *
  * $Id: at86rf215.h 37172 2015-04-09 13:09:51Z kschwieg $
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
  */
 /*
  * Copyright (c) 2014, Atmel Corporation All rights reserved.

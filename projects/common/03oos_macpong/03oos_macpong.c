@@ -1,7 +1,6 @@
 /**
 \brief A simple application to test MAC connectivity.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 // stack initialization

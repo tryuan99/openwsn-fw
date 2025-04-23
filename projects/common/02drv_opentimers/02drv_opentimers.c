@@ -11,7 +11,6 @@ sync, debug, respec.).
 
 When you run the application, you should see the LEDs "counting".
 
-\author Thomas Watteyne <thomas.watteyne@inria.fr>, July 2017.
 */
 
 #include "stdint.h"

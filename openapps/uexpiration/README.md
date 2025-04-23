@@ -3,8 +3,6 @@
 
 \brief UDP Expiration application
 
-\author Shalu R <shalur@cdac.in>, June 2017
-\author Lijo Thomas <lijo@cdac.in>, June 2017
 */
 
 uexpiration is a simple application to test the implementation of the draft on

@@ -347,7 +347,6 @@ owerror_t iphc_prependIPv6Header(
             break;
         case IPHC_DAM_16B:
             if (m == IPHC_M_YES) {
-                // tengfei: to do
             } else {
                 if (value_dest->type != ADDR_16B) {
                     LOG_CRITICAL(COMPONENT_IPHC, ERR_WRONG_ADDR_TYPE,
@@ -362,7 +361,6 @@ owerror_t iphc_prependIPv6Header(
             break;
         case IPHC_DAM_64B:
             if (m == IPHC_M_YES) {
-                // tengfei: to do
             } else {
                 if (value_dest->type != ADDR_64B) {
                     LOG_CRITICAL(COMPONENT_IPHC, ERR_WRONG_ADDR_TYPE,
@@ -377,7 +375,6 @@ owerror_t iphc_prependIPv6Header(
             break;
         case IPHC_DAM_128B:
             if (m == IPHC_M_YES) {
-                // tengfei: to do
             } else {
                 if (value_dest->type != ADDR_128B) {
                     LOG_CRITICAL(COMPONENT_IPHC, ERR_WRONG_ADDR_TYPE,
@@ -917,13 +914,10 @@ owerror_t iphc_retrieveIphcHeader(open_addr_t *temp_addr_16b,
                     ipv6_header->header_length += sizeof(uint8_t);
                     break;
                 case IPHC_DAM_16B:
-                    // tengfei: todo
                     break;
                 case IPHC_DAM_64B:
-                    // tengfei: todo
                     break;
                 case IPHC_DAM_128B:
-                    // tengfei: todo
                     break;
                 default:
                     LOG_ERROR(COMPONENT_IPHC, ERR_6LOWPAN_UNSUPPORTED, (errorparameter_t) 10, (errorparameter_t)(*dam));

@@ -1,7 +1,6 @@
 /**
 \brief WSN430v14-specific definition of the "leds" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #include "msp430f1611.h"

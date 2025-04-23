@@ -2,7 +2,6 @@
  * Drivers for the sensitive accelerometer and temperature sensor of the GINA2.2b/c board.
  *
  * Author:
- * Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
  */
 
 #ifndef __ADC_CHANNEL_H

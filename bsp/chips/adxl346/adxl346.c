@@ -2,7 +2,6 @@
  * \file
  *         Device drivers for ADXL346 acceleration sensor in OpenMote-CC2538.
  * \author
- *         Pere Tuset, OpenMote <peretuset@openmote.com>
  */
 
 #include "i2c.h"

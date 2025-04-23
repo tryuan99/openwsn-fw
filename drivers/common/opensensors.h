@@ -1,6 +1,5 @@
 /**
     \brief Declaration of the "opensensors" driver.
-    \author Nicola Accettura <nicola.accettura@eecs.berkeley.edu>, March 2015.
 */
 
 #ifndef OPENWSN_OPENSENSORS_H

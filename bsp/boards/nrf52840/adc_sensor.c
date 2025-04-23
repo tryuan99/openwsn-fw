@@ -1,6 +1,5 @@
 /**
     \brief Definition of the nrf52480 ADC driver.
-    \author Frank Senf <frank.senf@imms.de>, July 2018.
 */
 
 

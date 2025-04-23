@@ -25,7 +25,6 @@ Extra lines:
    - P3.0:       radio VREG (active-high)
    - P1.7:       radio reset line (active-low)
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "msp430f1611.h"

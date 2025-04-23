@@ -1,7 +1,6 @@
 /**
 \brief board setup file for derfmega
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 #include <avr/interrupt.h>

@@ -3,8 +3,6 @@
 
 On openmoteSTM32, we use RTC for the radiotimer module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
 */
 
 #include "stdint.h"

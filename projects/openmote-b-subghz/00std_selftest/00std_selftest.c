@@ -1,5 +1,4 @@
 /**
- * Author: Tengfei Chang(tengfei.chang@inria.fr)
  * Date:   October 2018
  * Description: standalone project to test at86rf215 radio module.
  */

@@ -1,7 +1,6 @@
 /**
 \brief eui64 definition of the "eui64" bsp module.
 
-\author Kevin Weekly <kweekly@eecs.berkeley.edu>, June 2012.
 */
 
 #include <avr/io.h>

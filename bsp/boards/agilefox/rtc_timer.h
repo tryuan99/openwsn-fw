@@ -1,7 +1,6 @@
 /**
 \brief openmoteSTM32 declaration "rtctimer" bsp module.
 
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
 */
 
 #ifndef __RTC_TIMER_H

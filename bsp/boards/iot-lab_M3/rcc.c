@@ -1,7 +1,6 @@
 /**
 \brief iot-lab_M3 definition of the RCC.
 
-\author Chang Tengfei <tengfei.chang@gmail.com>,  July 2012.
 */
 #include "stm32f10x_conf.h"
 //=========================== defines =========================================

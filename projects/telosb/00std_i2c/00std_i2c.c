@@ -10,7 +10,6 @@ The digital SPI interface consists of:
 Extra lines:
    - P1.7:     "slave-it-master-out", i.e. MSP430->CC2420
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 // DON'T USE, THIS IS WORK-IN-PROGRESS.

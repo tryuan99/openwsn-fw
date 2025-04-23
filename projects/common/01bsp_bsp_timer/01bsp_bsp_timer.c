@@ -10,7 +10,6 @@ it elapses:
     - the frame debugpin toggles
     - the error LED toggles
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2014.
 */
 
 #include "stdint.h"

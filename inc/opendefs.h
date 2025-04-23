@@ -1,12 +1,6 @@
 /**
 \brief General OpenWSN definitions
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
-\author Ankur Mehta <mehtank@eecs.berkeley.edu>, September 2010
-\author Savio Sciancalepore <savio.sciancalepore@poliba.it>, TelematicsLab April 2015
-\author Giuseppe Piro <giuseppe.piro@poliba.it>,
-\author Gennaro Boggia <gennaro.boggia@poliba.it>,
-\author Luigi Alfredo Grieco <alfredo.grieco@poliba.it>
 */
 
 #ifndef OPENWSN_OPENDEFS_H

@@ -4,7 +4,6 @@
 
 The digital output pins are: TBC
 
-\author Ankur Mehta <mehtank@eecs.berkeley.edu>, August 2010
 */
 
 #include "drivers/gina.h"

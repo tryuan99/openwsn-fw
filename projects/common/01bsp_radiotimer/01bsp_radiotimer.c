@@ -15,7 +15,6 @@ Each time a radiotimer compare event happens:
 - the slot debugpin toggles
 - the radio led toggles
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012.
 */
 
 #include "stdint.h"

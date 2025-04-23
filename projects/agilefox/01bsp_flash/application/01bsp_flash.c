@@ -7,7 +7,6 @@
 
 Load this program on your boards. The LEDs should start blinking furiously.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "stdint.h"

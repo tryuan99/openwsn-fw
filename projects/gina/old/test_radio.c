@@ -29,7 +29,6 @@ Other "debug" pins are:
    - P2.2: blue LED
    - P2.3: red LED
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 //board

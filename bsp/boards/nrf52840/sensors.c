@@ -1,6 +1,5 @@
 /**
     \brief Definition of the "sensors" board-specific driver.
-    \author Frank Senf <frank.senf@imms.de>, July 2018.
 */
 
 #include "config.h"

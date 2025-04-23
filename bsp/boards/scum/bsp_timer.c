@@ -4,7 +4,6 @@
 On SCuM, there is no bsp timer 0 currently. So the implementation 
 is empty by now.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2016.
 */
 
 #include "memory_map.h"

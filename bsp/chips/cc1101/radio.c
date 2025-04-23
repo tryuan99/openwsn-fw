@@ -1,7 +1,6 @@
 /**
 \brief CC1101-specific definition of the "radio" bsp module.
 
-\author Adilla Susungi <adilla.susungi@etu.unistra.fr>, August 2013.
 */
 
 #include "board.h"

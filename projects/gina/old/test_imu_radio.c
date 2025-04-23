@@ -26,7 +26,6 @@ The debug pins are:
 Speed:
    - one measurement every ~2.787ms
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 //board

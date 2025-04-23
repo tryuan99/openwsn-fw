@@ -3,7 +3,6 @@
 
 To be implemented after issue: SCUM-25
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2016.
 */
 
 #include "memory_map.h"

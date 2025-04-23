@@ -1,13 +1,11 @@
 OpenWSN firmware: stuff that runs on a mote
 
-Part of UC Berkeley's OpenWSN project, http://www.openwsn.org/.
 
 Build status
 ------------
 
 |              builder                                                                                                                 |      build                   | outcome
 | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | ------- 
-| [Travis](https://travis-ci.org/openwsn-berkeley/openwsn-fw)                                                                          | compile                      | [![Build Status](https://travis-ci.org/openwsn-berkeley/openwsn-fw.png?branch=develop)](https://travis-ci.org/openwsn-berkeley/openwsn-fw)
 | [OpenWSN builder](http://builder.openwsn.org/job/Firmware/board=telosb,label=master,project=oos_openwsn,toolchain=mspgcc/)           | compile (TelosB)             | [![Build Status](http://builder.openwsn.org/job/Firmware/board=telosb,label=master,project=oos_openwsn,toolchain=mspgcc/badge/icon/)](http://builder.openwsn.org/job/Firmware/board=telosb,label=master,project=oos_openwsn,toolchain=mspgcc/)
 | [OpenWSN builder](http://builder.openwsn.org/job/Firmware/board=gina,label=master,project=oos_openwsn,toolchain=mspgcc/)             | compile (GINA)               | [![Build Status](http://builder.openwsn.org/job/Firmware/board=gina,label=master,project=oos_openwsn,toolchain=mspgcc/badge/icon/)](http://builder.openwsn.org/job/Firmware/board=gina,label=master,project=oos_macpong,toolchain=mspgcc/)
 | [OpenWSN builder](http://builder.openwsn.org/job/Firmware/board=wsn430v13b,label=master,project=oos_openwsn,toolchain=mspgcc/)       | compile (wsn430v13b)         | [![Build Status](http://builder.openwsn.org/job/Firmware/board=wsn430v13b,label=master,project=oos_openwsn,toolchain=mspgcc/badge/icon/)](http://builder.openwsn.org/job/Firmware/board=wsn430v13b,label=master,project=oos_macpong,toolchain=mspgcc/)
@@ -23,4 +21,3 @@ Documentation
 -------------
 
 - overview: https://openwsn.atlassian.net/wiki/
-- source code: http://openwsn-berkeley.github.io/firmware/

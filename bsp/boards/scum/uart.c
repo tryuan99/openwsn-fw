@@ -1,7 +1,6 @@
 /**
 \brief SCuM-specific definition of the "uart" bsp module.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2016.
 */
 
 #include "memory_map.h"

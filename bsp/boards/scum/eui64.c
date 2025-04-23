@@ -1,7 +1,6 @@
 /**
 \brief SCuM-specific definition of the "eui64" bsp module.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, August 2016.
 */
 
 #include "string.h"

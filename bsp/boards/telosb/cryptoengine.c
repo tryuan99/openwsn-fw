@@ -1,7 +1,6 @@
 /**
 \brief CC2420-specific implementation of AES encryption.
 
-\author Malisa Vucinic <malishav@gmail.com>, April 2015.
 */
 
 #include "config.h"

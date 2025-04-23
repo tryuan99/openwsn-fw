@@ -1,7 +1,6 @@
 /**
 \brief CBOR encoding functions.
 \Author Martin Gunnarsson <martin.gunnarsson@ri.se>
-\author Modified by Malisa Vucinic <malishav@gmail.com>
 */
 
 #include "cborencoder.h"

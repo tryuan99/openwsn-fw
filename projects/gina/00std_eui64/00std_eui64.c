@@ -22,14 +22,12 @@ where:
 - zz-zz is the unique identifier of the board, in hex, big endian (the one 
   printed on the sticker).
  
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, August 2010
 */
 
 /* 
    =!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!
    CAREFUL! if the board is reset in the second half of this code, the MSP is dead.
    Therefore, before running, make a screen capture of the INFO memory contents. If
-   you don't know *exactly* what you are doing, ask watteyne@eecs.berkeley.edu.
    =!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!
 */
 

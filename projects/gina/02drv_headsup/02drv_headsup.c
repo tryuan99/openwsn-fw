@@ -4,7 +4,6 @@
 Since the driver modules for different platforms have the same declaration, you
 can use this project with any platform.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, March 2012.
 */
 
 #include "stdint.h"

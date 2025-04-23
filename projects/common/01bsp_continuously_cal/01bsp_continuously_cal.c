@@ -15,7 +15,6 @@ The frame sent by mote includes temperature data.
 The ACK replied includes tempearture data and the frequency offset
 corresponding to the incoming frame.
 
-\author Tengfei Chang <tengfei.chang@inria.fr>, June 2020.
 */
 
 #include "stdint.h"

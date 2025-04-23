@@ -1,7 +1,6 @@
 /**
 \brief Python-specific definition of the "uart" bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #include "uart_obj.h"

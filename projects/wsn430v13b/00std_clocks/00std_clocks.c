@@ -14,7 +14,6 @@ The digital outputs are:
 
 We measure an DCO frequency of 4.8MHz. Very low, indeed.
  
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, February 2012
 */
 
 #include "msp430f1611.h"

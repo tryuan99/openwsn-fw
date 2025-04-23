@@ -1,7 +1,6 @@
 /**
 \brief ELDORADO-specific definition of the "uart" bsp module.
 
-\author Branko Kerkez <bkerkez@berkeley.edu>, February 2012.
 */
 
 

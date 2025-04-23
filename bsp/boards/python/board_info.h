@@ -1,7 +1,6 @@
 /**
 \brief Python-specific board information bsp module.
 
-\author Thomas Watteyne <watteyne@eecs.berkeley.edu>, May 2013.
 */
 
 #ifndef __BOARD_INFO_H

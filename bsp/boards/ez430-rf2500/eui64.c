@@ -1,7 +1,6 @@
 /**
 \brief eZ430-RF2500-specific definition of the "eui64" bsp module.
 
-\author Chuang Qian <cqian@berkeley.edu>, April 2012.
 
 */
 

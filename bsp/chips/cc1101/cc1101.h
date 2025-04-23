@@ -1,7 +1,6 @@
 /** 
 \brief Register definitions for the Texas Instruments CC1101 radio chip.
 
-\author Adilla Susungi <adilla.susungi@etu.unistra.fr>, August 2013.
 */
 
 

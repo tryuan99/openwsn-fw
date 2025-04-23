@@ -1,5 +1,4 @@
 /**
- * Author: Tengfei Chang (tengfei.chang@inria.fr)
  * Date:   September 2016
  * Description:OpenMoteSTM-specific definition of the "i2c" bsp module.
  */
